@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="CrocoManager.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:CrocoManager"
+    xmlns:views="clr-namespace:CrocoManager.Views"
+    Title="CrocoManager">
+
+    <ShellContent Title="Login" ContentTemplate="{DataTemplate views:LoginPage}" Route="LoginPage" />
+    <!--<ShellContent Title="Register" ContentTemplate="{DataTemplate views:RegisterPage}" Route="RegisterPage" />
+    <ShellContent Title="Forgot Password" ContentTemplate="{DataTemplate views:ForgotPasswordPage}" Route="ForgotPasswordPage" />-->
+
+</Shell>
