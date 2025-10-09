@@ -14,18 +14,33 @@ namespace CrocoManager.ViewModel
         [ObservableProperty] string? email;
         [ObservableProperty] string? password;
 
+        private SupabaseAuthService? _authService;
+        public LoginViewModel()
+        {
+            InitalizeAuthServiceAsync().Wait();
+        }
+
+        private async Task InitalizeAuthServiceAsync()
+        {
+            if (_authService == null)
+            {
+                _authService = await SupabaseAuthService.CreateAsync();
+            }
+        }
 
         [RelayCommand]
         async Task TestConnectionAsync()
         {
-            bool ok = await SupabaseService.Instance.TestConnectionAsync();
+            //bool ok = await SupabaseService.Instance.TestConnectionAsync();
+            
+            bool ok = _authService.TestConnectionAsync().Result;
             await Application.Current.Windows[0].Page.DisplayAlert("Connection Test", ok ? "Connected" : "Failed", "OK");
         }
 
         [RelayCommand]
         async Task GetTextMessageAsync()
         {
-            var msg = await SupabaseService.Instance.GetTextMessageAsync();
+            var msg = await _authService.GetTextMessageAsync();
             await Application.Current.Windows[0].Page.DisplayAlert(
                 "Supabase Response",
                 msg ?? "No message found",
