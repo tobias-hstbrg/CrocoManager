@@ -32,12 +32,20 @@ namespace CrocoManager.Services
         }
 
 
-        public async Task<SupabaseSession?> RegisterAsync(string email, string password)
+        public async Task<SupabaseSession?> RegisterAsync(string email, string password, UserRole role)
         {
             try
             {
+                var options = new Supabase.Gotrue.SignUpOptions
+                {
+                    Data = new Dictionary<string, object>
+                    {
+                        { "role", role.ToString() } // store as string, e.g. "Admin"
+                    }
+                };
+
                 // retrieves a supabase session and user (hopefully)
-                var authResponse = await _client.Auth.SignUp(email, password);
+                var authResponse = await _client.Auth.SignUp(email, password, options);
                 SupabaseSession session = new SupabaseSession();
 
                 if(authResponse != null && authResponse.User != null)
@@ -54,8 +62,8 @@ namespace CrocoManager.Services
                         CreatedAt = authResponse.User.CreatedAt,
                         UserMetadata = new Models.UserMetadata
                         {
-                            Role = Enum.TryParse(authResponse.User.Role, out UserRole role)
-                                                 ? role
+                            Role = Enum.TryParse(authResponse.User.UserMetadata?["role"]?.ToString(), true, out UserRole parsedRole)
+                                                 ? parsedRole
                                                  : UserRole.NotAssigned
                         }
                     };
@@ -95,7 +103,7 @@ namespace CrocoManager.Services
                         CreatedAt = authResponse.User.CreatedAt,
                         UserMetadata = new Models.UserMetadata
                         {
-                            Role = Enum.TryParse(authResponse.User.Role, out UserRole role)
+                            Role = Enum.TryParse(authResponse.User.UserMetadata?["role"]?.ToString(), true, out UserRole role)
                                                  ? role
                                                  : UserRole.NotAssigned
                         }

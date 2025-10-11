@@ -34,7 +34,7 @@ namespace CrocoManager.ViewModel
 
             if (session != null)
             {
-                await Application.Current.Windows[0].Page.DisplayAlert("Success", $"Welcome {session.User.Email}", "OK");
+                await Application.Current.Windows[0].Page.DisplayAlert("Success", $"Welcome {session.User.UserMetadata.Role.ToString()}", "OK");
                 // Navigate to home page if needed
             }
             else

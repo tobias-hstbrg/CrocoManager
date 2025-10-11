@@ -8,6 +8,7 @@
     <VerticalStackLayout Padding="30" Spacing="15">
         <Entry Placeholder="E-Mail" Text="{Binding Email}" />
         <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" />
+        <Entry Placeholder="Role" Text="{Binding Role}" />
         <Button Text="Register" Command="{Binding RegisterUserCommand}" />
     </VerticalStackLayout>
 </ContentPage>

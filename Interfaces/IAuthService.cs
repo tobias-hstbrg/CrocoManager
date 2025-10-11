@@ -4,6 +4,7 @@ using Supabase.Gotrue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace CrocoManager.Interfaces
     {
         Task<bool> TestConnectionAsync();
         Task<string?> GetTextMessageAsync();
-        Task<SupabaseSession?> RegisterAsync(string email, string password);
+        Task<SupabaseSession?> RegisterAsync(string email, string password, UserRole role);
         Task<SupabaseSession?> LoginAsync(string email, string password);
     }
 }

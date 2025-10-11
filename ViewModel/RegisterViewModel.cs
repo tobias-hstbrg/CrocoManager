@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Interfaces;
+using CrocoManager.Models;
 using CrocoManager.Services;
+using Microsoft.Security.Authentication.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +33,7 @@ namespace CrocoManager.ViewModel
                 return;
             }
 
-            var session = await _authService.RegisterAsync(Email, Password);
+            var session = await _authService.RegisterAsync(Email, Password, Enum.TryParse(Role, out UserRole role) ? role : UserRole.NotAssigned);
 
             if (session != null)
             {
