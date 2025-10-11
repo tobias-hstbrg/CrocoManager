@@ -16,6 +16,7 @@ namespace CrocoManager.ViewModel
 
         [ObservableProperty] string? email;
         [ObservableProperty] string? password;
+        [ObservableProperty] string? role;
         public RegisterViewModel(IAuthService authService)
         {
             _authService = authService;
@@ -30,11 +31,11 @@ namespace CrocoManager.ViewModel
                 return;
             }
 
-            var user = await _authService.RegisterAsync(Email, Password);
+            var session = await _authService.RegisterAsync(Email, Password);
 
-            if (user != null)
+            if (session != null)
             {
-                await Application.Current.Windows[0].Page.DisplayAlert("Success", $"Registered {user.Email}", "OK");
+                await Application.Current.Windows[0].Page.DisplayAlert("Success", $"Registered {session.User.Email}", "OK");
             }
             else
             {

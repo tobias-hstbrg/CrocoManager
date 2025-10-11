@@ -12,15 +12,20 @@ namespace CrocoManager.Models
     {
         public string Id { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public UserMetadata? UserMetadata { get; set; } = new UserMetadata();
+        public DateTime? CreatedAt { get; set; }
     }
 
-    [Table("test")]
-    public class Test : BaseModel
+    public class UserMetadata
     {
-        [PrimaryKey("id")]
-        public int id { get; set; }
+        public UserRole? Role { get; set; } = UserRole.NotAssigned;
+    }
 
-        [Column("text")]
-        public string text { get; set; } = string.Empty;
+    public enum UserRole
+    {
+        Admin,
+        Ranger,
+        Scientist,
+        NotAssigned
     }
 }

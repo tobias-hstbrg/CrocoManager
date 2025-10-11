@@ -6,9 +6,9 @@
              Title="LoginPage">
 
     <VerticalStackLayout Padding="30" Spacing="15">
-        <Entry Placeholder="Username" Text="{Binding Username}" />
+        <Entry Placeholder="Username" Text="{Binding Email}" />
         <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" />
-        <Button Text="Login" Command="{Binding LoginCommand}" />
+        <Button Text="Login" Command="{Binding LoginUserCommand}" />
         <Button Text="Register" Command="{Binding GoToRegisterCommand}" />
         <Button Text="Test Supabase Connection"
         Command="{Binding TestConnectionCommand}" />

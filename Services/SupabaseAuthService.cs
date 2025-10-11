@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CrocoManager.Services
@@ -31,16 +32,36 @@ namespace CrocoManager.Services
         }
 
 
-        public async Task<Supabase.Gotrue.User?> RegisterAsync(string email, string password)
+        public async Task<SupabaseSession?> RegisterAsync(string email, string password)
         {
             try
             {
                 // retrieves a supabase session and user (hopefully)
-                var result = await _client.Auth.SignUp(email, password);
+                var authResponse = await _client.Auth.SignUp(email, password);
+                SupabaseSession session = new SupabaseSession();
 
-                if(result != null)
+                if(authResponse != null && authResponse.User != null)
                 {
-                    return result.User;
+                    session.AccessToken = authResponse.AccessToken;
+                    session.RefreshToken = authResponse.RefreshToken;
+                    session.TokenType = authResponse.TokenType;
+                    session.ExpiresIn = DateTime.UtcNow.AddSeconds(authResponse.ExpiresIn);
+
+                    session.User = new Models.User
+                    {
+                        Id = authResponse.User.Id,
+                        Email = authResponse.User.Email ?? string.Empty,
+                        CreatedAt = authResponse.User.CreatedAt,
+                        UserMetadata = new Models.UserMetadata
+                        {
+                            Role = Enum.TryParse(authResponse.User.Role, out UserRole role)
+                                                 ? role
+                                                 : UserRole.NotAssigned
+                        }
+                    };
+                    var sessionJson = JsonSerializer.Serialize(session);
+                    await SecureStorage.SetAsync("supabase_session", sessionJson);
+                    return session;
                 }
                 else
                 {
@@ -51,6 +72,45 @@ namespace CrocoManager.Services
             {
                 return null;
             }
+        }
+
+        public async Task<SupabaseSession?> LoginAsync(string email, string password)
+        {
+            SupabaseSession session = new SupabaseSession();
+            try
+            {
+                var authResponse = await _client.Auth.SignInWithPassword(email, password);
+                
+                if (authResponse != null && authResponse.User != null)
+                {
+                    session.AccessToken = authResponse.AccessToken;
+                    session.RefreshToken = authResponse.RefreshToken;
+                    session.TokenType = authResponse.TokenType;
+                    session.ExpiresIn = DateTime.UtcNow.AddSeconds(authResponse.ExpiresIn);
+
+                    session.User = new Models.User
+                    {
+                        Id = authResponse.User.Id,
+                        Email = authResponse.User.Email ?? string.Empty,
+                        CreatedAt = authResponse.User.CreatedAt,
+                        UserMetadata = new Models.UserMetadata
+                        {
+                            Role = Enum.TryParse(authResponse.User.Role, out UserRole role)
+                                                 ? role
+                                                 : UserRole.NotAssigned
+                        }
+                    };
+
+                    var sessionJson = JsonSerializer.Serialize(session);
+                    await SecureStorage.SetAsync("supabase_session", sessionJson);
+                }
+                return session;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Login failed: {ex.Message}");
+            }
+            return null;
         }
 
         public async Task<bool> TestConnectionAsync()
@@ -68,18 +128,18 @@ namespace CrocoManager.Services
 
         public async Task<string?> GetTextMessageAsync()
         {
-            try
-            {
-                var result = await _client.From<Test>().Get();
-                if (result.Models.Count > 0)
-                {
-                    return result.Models[0].text;
-                }
-            }
-            catch (Exception ex)
-            {
-                return $"Error: {ex.Message}";
-            }
+            //try
+            //{
+            //    var result = await _client.From<Test>().Get();
+            //    if (result.Models.Count > 0)
+            //    {
+            //        return result.Models[0].text;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return $"Error: {ex.Message}";
+            //}
             return null;
         }
     }

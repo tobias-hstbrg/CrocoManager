@@ -22,6 +22,28 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
+        async Task LoginUserAsync()
+        {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(Password))
+            {
+                await Application.Current.Windows[0].Page.DisplayAlert("Error", "Enter credentials", "OK");
+                return;
+            }
+
+            var session = await _authService.LoginAsync(email, Password);
+
+            if (session != null)
+            {
+                await Application.Current.Windows[0].Page.DisplayAlert("Success", $"Welcome {session.User.Email}", "OK");
+                // Navigate to home page if needed
+            }
+            else
+            {
+                await Application.Current.Windows[0].Page.DisplayAlert("Error", "Invalid credentials", "OK");
+            }
+        }
+
+        [RelayCommand]
         async Task TestConnectionAsync()
         {
             //bool ok = await SupabaseService.Instance.TestConnectionAsync();
@@ -45,27 +67,5 @@ namespace CrocoManager.ViewModel
         {
             await Shell.Current.GoToAsync("RegisterPage");
         }
-
-        //[RelayCommand]
-        //async Task LoginAsync()
-        //{
-        //    if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
-        //    {
-        //        await Application.Current.Windows[0].Page.DisplayAlert("Error", "Enter credentials", "OK");
-        //        return;
-        //    }
-
-        //    var user = await SupabaseService.Instance.LoginAsync(Email, Password);
-
-        //    if (user != null)
-        //    {
-        //        await Application.Current.Windows[0].Page.DisplayAlert("Success", $"Welcome {user.Email}", "OK");
-        //        // Navigate to home page if needed
-        //    }
-        //    else
-        //    {
-        //        await Application.Current.Windows[0].Page.DisplayAlert("Error", "Invalid credentials", "OK");
-        //    }
-        //}
     }
 }

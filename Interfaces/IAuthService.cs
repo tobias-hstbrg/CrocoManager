@@ -1,4 +1,5 @@
-﻿using Supabase;
+﻿using CrocoManager.Models;
+using Supabase;
 using Supabase.Gotrue;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace CrocoManager.Interfaces
     {
         Task<bool> TestConnectionAsync();
         Task<string?> GetTextMessageAsync();
-        Task<User?> RegisterAsync(string email, string password);
+        Task<SupabaseSession?> RegisterAsync(string email, string password);
+        Task<SupabaseSession?> LoginAsync(string email, string password);
     }
 }
