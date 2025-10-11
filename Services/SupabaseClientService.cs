@@ -1,5 +1,4 @@
-﻿using dotenv.net;
-using Supabase;
+﻿using Supabase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +21,10 @@ namespace CrocoManager.Services
 
         public async Task InitializeAsync()
         {
-            DotEnv.Load();
-
-            string url = Environment.GetEnvironmentVariable("SUPABASE_URL") ?? throw new Exception("SUPABASE_URL missing");
-            string key = Environment.GetEnvironmentVariable("SUPABASE_ANON_KEY") ?? throw new Exception("SUPABASE_ANON_KEY missing");
-
             if (_isInitialized) return;
 
-            _client = new Client(url, key);
+            // Initalizing Supabase connection
+            _client = new Client(ConfigLoader.Configuration["Supabase:Url"], ConfigLoader.Configuration["Supabase:AnonKey"]);
             await _client.InitializeAsync();
 
             _isInitialized = true;
