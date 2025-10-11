@@ -1,10 +1,18 @@
-﻿namespace CrocoManager
+﻿using CrocoManager.Views;
+
+namespace CrocoManager
 {
     public partial class AppShell : Shell
     {
         public AppShell()
         {
-            InitializeComponent();
+            Items.Add(new ShellContent
+            {
+                Title = "Login",
+                ContentTemplate = new DataTemplate(() => MauiProgram.ServiceProvider.GetRequiredService<LoginPage>())
+            });
+
+            Routing.RegisterRoute("RegisterPage", typeof(RegisterPage));
         }
     }
 }

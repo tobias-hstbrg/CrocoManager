@@ -1,9 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CrocoManager.Interfaces;
+using CrocoManager.Services;
+using CrocoManager.ViewModel;
+using CrocoManager.Views;
+using Microsoft.Extensions.Logging;
 
 namespace CrocoManager
 {
     public static class MauiProgram
     {
+        public static IServiceProvider ServiceProvider { get; private set; }
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -16,10 +21,27 @@ namespace CrocoManager
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
-            return builder.Build();
+            // Pages & ViewModels
+            builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<RegisterViewModel>();
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<RegisterPage>();
+
+            // Shell
+            builder.Services.AddSingleton<AppShell>();
+
+            // Auth service via async factory (blocking)
+            builder.Services.AddSingleton<IAuthService>(sp =>
+                SupabaseAuthService.CreateAsync().GetAwaiter().GetResult()
+            );
+
+            var app = builder.Build();
+            ServiceProvider = app.Services;
+
+            return app;
         }
     }
 }

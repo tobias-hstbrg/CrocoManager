@@ -5,10 +5,6 @@
              x:Class="CrocoManager.Views.LoginPage"
              Title="LoginPage">
 
-    <ContentPage.BindingContext>
-        <vm:LoginViewModel />
-    </ContentPage.BindingContext>
-
     <VerticalStackLayout Padding="30" Spacing="15">
         <Entry Placeholder="Username" Text="{Binding Username}" />
         <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" />

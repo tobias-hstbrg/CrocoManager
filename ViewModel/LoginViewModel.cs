@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CrocoManager.Interfaces;
 using CrocoManager.Services;
 using System;
 using System.Collections.Generic;
@@ -14,18 +15,10 @@ namespace CrocoManager.ViewModel
         [ObservableProperty] string? email;
         [ObservableProperty] string? password;
 
-        private SupabaseAuthService? _authService;
-        public LoginViewModel()
+        private readonly IAuthService _authService;
+        public LoginViewModel(IAuthService authService)
         {
-            InitalizeAuthServiceAsync().Wait();
-        }
-
-        private async Task InitalizeAuthServiceAsync()
-        {
-            if (_authService == null)
-            {
-                _authService = await SupabaseAuthService.CreateAsync();
-            }
+            _authService = authService;
         }
 
         [RelayCommand]
@@ -45,6 +38,12 @@ namespace CrocoManager.ViewModel
                 "Supabase Response",
                 msg ?? "No message found",
                 "OK");
+        }
+
+        [RelayCommand]
+        private async Task GoToRegister()
+        {
+            await Shell.Current.GoToAsync("RegisterPage");
         }
 
         //[RelayCommand]
