@@ -48,7 +48,7 @@ namespace CrocoManager.ViewModel
         {
             //bool ok = await SupabaseService.Instance.TestConnectionAsync();
             
-            bool ok = _authService.TestConnectionAsync().Result;
+            var ok = await _authService.TestConnectionAsync();
             await Application.Current.Windows[0].Page.DisplayAlert("Connection Test", ok ? "Connected" : "Failed", "OK");
         }
 
