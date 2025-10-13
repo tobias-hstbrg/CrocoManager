@@ -1,12 +1,15 @@
-﻿using CrocoManager.Interfaces;
+﻿using CrocoManager.DTOs;
+using CrocoManager.Interfaces;
 using CrocoManager.Models;
 using Supabase;
+using Supabase.Postgrest.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static Supabase.Functions.Client;
 
 namespace CrocoManager.Services
 {
@@ -32,19 +35,32 @@ namespace CrocoManager.Services
         }
 
 
-        public async Task<SupabaseSession?> RegisterAsync(string email, string password, UserRole role)
+        public async Task<SupabaseSession?> RegisterAsync(string email, string password)
         {
             try
             {
+                var whitelistResponse = await CheckEmailWhitelist(email);
+
+                if (whitelistResponse == null)
+                    return null;
+
+                // Setting the role for the new user
+                var newUsersRole = new UserRole();
+                if (string.IsNullOrEmpty(whitelistResponse.role))
+                    newUsersRole = UserRole.NotAssigned;
+
+                if (!Enum.TryParse<UserRole>(whitelistResponse.role, out newUsersRole))
+                    newUsersRole = UserRole.NotAssigned;
+
                 var options = new Supabase.Gotrue.SignUpOptions
                 {
                     Data = new Dictionary<string, object>
-                    {
-                        { "role", role.ToString() } // store as string, e.g. "Admin"
-                    }
+                {
+                    { "role", newUsersRole.ToString() } // store as string, e.g. "Admin"
+                }
                 };
 
-                // retrieves a supabase session and user (hopefully)
+                // retrieves a supabase session and the new user (hopefully)
                 var authResponse = await _client.Auth.SignUp(email, password, options);
                 SupabaseSession session = new SupabaseSession();
 
@@ -81,6 +97,33 @@ namespace CrocoManager.Services
                 return null;
             }
         }
+
+        private async Task<EmailWhitelist?> CheckEmailWhitelist(string email)
+        {
+            try
+            {
+                var response = await _client
+                    .From<EmailWhitelist>()
+                    .Filter("email", Supabase.Postgrest.Constants.Operator.Equals, email)
+                    .Single();
+
+                return response;
+            }
+            catch (PostgrestException ex)
+            {
+                Console.WriteLine($"PostgrestException: {ex.Message}");
+                if (ex.Message.Contains("No rows"))
+                    return null;
+
+                throw; // rethrow other Postgrest errors
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"General Exception: {ex}");
+                throw; // rethrow to see where it bubbles up
+            }
+        }
+
 
         public async Task<SupabaseSession?> LoginAsync(string email, string password)
         {
