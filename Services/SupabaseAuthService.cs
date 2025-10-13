@@ -6,6 +6,7 @@ using Supabase.Postgrest.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -40,62 +41,44 @@ namespace CrocoManager.Services
             try
             {
                 var whitelistResponse = await CheckEmailWhitelist(email);
-
                 if (whitelistResponse == null)
                     return null;
 
-                // Setting the role for the new user
-                var newUsersRole = new UserRole();
-                if (string.IsNullOrEmpty(whitelistResponse.role))
-                    newUsersRole = UserRole.NotAssigned;
+                // grab Userrole in usable format
+                var newUsersRole = ParseUserRole(whitelistResponse.role);
 
-                if (!Enum.TryParse<UserRole>(whitelistResponse.role, out newUsersRole))
-                    newUsersRole = UserRole.NotAssigned;
-
+                // Prepare user_metadata for new user
                 var options = new Supabase.Gotrue.SignUpOptions
                 {
                     Data = new Dictionary<string, object>
-                {
-                    { "role", newUsersRole.ToString() } // store as string, e.g. "Admin"
-                }
+                    {
+                        { "role", newUsersRole.ToString() }
+                    }
                 };
 
                 // retrieves a supabase session and the new user (hopefully)
                 var authResponse = await _client.Auth.SignUp(email, password, options);
-                SupabaseSession session = new SupabaseSession();
-
-                if(authResponse != null && authResponse.User != null)
-                {
-                    session.AccessToken = authResponse.AccessToken;
-                    session.RefreshToken = authResponse.RefreshToken;
-                    session.TokenType = authResponse.TokenType;
-                    session.ExpiresIn = DateTime.UtcNow.AddSeconds(authResponse.ExpiresIn);
-
-                    session.User = new Models.User
-                    {
-                        Id = authResponse.User.Id,
-                        Email = authResponse.User.Email ?? string.Empty,
-                        CreatedAt = authResponse.User.CreatedAt,
-                        UserMetadata = new Models.UserMetadata
-                        {
-                            Role = Enum.TryParse(authResponse.User.UserMetadata?["role"]?.ToString(), true, out UserRole parsedRole)
-                                                 ? parsedRole
-                                                 : UserRole.NotAssigned
-                        }
-                    };
-                    var sessionJson = JsonSerializer.Serialize(session);
-                    await SecureStorage.SetAsync("supabase_session", sessionJson);
-                    return session;
-                }
-                else
-                {
+                if (authResponse?.User == null)
                     return null;
-                }
+
+                var session = BuildSession(authResponse);
+
+                // safe session in secure storage of the operting system
+                var sessionJson = JsonSerializer.Serialize(session);
+                await SecureStorage.SetAsync("supabase_session", sessionJson);
+
+                return session;
             }
-            catch
+            catch (PostgrestException ex)
             {
+                Console.WriteLine($"Supabase error: {ex.Message}");
                 return null;
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error {ex.Message}");
+            }
+            return null;
         }
 
         private async Task<EmailWhitelist?> CheckEmailWhitelist(string email)
@@ -122,6 +105,39 @@ namespace CrocoManager.Services
                 Console.WriteLine($"General Exception: {ex}");
                 throw; // rethrow to see where it bubbles up
             }
+        }
+
+        private SupabaseSession BuildSession(Supabase.Gotrue.Session authResponse)
+        {
+            var userMetadata = authResponse.User.UserMetadata;
+            var role = ParseUserRole(userMetadata?["role"]?.ToString());
+
+            return new SupabaseSession
+            {
+                AccessToken = authResponse.AccessToken,
+                RefreshToken = authResponse.RefreshToken,
+                TokenType = authResponse.TokenType,
+                ExpiresIn = DateTime.UtcNow.AddSeconds(authResponse.ExpiresIn),
+                User = new Models.User
+                {
+                    Id = authResponse.User.Id,
+                    Email = authResponse.User.Email ?? string.Empty,
+                    CreatedAt = authResponse.User.CreatedAt,
+                    UserMetadata = new Models.UserMetadata
+                    {
+                        Role = role
+                    }
+                }
+            };
+        }
+
+        private UserRole ParseUserRole(string? role)
+        {
+            if (string.IsNullOrEmpty(role))
+                return UserRole.NotAssigned;
+
+            // Tries to parse string into enum if that doesnt work it defaults to not Assigned just like if the string would be null.
+            return Enum.TryParse(role, true, out UserRole parsedRole) ? parsedRole : UserRole.NotAssigned;
         }
 
 
