@@ -38,7 +38,7 @@ namespace CrocoManager.Services
                     return null;
 
                 // grab Userrole in usable format
-                var newUsersRole = ParseUserRole(whitelistResponse.role);
+                var newUsersRole = ParseUserRole(whitelistResponse.Role);
 
                 // Prepare user_metadata for new user
                 var options = new Supabase.Gotrue.SignUpOptions

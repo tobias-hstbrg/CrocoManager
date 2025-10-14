@@ -13,12 +13,12 @@ namespace CrocoManager.DTOs
     public class EmailWhitelist : BaseModel
     {
         [PrimaryKey("id")]
-        public Guid id { get; set; }
+        public Guid Id { get; set; }
 
         [Column("email")]
-        public string? email { get; set; } = string.Empty;
+        public string? Email { get; set; } = string.Empty;
 
         [Column("role")]
-        public string? role { get; set; } = string.Empty;
+        public string? Role { get; set; } = string.Empty;
     }
 }

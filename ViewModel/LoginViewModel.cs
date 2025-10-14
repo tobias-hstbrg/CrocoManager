@@ -32,23 +32,14 @@ namespace CrocoManager.ViewModel
 
             var session = await _authService.LoginAsync(email, Password);
 
-            if (session != null)
-            {
-                await Application.Current.Windows[0].Page.DisplayAlert("Success", $"Welcome {session.User.UserMetadata.Role.ToString()}", "OK");
-                // Navigate to home page if needed
-            }
-            else
-            {
-                await Application.Current.Windows[0].Page.DisplayAlert("Error", "Invalid credentials", "OK");
-            }
-
-            if(session.User.UserMetadata.Role == Models.UserRole.Admin)
+            if(session != null && session.User.UserMetadata.Role == Models.UserRole.Admin)
             {
                 // Navigate to admin page
                 await Shell.Current.GoToAsync("AdminPage");
             }
             else
             {
+                await Application.Current.Windows[0].Page.DisplayAlert("Error", "Invalid credentials", "OK");
                 // Navigate to user page
                 //await Shell.Current.GoToAsync("UserPage");
             }
