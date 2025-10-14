@@ -1,6 +1,7 @@
 ﻿using CrocoManager.Interfaces;
 using CrocoManager.Models;
 using Supabase;
+using Supabase.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,25 +13,16 @@ namespace CrocoManager.Services
 {
     public sealed class SupabaseAuthService : IAuthService
     {
-        private readonly Client _client;
+        private readonly SupabaseClientService _supabase;
 
-        public SupabaseAuthService(Client client)
+        public SupabaseAuthService(SupabaseClientService supabase)
         {
-            _client = client;
+            _supabase = supabase;
         }
-        //public static async Task<SupabaseAuthService> CreateAsync()
-        //{
-        //    await SupabaseClientService.Instance.InitializeAsync();
-        //    return new SupabaseAuthService(SupabaseClientService.Instance.Client);
-        //}
-
-        // Creates Supabase Client Instance
-        public static async Task<SupabaseAuthService> CreateAsync()
+        public async Task InitializeAsync()
         {
-            await SupabaseClientService.Instance.InitializeAsync();
-            return new SupabaseAuthService(SupabaseClientService.Instance.Client);
+            await _supabase.InitializeAsync();
         }
-
 
         public async Task<SupabaseSession?> RegisterAsync(string email, string password, UserRole role)
         {
@@ -45,7 +37,7 @@ namespace CrocoManager.Services
                 };
 
                 // retrieves a supabase session and user (hopefully)
-                var authResponse = await _client.Auth.SignUp(email, password, options);
+                var authResponse = await _supabase.Client.Auth.SignUp(email, password, options);
                 SupabaseSession session = new SupabaseSession();
 
                 if(authResponse != null && authResponse.User != null)
@@ -87,7 +79,7 @@ namespace CrocoManager.Services
             SupabaseSession session = new SupabaseSession();
             try
             {
-                var authResponse = await _client.Auth.SignInWithPassword(email, password);
+                var authResponse = await _supabase.Client.Auth.SignInWithPassword(email, password);
                 
                 if (authResponse != null && authResponse.User != null)
                 {
@@ -125,7 +117,7 @@ namespace CrocoManager.Services
         {
             try
             {
-                var result = await _client.Auth.RetrieveSessionAsync();
+                var result = await _supabase.Client.Auth.RetrieveSessionAsync();
                 return true;
             }
             catch

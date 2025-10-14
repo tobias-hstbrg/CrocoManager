@@ -34,9 +34,8 @@ namespace CrocoManager
             builder.Services.AddSingleton<AppShell>();
 
             // Auth service via async factory (blocking)
-            builder.Services.AddSingleton<IAuthService>(sp =>
-                SupabaseAuthService.CreateAsync().GetAwaiter().GetResult()
-            );
+            builder.Services.AddSingleton<SupabaseClientService>();
+            builder.Services.AddSingleton<IAuthService, SupabaseAuthService>();
 
             var app = builder.Build();
             ServiceProvider = app.Services;

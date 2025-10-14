@@ -1,4 +1,5 @@
-﻿using CrocoManager.Views;
+﻿using CrocoManager.Services;
+using CrocoManager.Views;
 
 namespace CrocoManager
 {
@@ -15,6 +16,12 @@ namespace CrocoManager
         protected override Window CreateWindow(IActivationState? activationState)
         {
             return new Window(_appShell);
+        }
+
+        protected override async void OnStart()
+        {
+            var clientService = MauiProgram.ServiceProvider.GetRequiredService<SupabaseClientService>();
+            await clientService.InitializeAsync();
         }
     }
 }
