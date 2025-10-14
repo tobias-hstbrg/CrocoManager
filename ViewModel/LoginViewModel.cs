@@ -41,6 +41,18 @@ namespace CrocoManager.ViewModel
             {
                 await Application.Current.Windows[0].Page.DisplayAlert("Error", "Invalid credentials", "OK");
             }
+
+            if(session.User.UserMetadata.Role == Models.UserRole.Admin)
+            {
+                // Navigate to admin page
+                await Shell.Current.GoToAsync("AdminPage");
+            }
+            else
+            {
+                // Navigate to user page
+                //await Shell.Current.GoToAsync("UserPage");
+            }
+
         }
 
         [RelayCommand]

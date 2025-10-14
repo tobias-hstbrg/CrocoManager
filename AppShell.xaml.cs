@@ -13,6 +13,7 @@ namespace CrocoManager
             });
 
             Routing.RegisterRoute("RegisterPage", typeof(RegisterPage));
+            Routing.RegisterRoute("AdminPage", typeof(AdminPage));
         }
     }
 }
