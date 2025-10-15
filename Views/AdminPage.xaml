@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage x:Name="AdminPageRoot"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:CrocoManager.ViewModel"
              x:Class="CrocoManager.Views.AdminPage"
              Title="Admin Panel">
-    <VerticalStackLayout Padding="20" Spacing="10">
-        <Entry Text="{Binding Email}" Placeholder="Enter email" Keyboard="Email" />
-        <Picker Title="Select Role" 
-                ItemsSource="{Binding Roles}" 
-                SelectedItem="{Binding Role}"
-                ItemDisplayBinding="{Binding .}"/>
-        <Button Text="Add Email" Command="{Binding AddEmailCommand}"/>
 
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <!-- New email input -->
+        <Entry Text="{Binding Email}" Placeholder="Enter email" Keyboard="Email" />
+
+        <!-- Picker for new email -->
+        <Picker Title="Select Role"
+        ItemsSource="{Binding Roles}"
+        SelectedItem="{Binding SelectedRole}" />
+
+        <Button Text="Add Email" Command="{Binding AddEmailCommand}" />
+
+        <!-- Existing users -->
         <CollectionView ItemsSource="{Binding WhitelistedEmails}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center" Padding="10">
                         <Label Text="{Binding Email}" WidthRequest="200" VerticalOptions="Center"/>
 
-                        <Picker x:Name="RolePicker"
-                                ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=Roles}" 
-                                
-                                ItemDisplayBinding="{Binding .}"/>
-                        <!--SelectedIndexChanged="RolePicker_SelectedIndexChanged"-->
-                        
-                        <Button Text="Update" 
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=UpdateRoleCommand}" 
-                                CommandParameter="{Binding .}" />
+                        <!-- Picker for existing user's role -->
+                        <Picker Title="Select Role"
+                        ItemsSource="{Binding BindingContext.Roles, Source={x:Reference AdminPageRoot}}"
+                        SelectedItem="{Binding Role, Mode=TwoWay}"
+                        ItemDisplayBinding="{Binding .}" />
 
-                        <Button Text="Delete" 
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteEmailCommand}" 
-                                CommandParameter="{Binding .}" />
+                        <Button Text="Update"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=UpdateRoleCommand}"
+                        CommandParameter="{Binding .}" />
+
+                        <Button Text="Delete"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteEmailCommand}"
+                        CommandParameter="{Binding .}" />
                     </HorizontalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
     </VerticalStackLayout>
 </ContentPage>

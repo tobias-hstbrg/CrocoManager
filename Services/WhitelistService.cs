@@ -37,11 +37,17 @@ namespace CrocoManager.Services
 
         public async Task UpdateRoleAsync(Guid id, UserRole newRole)
         {
-            var updateEntry = new EmailWhitelist
+            var response = await _supabase.Client
+        .From<EmailWhitelist>()
+        .Where(entry => entry.Id == id)
+        .Set(entry => entry.Role, newRole.ToString())
+        .Update();
+
+            // Check if the update was successful
+            if (response?.Models == null || response.Models.Count == 0)
             {
-                Role = newRole.ToString()
-            };
-            await _supabase.Client.From<EmailWhitelist>().Where(entry => entry.Id == id).Update(updateEntry);
+                throw new InvalidOperationException($"Failed to update role for whitelist entry with id {id}. No rows were affected.");
+            }
         }
 
         public async Task DeleteEmailFromWhitelistAsync(Guid id)

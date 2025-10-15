@@ -3,13 +3,10 @@ using CommunityToolkit.Mvvm.Input;
 using CrocoManager.DTOs;
 using CrocoManager.Interfaces;
 using CrocoManager.Models;
-using Microsoft.Maui.ApplicationModel.Communication;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CrocoManager.ViewModel
@@ -17,72 +14,69 @@ namespace CrocoManager.ViewModel
     public partial class AdminViewModel : ObservableObject
     {
         private readonly IWhitelistService _whitelistService;
-        public ObservableCollection<EmailWhitelist> WhitelistedEmails { get; } = new();
+
+        public ObservableCollection<EmailWhitelistVM> WhitelistedEmails { get; } = new();
 
         [ObservableProperty] private Guid id;
-
         [ObservableProperty] private string email;
+        [ObservableProperty] private string selectedRole;
 
-        [ObservableProperty] private string role;
+        public List<string> Roles { get; }
 
-        public AdminViewModel(IWhitelistService whitelistService)
-        {
-            _whitelistService = whitelistService;
-            AddEmailCommand = new AsyncRelayCommand(AddEmail);
-            LoadEmailsCommand = new AsyncRelayCommand(LoadEmails);
-
-            _ = LoadEmails(); // supressing warning with _ because normally one would call this async
-        }
         public IAsyncRelayCommand LoadEmailsCommand { get; }
         public IAsyncRelayCommand AddEmailCommand { get; }
 
-        public List<string> Roles { get; } = Enum.GetNames(typeof(UserRole)).ToList();
+        public AdminViewModel(IWhitelistService whitelistService)
+        {
+            _whitelistService = whitelistService ?? throw new ArgumentNullException(nameof(whitelistService));
+
+            Roles = Enum.GetNames(typeof(UserRole)).ToList();
+
+            LoadEmailsCommand = new AsyncRelayCommand(LoadEmails);
+            AddEmailCommand = new AsyncRelayCommand(AddEmail);
+
+            _ = LoadEmails(); // fire-and-forget initialization
+        }
 
         private async Task LoadEmails()
         {
             var emails = await _whitelistService.GetWhitelistedEmailsAsync();
             WhitelistedEmails.Clear();
+
             foreach (var e in emails)
-                WhitelistedEmails.Add(e);
+                WhitelistedEmails.Add(new EmailWhitelistVM(e));
         }
 
         private async Task AddEmail()
         {
-            if (string.IsNullOrWhiteSpace(email)) return;
+            if (string.IsNullOrWhiteSpace(Email)) return;
+            var targetRole = SelectedRole;
 
-            if (Enum.TryParse<UserRole>(Role, out var roleEnum))
-            {
-                await _whitelistService.AddEmailToWhitelistAsync(email, roleEnum);
-                email = string.Empty;
-                await LoadEmails();
-            }
-            else
-            {
-                // Handle invalid role string if necessary
-            }
-        }
+            if (!Enum.TryParse<UserRole>(targetRole, out var roleEnum))
+                return;
 
-        [RelayCommand]
-        private async Task DeleteEmail(EmailWhitelist email)
-        {
-            if (email == null) return;
-            await _whitelistService.DeleteEmailFromWhitelistAsync(email.Id);
+            await _whitelistService.AddEmailToWhitelistAsync(Email, roleEnum);
+            Email = string.Empty;
             await LoadEmails();
         }
 
         [RelayCommand]
-        private async Task UpdateRole(EmailWhitelist email)
+        private async Task DeleteEmail(EmailWhitelistVM emailVM)
         {
-            if (email == null) return;
-            if (Enum.TryParse<UserRole>(email.Role, out var roleEnum))
-            {
-                await _whitelistService.UpdateRoleAsync(email.Id, roleEnum);
-                await LoadEmails();
-            }
-            else
-            {
-                // Handle invalid role string if necessary
-            }
+            if (emailVM == null) return;
+
+            await _whitelistService.DeleteEmailFromWhitelistAsync(emailVM.Id);
+            await LoadEmails();
+        }
+
+        [RelayCommand]
+        private async Task UpdateRole(EmailWhitelistVM emailVM)
+        {
+            if (emailVM == null) return;
+            if (!Enum.TryParse<UserRole>(emailVM.Role, out var roleEnum))
+                return;
+
+            await _whitelistService.UpdateRoleAsync(emailVM.Id, roleEnum);
             await LoadEmails();
         }
     }

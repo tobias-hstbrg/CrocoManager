@@ -4,7 +4,7 @@ namespace CrocoManager.Views;
 
 public partial class AdminPage : ContentPage
 {
-    public AdminPage(LoginViewModel viewModel)
+    public AdminPage(AdminViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
