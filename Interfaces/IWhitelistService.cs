@@ -13,7 +13,7 @@ namespace CrocoManager.Interfaces
         Task<List<EmailWhitelist>> GetWhitelistedEmailsAsync();
         Task AddEmailToWhitelistAsync(string email, UserRole role);
 
-        Task UpdateRoleAsync(Guid id, UserRole newRole);
+        Task<bool> UpdateRoleAsync(Guid id, UserRole newRole);
         Task DeleteEmailFromWhitelistAsync(Guid id);
     }
 }

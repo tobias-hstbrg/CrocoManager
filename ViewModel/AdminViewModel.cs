@@ -76,7 +76,11 @@ namespace CrocoManager.ViewModel
             if (!Enum.TryParse<UserRole>(emailVM.Role, out var roleEnum))
                 return;
 
-            await _whitelistService.UpdateRoleAsync(emailVM.Id, roleEnum);
+            var roleUpdated = await _whitelistService.UpdateRoleAsync(emailVM.Id, roleEnum);
+
+            if(!roleUpdated)
+                await Application.Current.Windows[0].Page.DisplayAlert("Warning", "User not updated", "OK");
+
             await LoadEmails();
         }
     }
