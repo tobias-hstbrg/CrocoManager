@@ -5,42 +5,103 @@
              xmlns:vm="clr-namespace:CrocoManager.ViewModel"
              x:Class="CrocoManager.Views.AdminPage"
              Title="Admin Panel">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15" HorizontalOptions="Center" MaximumWidthRequest="800">
+            
+            <Label Text="Manage User Access" FontSize="20" FontAttributes="Bold" Margin="0,0,0,10"/>
 
-    <VerticalStackLayout Padding="20" Spacing="10">
-        <!-- New email input -->
-        <Entry Text="{Binding Email}" Placeholder="Enter email" Keyboard="Email" />
+            <!-- Add New User Section -->
+            <Border Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Add New User" FontSize="16" FontAttributes="Bold"/>
+                    <Entry Text="{Binding Email}" Placeholder="Enter email" Keyboard="Email" />
+                    <Picker Title="Select Role"
+                            ItemsSource="{Binding Roles}"
+                            SelectedItem="{Binding SelectedRole}" />
+                    <Button Text="Add Email" Command="{Binding AddEmailCommand}" 
+                            HorizontalOptions="End" WidthRequest="120"/>
+                </VerticalStackLayout>
+            </Border>
 
-        <!-- Picker for new email -->
-        <Picker Title="Select Role"
-        ItemsSource="{Binding Roles}"
-        SelectedItem="{Binding SelectedRole}" />
+            <!-- Existing Users Section -->
+            <Label Text="Existing Users" FontSize="16" FontAttributes="Bold" Margin="0,10,0,0"/>
 
-        <Button Text="Add Email" Command="{Binding AddEmailCommand}" />
+            <CollectionView ItemsSource="{Binding WhitelistedEmails}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="10" Margin="0,5">
+                            <Grid ColumnSpacing="10" RowSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-        <!-- Existing users -->
-        <CollectionView ItemsSource="{Binding WhitelistedEmails}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center" Padding="10">
-                        <Label Text="{Binding Email}" WidthRequest="200" VerticalOptions="Center"/>
+                                <!--Defines vertical stacking for the elements-->
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                        <!-- Picker for existing user's role -->
-                        <Picker Title="Select Role"
-                        ItemsSource="{Binding BindingContext.Roles, Source={x:Reference AdminPageRoot}}"
-                        SelectedItem="{Binding Role, Mode=TwoWay}"
-                        ItemDisplayBinding="{Binding .}" />
+                                <!-- Desktop Layout -->
+                                <Label Grid.Column="0" Grid.Row="0"
+                                       Text="{Binding Email}" 
+                                       VerticalOptions="Center"
+                                       LineBreakMode="TailTruncation"/>
 
-                        <Button Text="Update"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=UpdateRoleCommand}"
-                        CommandParameter="{Binding .}" />
+                                <Picker Grid.Column="1" Grid.Row="0"
+                                        Title="Select Role"
+                                        ItemsSource="{Binding BindingContext.Roles, Source={x:Reference AdminPageRoot}}"
+                                        SelectedItem="{Binding Role, Mode=TwoWay}"
+                                        ItemDisplayBinding="{Binding .}"
+                                        VerticalOptions="Center"
+                                        MinimumWidthRequest="120"/>
 
-                        <Button Text="Delete"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteEmailCommand}"
-                        CommandParameter="{Binding .}" />
-                    </HorizontalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                                <Button Grid.Column="2" Grid.Row="0"
+                                        Text="Update"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=UpdateRoleCommand}"
+                                        CommandParameter="{Binding .}"
+                                        VerticalOptions="Center"
+                                        WidthRequest="80"
+                                        HeightRequest="40"/>
 
-    </VerticalStackLayout>
+                                <Button Grid.Column="3" Grid.Row="0"
+                                        Text="Delete"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteEmailCommand}"
+                                        CommandParameter="{Binding .}"
+                                        VerticalOptions="Center"
+                                        WidthRequest="80"
+                                        HeightRequest="40"/>
+
+                                <!-- Mobile Layout -->
+                                <HorizontalStackLayout Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
+                                                       Spacing="10" HorizontalOptions="End"
+                                                       IsVisible="False"
+                                                       x:Name="MobileButtons">
+                                    <Button Text="Update"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=UpdateRoleCommand}"
+                                            CommandParameter="{Binding .}"
+                                            WidthRequest="100"/>
+                                    <Button Text="Delete"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteEmailCommand}"
+                                            CommandParameter="{Binding .}"
+                                            WidthRequest="100"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+
+                            <!-- Resize Triggers for when the window size changes -->
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" 
+                                            Binding="{Binding Source={x:Reference AdminPageRoot}, Path=Width}"
+                                            Value="{OnPlatform WinUI=600, Default=500}">
+                                    <Setter Property="Padding" Value="15"/>
+                                </DataTrigger>
+                            </Border.Triggers>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
