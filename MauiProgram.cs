@@ -28,15 +28,16 @@ namespace CrocoManager
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<RegisterViewModel>();
             builder.Services.AddTransient<AdminViewModel>();
+            builder.Services.AddTransient<HomeViewModel>();
 
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<RegisterPage>();
             builder.Services.AddTransient<AdminPage>();
+            builder.Services.AddTransient<HomePage>();
 
             // Shell
             builder.Services.AddSingleton<AppShell>();
 
-            // Auth service via async factory (blocking)
             builder.Services.AddSingleton<SupabaseClientService>();
             builder.Services.AddSingleton<IAuthService, SupabaseAuthService>();
             builder.Services.AddSingleton<IWhitelistService, WhitelistService>();
