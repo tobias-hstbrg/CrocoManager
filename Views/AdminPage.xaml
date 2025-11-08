@@ -12,7 +12,10 @@
 
             <!-- Add New User Section -->
             <Border Padding="15">
-                <VerticalStackLayout Spacing="10">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14,14,14,14"/>
+                </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
                     <Label Text="Add New User" FontSize="16" FontAttributes="Bold"/>
                     <Entry Text="{Binding Email}" Placeholder="Enter email" Keyboard="Email" />
                     <Picker Title="Select Role"
@@ -29,7 +32,7 @@
             <CollectionView ItemsSource="{Binding WhitelistedEmails}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Padding="10" Margin="0,5">
+                        <Border Padding="10" Margin="10">
                             <Grid ColumnSpacing="10" RowSpacing="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
