@@ -9,77 +9,77 @@ Als Primary Keys werden UUIDs verwendet, was dem PostgreSQL-Standard entspricht.
 title: CrocoManager
 ---
 erDiagram
-    ANIMALS ||--o{ FEEDING_ANIMALS : "wird gefüttert in"
-    ANIMALS ||--o{ OBSERVATIONS : "hat"
-    FEEDING_PLANS ||--o{ FEEDINGS : "wird verwendet in"
-    FEEDINGS ||--o{ FEEDING_ANIMALS : "enthält"
-    FEEDINGS ||--o{ OBSERVATIONS : "wird dokumentiert in"
-    ENVIRONMENTAL_DATA ||--o{ OBSERVATIONS : "gemessen bei"
+	direction TB
+	ANIMALS {
+		uuid id PK ""  
+		string name  ""  
+		string species  ""  
+		string gender  ""  
+		int age_years  ""  
+		string enclosure  ""  
+		text description  ""  
+		timestamp created_at  ""  
+		timestamp updated_at  ""  
+	}
 
-    ANIMALS {
-        uuid id PK
-        string name
-        string species
-        string gender
-        int age_years
-        string enclosure
-        text description
-        timestamp created_at
-        timestamp updated_at
-    }
+	FEEDING_ANIMALS {
+		uuid id PK ""  
+		uuid feeding_id FK ""  
+		uuid animal_id FK ""  
+		boolean was_fed  ""  
+		timestamp created_at  ""  
+	}
 
-    FEEDING_PLANS {
-        uuid id PK
-        string plan_name
-        string food_type
-        decimal amount_kg
-        int feedings_per_week
-        string weekdays
-        text description
-        boolean is_active
-        timestamp created_at
-        timestamp updated_at
-    }
+	FEEDING_PLAN {
+		uuid id PK ""  
+		string name  ""  
+		string food_type  ""  
+		decimal amount_kg  ""  
+		int frequency_per_week  ""  
+		string weekdays  ""  
+		text description  ""  
+		boolean is_active  ""  
+		timestamp created_at  ""  
+		timestamp updated_at  ""  
+	}
 
-    FEEDINGS {
-        uuid id PK
-        uuid feeding_plan_id FK
-        date feeding_date
-        string performed_by_user_id
-        timestamp created_at
-    }
+	FEEDINGS {
+		uuid id PK ""  
+		uuid feeding_plan_id FK ""  
+		date feeding_date  ""  
+		string performed_by_email  ""  
+		timestamp created_at  ""
+	}
 
-    FEEDING_ANIMALS {
-        uuid id PK
-        uuid feeding_id FK
-        uuid animal_id FK
-        boolean was_fed
-        timestamp created_at
-    }
+	ENVIRONMENTAL_DATA {
+		uuid id PK ""  
+		date measurement_date  ""  
+		time measurement_time  ""  
+		decimal air_temperature_celsius  ""  
+		decimal humidity_percent  ""  
+		decimal water_temperature_celsius  ""  
+		decimal ph_value  ""  
+		decimal salinity_ppt  ""  
+		timestamp created_at  ""
+	}
 
-    OBSERVATIONS {
-        uuid id PK
-        uuid animal_id FK
-        uuid feeding_id FK
-        uuid environmental_data_id FK
-        string feeding_behavior
-        text notes
-        string researcher_user_id
-        timestamp created_at
-        timestamp updated_at
-    }
+	OBSERVATIONS {
+		uuid id PK ""  
+		uuid animal_id FK ""  
+		uuid feeding_id FK ""  
+		uuid environmental_data_id FK ""  
+		string feeding_behavior  ""  
+		text notes  ""  
+		string researcher_email  ""  
+		timestamp created_at  "" 
+	}
 
-    ENVIRONMENTAL_DATA {
-        uuid id PK
-        date measurement_date
-        time measurement_time
-        decimal air_temperature_celsius
-        decimal humidity_percent
-        decimal water_temperature_celsius
-        decimal ph_value
-        decimal salinity_ppt
-        timestamp created_at
-    }
+	ANIMALS||--o{FEEDING_ANIMALS:"wird gefüttert in"
+	ANIMALS||--o{OBSERVATIONS:"hat"
+	FEEDING_PLAN||--o{FEEDINGS:"wird verwendet in"
+	FEEDINGS||--o{FEEDING_ANIMALS:"enthält"
+	FEEDINGS||--o{OBSERVATIONS:"wird dokumentiert in"
+	ENVIRONMENTAL_DATA||--o{OBSERVATIONS:"gemessen bei"
 
 ```
 
