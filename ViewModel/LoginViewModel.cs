@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Interfaces;
 using CrocoManager.Services;
+using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +74,8 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private async Task GoToRegister()
         {
-            await Shell.Current.GoToAsync("RegisterPage");
+            var registerPage = MauiProgram.ServiceProvider.GetRequiredService<RegisterPage>();
+            await Application.Current.MainPage.Navigation.PushAsync(registerPage, false);
         }
     }
 }

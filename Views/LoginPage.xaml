@@ -23,7 +23,7 @@
                         <Setter TargetName="AppTitle" Property="Label.FontSize" Value="28"/>
                         <Setter TargetName="WelcomeText" Property="Label.FontSize" Value="16"/>
                         <Setter TargetName="LoginCard" Property="Border.Padding" Value="24"/>
-                        <Setter TargetName="FormFlex" Property="FlexLayout.Margin" Value="0,16,0,0"/>
+                        <Setter TargetName="FormFlex" Property="FlexLayout.Margin" Value="0,0,0,0"/>
                         <Setter TargetName="EmailEntry" Property="Entry.FontSize" Value="15"/>
                         <Setter TargetName="PasswordEntry" Property="Entry.FontSize" Value="15"/>
                         <Setter TargetName="EmailBorder" Property="Border.Padding" Value="14,0"/>
@@ -41,10 +41,10 @@
                         <Setter TargetName="RegisterLabel" Property="Label.FontSize" Value="14"/>
                         <Setter TargetName="RegisterButton" Property="Button.HeightRequest" Value="48"/>
                         <Setter TargetName="RegisterButton" Property="Button.FontSize" Value="16"/>
-                        <Setter TargetName="InfoButton" Property="ImageButton.WidthRequest" Value="40"/>
-                        <Setter TargetName="InfoButton" Property="ImageButton.HeightRequest" Value="40"/>
-                        <Setter TargetName="InfoButton" Property="ImageButton.Padding" Value="8"/>
-                        <Setter TargetName="InfoButton" Property="ImageButton.Margin" Value="0,16,16,0"/>
+                        <Setter TargetName="InfoButton" Property="Button.WidthRequest" Value="40"/>
+                        <Setter TargetName="InfoButton" Property="Button.HeightRequest" Value="40"/>
+                        <Setter TargetName="InfoButton" Property="Button.Padding" Value="8"/>
+                        <Setter TargetName="InfoButton" Property="Button.Margin" Value="0,16,16,0"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -61,7 +61,7 @@
                         <Setter TargetName="AppTitle" Property="Label.FontSize" Value="36"/>
                         <Setter TargetName="WelcomeText" Property="Label.FontSize" Value="18"/>
                         <Setter TargetName="LoginCard" Property="Border.Padding" Value="40"/>
-                        <Setter TargetName="FormFlex" Property="FlexLayout.Margin" Value="0,20,0,0"/>
+                        <Setter TargetName="FormFlex" Property="FlexLayout.Margin" Value="0,0,0,0"/>
                         <Setter TargetName="EmailEntry" Property="Entry.FontSize" Value="16"/>
                         <Setter TargetName="PasswordEntry" Property="Entry.FontSize" Value="16"/>
                         <Setter TargetName="EmailBorder" Property="Border.Padding" Value="16,0"/>
@@ -79,10 +79,10 @@
                         <Setter TargetName="RegisterLabel" Property="Label.FontSize" Value="15"/>
                         <Setter TargetName="RegisterButton" Property="Button.HeightRequest" Value="56"/>
                         <Setter TargetName="RegisterButton" Property="Button.FontSize" Value="17"/>
-                        <Setter TargetName="InfoButton" Property="ImageButton.WidthRequest" Value="48"/>
-                        <Setter TargetName="InfoButton" Property="ImageButton.HeightRequest" Value="48"/>
-                        <Setter TargetName="InfoButton" Property="ImageButton.Padding" Value="10"/>
-                        <Setter TargetName="InfoButton" Property="ImageButton.Margin" Value="0,24,24,0"/>
+                        <Setter TargetName="InfoButton" Property="Button.WidthRequest" Value="48"/>
+                        <Setter TargetName="InfoButton" Property="Button.HeightRequest" Value="48"/>
+                        <Setter TargetName="InfoButton" Property="Button.Padding" Value="10"/>
+                        <Setter TargetName="InfoButton" Property="Button.Margin" Value="0,24,24,0"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -91,19 +91,20 @@
         <!-- Info Button in Top Right -->
         <Button 
             x:Name="InfoButton"
-            ImageSource="info_icon.png"
+            Text="ℹ️"
             BackgroundColor="{StaticResource Primary}"
+            TextColor="{StaticResource TextOnPrimary}"
             BorderColor="Transparent"
-            WidthRequest="20"
-            HeightRequest="20"
+            WidthRequest="40"
+            HeightRequest="40"
             CornerRadius="8"
+            FontSize="20"
             Margin="0,16,16,0"
             HorizontalOptions="End"
             VerticalOptions="Start"
-            Padding="4"
+            Padding="8"
             ZIndex="1000"
-            Command="{Binding TestConnectionCommand}">
-        </Button>
+            Command="{Binding TestConnectionCommand}"/>
 
         <ScrollView>
             <FlexLayout 
@@ -128,7 +129,7 @@
                         HorizontalOptions="Center"/>
                     <Label 
                         x:Name="AppTitle"
-                        Text="CrocoManager"
+                        Text="Croco Manager"
                         FontAttributes="Bold"
                         FontSize="28"
                         TextColor="{StaticResource TextPrimary}"
@@ -144,39 +145,31 @@
                 <!-- Login Form Card -->
                 <Border 
                     x:Name="LoginCard"
-                    BackgroundColor="{StaticResource CardBackground}"
-                    StrokeThickness="0"
+                    Style="{StaticResource SecondaryCard}"
                     Padding="24"
-                    StrokeShape="RoundRectangle 12"
                     FlexLayout.AlignSelf="Stretch">
-                    <Border.Shadow>
-                        <Shadow Brush="Black"
-                                Opacity="0.1"
-                                Radius="12"
-                                Offset="0,4"/>
-                    </Border.Shadow>
 
                     <FlexLayout 
                         x:Name="FormFlex"
                         Direction="Column"
-                        Margin="0,16,0,0">
+                        Margin="0,0,0,0">
 
-                        <!-- Username Field -->
+                        <!-- Email Field -->
                         <Border
                             x:Name="EmailBorder"
-                            Stroke="{StaticResource BorderLight}"
-                            StrokeThickness="1"
-                            BackgroundColor="{StaticResource CardBackground}"
+                            Style="{StaticResource EntryBorder}"
                             Padding="14,0"
                             HeightRequest="48"
                             Margin="0,0,0,16"
-                            StrokeShape="RoundRectangle 8"
                             FlexLayout.AlignSelf="Stretch">
                             <Entry 
                                 x:Name="EmailEntry"
                                 Placeholder="E-Mail" 
                                 Text="{Binding Email}"
                                 Keyboard="Email"
+                                TextColor="{StaticResource TextPrimary}"
+                                PlaceholderColor="{StaticResource PlaceholderText}"
+                                BackgroundColor="Transparent"
                                 FontSize="15"
                                 VerticalOptions="Center"/>
                         </Border>
@@ -184,19 +177,19 @@
                         <!-- Password Field -->
                         <Border
                             x:Name="PasswordBorder"
-                            Stroke="{StaticResource BorderLight}"
-                            StrokeThickness="1"
-                            BackgroundColor="{StaticResource CardBackground}"
+                            Style="{StaticResource EntryBorder}"
                             Padding="14,0"
                             HeightRequest="48"
                             Margin="0,0,0,16"
-                            StrokeShape="RoundRectangle 8"
                             FlexLayout.AlignSelf="Stretch">
                             <Entry 
                                 x:Name="PasswordEntry"
                                 Placeholder="Passwort" 
                                 IsPassword="True" 
                                 Text="{Binding Password}"
+                                TextColor="{StaticResource TextPrimary}"
+                                PlaceholderColor="{StaticResource PlaceholderText}"
+                                BackgroundColor="Transparent"
                                 FontSize="15"
                                 VerticalOptions="Center"/>
                         </Border>
@@ -210,7 +203,6 @@
                             Margin="0,8,0,16"
                             HeightRequest="48"
                             FontSize="16"
-                            CornerRadius="8"
                             FlexLayout.AlignSelf="Stretch"/>
 
                         <!-- Forgot Password Button -->
@@ -219,7 +211,9 @@
                             Text="Passwort vergessen?"
                             BackgroundColor="Transparent"
                             TextColor="{StaticResource Primary}"
+                            BorderWidth="0"
                             FontSize="13"
+                            FontAttributes="None"
                             Padding="0"
                             Margin="0,0,0,20"
                             HorizontalOptions="Center"
@@ -243,8 +237,7 @@
                                 Command="{Binding GoToRegisterCommand}"
                                 Style="{StaticResource SecondaryButton}"
                                 HeightRequest="48"
-                                FontSize="16"
-                                CornerRadius="8"/>
+                                FontSize="16"/>
                         </VerticalStackLayout>
 
                     </FlexLayout>

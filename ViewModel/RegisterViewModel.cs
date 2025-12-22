@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Interfaces;
 using CrocoManager.Models;
 using CrocoManager.Services;
+using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,12 @@ namespace CrocoManager.ViewModel
             {
                 await Application.Current.Windows[0].Page.DisplayAlert("Error", "Registration failed", "OK");
             }
+        }
+
+        [RelayCommand]
+        private async Task GoToLogin()
+        {
+            await Application.Current.MainPage.Navigation.PopAsync(false);
         }
     }
 }
