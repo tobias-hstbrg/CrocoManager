@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:CrocoManager.ViewModel"
              x:Class="CrocoManager.Views.LoginPage"
-             Title="LoginPage">
+             Title="LoginPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource PageBackground}">
 
     <VerticalStackLayout Padding="30" Spacing="15">
         <Entry Placeholder="Username" Text="{Binding Email}" />
