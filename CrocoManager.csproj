@@ -99,6 +99,10 @@
 	  </MauiXaml>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Include=".github\workflows\maui-ci.yml" />
+	</ItemGroup>
+
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<RunAOTCompilation>false</RunAOTCompilation>
 		<UseInterpreter>true</UseInterpreter>
