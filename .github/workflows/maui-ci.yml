@@ -22,6 +22,16 @@ jobs:
     - name: Install .NET MAUI workload
       run: dotnet workload install maui
     
+    - name: Create appsettings.json
+      run: |
+        $settings = @{
+          Supabase = @{
+            Url = "${{ secrets.SUPABASE_URL }}"
+            AnonKey = "${{ secrets.SUPABASE_ANON_KEY }}"
+          }
+        } | ConvertTo-Json -Depth 3
+        $settings | Out-File -FilePath "CrocoManager/appsettings.json" -Encoding UTF8
+    
     - name: Restore dependencies
       run: dotnet restore
     
@@ -47,6 +57,16 @@ jobs:
     
     - name: Install .NET MAUI workload
       run: dotnet workload install maui
+    
+    - name: Create appsettings.json
+      run: |
+        $settings = @{
+          Supabase = @{
+            Url = "${{ secrets.SUPABASE_URL }}"
+            AnonKey = "${{ secrets.SUPABASE_ANON_KEY }}"
+          }
+        } | ConvertTo-Json -Depth 3
+        $settings | Out-File -FilePath "CrocoManager/appsettings.json" -Encoding UTF8
     
     - name: Restore dependencies
       run: dotnet restore
