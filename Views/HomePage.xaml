@@ -90,28 +90,28 @@
                       RowSpacing="15">
 
                     <!-- Card 1: Tiere gesamt -->
-                    <Frame x:Name="Card1" Style="{StaticResource CardFrame}">
+                    <Border x:Name="Card1" Style="{StaticResource CardFrame}">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="24" Style="{StaticResource LargeNumber}"/>
                             <Label Text="Tiere gesamt" Style="{StaticResource CardLabel}"/>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
 
                     <!-- Card 2: Futterpläne gesamt -->
-                    <Frame x:Name="Card2" Style="{StaticResource CardFrame}">
+                    <Border x:Name="Card2" Style="{StaticResource CardFrame}">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="3" Style="{StaticResource LargeNumber}"/>
                             <Label Text="Futterpläne gesamt" Style="{StaticResource CardLabel}"/>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
 
                     <!-- Card 3: Fütterungen diese Woche -->
-                    <Frame x:Name="Card3" Style="{StaticResource CardFrame}">
+                    <Border x:Name="Card3" Style="{StaticResource CardFrame}">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="12" Style="{StaticResource LargeNumber}"/>
                             <Label Text="Fütterungen diese Woche" Style="{StaticResource CardLabel}"/>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
                 </Grid>
 
                 <!-- Info Cards -->
@@ -120,7 +120,7 @@
                       RowSpacing="15">
 
                     <!-- Aktiver Futterplan -->
-                    <Frame x:Name="InfoCard1" Style="{StaticResource InfoCardFrame}">
+                    <Border x:Name="InfoCard1" Style="{StaticResource InfoCardFrame}">
                         <VerticalStackLayout Spacing="8">
                             <Label Text="Aktiver Futterplan" Style="{StaticResource InfoTitle}"/>
 
@@ -144,10 +144,10 @@
                                 <Label Text="01.06.2025" Style="{StaticResource InfoValue}"/>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
 
                     <!-- Letzte Fütterung -->
-                    <Frame x:Name="InfoCard2" Style="{StaticResource InfoCardFrame}">
+                    <Border x:Name="InfoCard2" Style="{StaticResource InfoCardFrame}">
                         <VerticalStackLayout Spacing="8">
                             <Label Text="Letzte Fütterung" Style="{StaticResource InfoTitle}"/>
 
@@ -167,7 +167,7 @@
                                        Style="{StaticResource InfoValueSuccess}"/>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
                 </Grid>
 
             </VerticalStackLayout>

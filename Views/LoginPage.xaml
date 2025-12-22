@@ -7,14 +7,171 @@
              Shell.NavBarIsVisible="False"
              BackgroundColor="{StaticResource PageBackground}">
 
-    <VerticalStackLayout Padding="30" Spacing="15">
-        <Entry Placeholder="Username" Text="{Binding Email}" />
-        <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" />
-        <Button Text="Login" Command="{Binding LoginUserCommand}" />
-        <Button Text="Register" Command="{Binding GoToRegisterCommand}" />
-        <Button Text="Test Supabase Connection"
-        Command="{Binding TestConnectionCommand}" />
-        <Button Text="Test Supabase By getting Database Field"
-Command="{Binding GetTextMessageCommand}" />
-    </VerticalStackLayout>
+    <Grid x:Name="MainGrid">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveStates">
+                <!-- Mobile Layout (width < 768) -->
+                <VisualState x:Name="Mobile">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter TargetName="ContentStack" Property="VerticalStackLayout.Padding" Value="20"/>
+                        <Setter TargetName="ContentStack" Property="VerticalStackLayout.MaximumWidthRequest" Value="500"/>
+                        <Setter TargetName="LogoEmoji" Property="Label.FontSize" Value="64"/>
+                        <Setter TargetName="AppTitle" Property="Label.FontSize" Value="32"/>
+                        <Setter TargetName="WelcomeText" Property="Label.FontSize" Value="18"/>
+                        <Setter TargetName="LoginCard" Property="Border.Padding" Value="20"/>
+                        <Setter TargetName="DebugSection" Property="VerticalStackLayout.IsVisible" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- Desktop Layout (width >= 768) -->
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="768" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter TargetName="ContentStack" Property="VerticalStackLayout.Padding" Value="40"/>
+                        <Setter TargetName="ContentStack" Property="VerticalStackLayout.MaximumWidthRequest" Value="450"/>
+                        <Setter TargetName="LogoEmoji" Property="Label.FontSize" Value="80"/>
+                        <Setter TargetName="AppTitle" Property="Label.FontSize" Value="40"/>
+                        <Setter TargetName="WelcomeText" Property="Label.FontSize" Value="20"/>
+                        <Setter TargetName="LoginCard" Property="Border.Padding" Value="30"/>
+                        <Setter TargetName="DebugSection" Property="VerticalStackLayout.IsVisible" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <ScrollView>
+            <VerticalStackLayout 
+                x:Name="ContentStack"
+                Padding="20" 
+                Spacing="20"
+                VerticalOptions="Center"
+                MaximumWidthRequest="400"
+                HorizontalOptions="Center">
+
+                <!-- Logo/Title Section -->
+                <VerticalStackLayout Spacing="10" Margin="0,0,0,30">
+                    <Label 
+                        x:Name="LogoEmoji"
+                        Text="🐊"
+                        FontSize="64"
+                        HorizontalOptions="Center"/>
+                    <Label 
+                        x:Name="AppTitle"
+                        Text="CrocoManager"
+                        Style="{StaticResource Headline}"
+                        TextColor="{StaticResource Primary}"/>
+                    <Label 
+                        x:Name="WelcomeText"
+                        Text="Willkommen zurück"
+                        Style="{StaticResource SubHeadline}"
+                        FontSize="18"
+                        TextColor="{StaticResource TextTertiary}"/>
+                </VerticalStackLayout>
+
+                <!-- Login Form -->
+                <Border 
+                    x:Name="LoginCard"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    StrokeThickness="0"
+                    Padding="20"
+                    StrokeShape="RoundRectangle 12">
+                    <Border.Shadow>
+                        <Shadow Brush="Black"
+                                Opacity="0.1"
+                                Radius="10"
+                                Offset="0,4"/>
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="15">
+
+                        <!-- Username Field -->
+                        <VerticalStackLayout Spacing="5">
+                            <Label 
+                                Text="Benutzername"
+                                FontSize="14"
+                                TextColor="{StaticResource TextTertiary}"/>
+                            <Border
+                                Stroke="{StaticResource BorderLight}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource CardBackground}"
+                                Padding="10,0"
+                                StrokeShape="RoundRectangle 8">
+                                <Entry 
+                                    Placeholder="name@beispiel.de" 
+                                    Text="{Binding Email}"
+                                    Keyboard="Email"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Password Field -->
+                        <VerticalStackLayout Spacing="5">
+                            <Label 
+                                Text="Passwort"
+                                FontSize="14"
+                                TextColor="{StaticResource TextTertiary}"/>
+                            <Border
+                                Stroke="{StaticResource BorderLight}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource CardBackground}"
+                                Padding="10,0"
+                                StrokeShape="RoundRectangle 8">
+                                <Entry 
+                                    Placeholder="••••••••" 
+                                    IsPassword="True" 
+                                    Text="{Binding Password}"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Login Button -->
+                        <Button 
+                            Text="Anmelden" 
+                            Command="{Binding LoginUserCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            Margin="0,10,0,0"/>
+
+                        <!-- Register Button -->
+                        <Button 
+                            Text="Konto erstellen" 
+                            Command="{Binding GoToRegisterCommand}"
+                            Style="{StaticResource SecondaryButton}"/>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Debug/Test Section -->
+                <VerticalStackLayout 
+                    x:Name="DebugSection"
+                    Spacing="10" 
+                    Margin="0,20,0,0">
+                    <Label 
+                        Text="Development Tools"
+                        FontSize="12"
+                        TextColor="{StaticResource TextLight}"
+                        HorizontalOptions="Center"/>
+
+                    <Button 
+                        Text="Test Supabase Connection"
+                        Command="{Binding TestConnectionCommand}"
+                        BackgroundColor="{StaticResource Info}"
+                        TextColor="White"
+                        FontSize="12"
+                        Padding="10,8"/>
+
+                    <Button 
+                        Text="Test Database Field"
+                        Command="{Binding GetTextMessageCommand}"
+                        BackgroundColor="{StaticResource Info}"
+                        TextColor="White"
+                        FontSize="12"
+                        Padding="10,8"/>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>
