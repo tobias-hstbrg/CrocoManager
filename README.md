@@ -51,7 +51,7 @@ https://waterservices.usgs.gov/nwis/iv/?format=json&sites=251457080395802&parame
 
 #### Parameter:
 | Parameter              | Wert             | Beschreibung                                |
-| :--------------------- | :----------------| ------------------------------------------: |
+| :--------------------- | :----------------| :------------------------------------------ |
 | Format                 |json              |    Ausgabe Format                           |
 | Sites                  |251457080395802   |    ID der Messstation                       |
 | parameterCd            |00010,00095       |    Wassertemperatur, Salzgehalt (Salinität) |
@@ -61,7 +61,7 @@ https://waterservices.usgs.gov/nwis/iv/?format=json&sites=251457080395802&parame
 https://api.weather.gov/points/25.25255556,-80.6662611
 ```
 | Parameter              | Wert             | Beschreibung                                |
-| :--------------------- | :----------------| ------------------------------------------: |
+| :--------------------- | :----------------| :------------------------------------------ |
 | lat                    |25.25255556       |    Breitengrad                              |
 | lon                    |-80.6662611       |    Längengrad                               |
 
@@ -128,7 +128,7 @@ https://waterservices.usgs.gov/nwis/iv/?format=json&sites=251457080395802&parame
 
 #### Parameter:
 | Parameter              | Value            | Description                                 |
-| :--------------------- | :----------------| ------------------------------------------: |
+| :--------------------- | :----------------| :------------------------------------------ |
 | Format                 |json              |    result format                            |
 | Sites                  |251457080395802   |    station ID                               |
 | parameterCd            |00010,00095       |    watertemperature, salinity               |
@@ -138,7 +138,7 @@ https://waterservices.usgs.gov/nwis/iv/?format=json&sites=251457080395802&parame
 https://api.weather.gov/points/25.25255556,-80.6662611
 ```
 | Parameter              | Value            | Description                                 |
-| :--------------------- | :----------------| ------------------------------------------: |
+| :--------------------- | :----------------| :------------------------------------------ |
 | lat                    |25.25255556       |    latitude                                 |
 | lon                    |-80.6662611       |    longitude                                |
 
