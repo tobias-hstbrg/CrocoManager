@@ -72,10 +72,10 @@ jobs:
       run: dotnet restore
     
     - name: Build Windows
-      run: dotnet build -f net9.0-windows10.0.19041.0 -c Release
+      run: dotnet publish -f net9.0-windows10.0.19041.0 -c Release -p:RuntimeIdentifierOverride=win-x64 -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true
     
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
         name: windows-build
-        path: '**/*.msix'
+        path: '**/bin/Release/**/*.exe'
