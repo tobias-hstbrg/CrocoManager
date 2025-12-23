@@ -13,6 +13,9 @@ namespace CrocoManager.Services
             var url = ConfigLoader.Configuration["Supabase:Url"];
             var key = ConfigLoader.Configuration["Supabase:AnonKey"];
 
+            if(string.IsNullOrEmpty(url) || string.IsNullOrEmpty(key))
+                throw new InvalidOperationException("Supabase URL or Anon Key is not configured properly.");
+
             _client = new Client(url, key);
         }
 
