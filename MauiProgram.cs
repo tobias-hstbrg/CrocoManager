@@ -8,7 +8,14 @@ namespace CrocoManager
 {
     public static class MauiProgram
     {
-        public static IServiceProvider ServiceProvider { get; private set; }
+        private static IServiceProvider? _serviceProvider;
+
+        public static IServiceProvider ServiceProvider
+        {
+            get => _serviceProvider ?? throw new InvalidOperationException("ServiceProvider has not been initialized.");
+            private set => _serviceProvider = value;
+        }
+
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -43,7 +50,7 @@ namespace CrocoManager
             builder.Services.AddSingleton<IWhitelistService, WhitelistService>();
 
             var app = builder.Build();
-            ServiceProvider = app.Services;
+            _serviceProvider = app.Services;
 
             return app;
         }
