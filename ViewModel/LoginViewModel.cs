@@ -77,16 +77,6 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
-        async Task GetTextMessageAsync()
-        {
-            var msg = await _authService.GetTextMessageAsync();
-            await Shell.Current.DisplayAlert(
-                "Supabase Response",
-                msg ?? "No message found",
-                "OK");
-        }
-
-        [RelayCommand]
         private async Task GoToRegister()
         {
             await Shell.Current.GoToAsync(nameof(RegisterPage));

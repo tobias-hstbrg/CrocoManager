@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using static Supabase.Functions.Client;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CrocoManager.Services
 {
@@ -102,6 +103,24 @@ namespace CrocoManager.Services
 
         private SupabaseSession BuildSession(Supabase.Gotrue.Session authResponse)
         {
+            if (authResponse?.User == null)
+                throw new InvalidOperationException("Invalid auth response: User data is missing");
+
+            if (string.IsNullOrEmpty(authResponse.AccessToken))
+                throw new InvalidOperationException("Invalid auth response: Access token is missing");
+
+            if (string.IsNullOrEmpty(authResponse.RefreshToken))
+                throw new InvalidOperationException("Invalid auth response: Refresh token is missing");
+
+            if (string.IsNullOrEmpty(authResponse.TokenType))
+                throw new InvalidOperationException("Invalid auth response: Token type is missing");
+
+            if(string.IsNullOrEmpty(authResponse.User.Id))
+                throw new InvalidOperationException("Invalid auth response: User ID is missing");
+
+            if(string.IsNullOrEmpty(authResponse.User.Email))
+                throw new InvalidOperationException("Invalid auth response: User Email is missing");
+
             var userMetadata = authResponse.User.UserMetadata;
             var role = ParseUserRole(userMetadata?["role"]?.ToString());
 
@@ -114,7 +133,7 @@ namespace CrocoManager.Services
                 User = new Models.User
                 {
                     Id = authResponse.User.Id,
-                    Email = authResponse.User.Email ?? string.Empty,
+                    Email = authResponse.User.Email,
                     CreatedAt = authResponse.User.CreatedAt,
                     UserMetadata = new Models.UserMetadata
                     {
@@ -143,15 +162,29 @@ namespace CrocoManager.Services
                 
                 if (authResponse != null && authResponse.User != null)
                 {
+                    if(string.IsNullOrEmpty(authResponse.AccessToken) ||
+                        string.IsNullOrEmpty(authResponse.RefreshToken) ||
+                        string.IsNullOrEmpty(authResponse.TokenType))
+                    {
+                        throw new InvalidOperationException("Invalid auth response: Missing tokens");
+                    }
+
                     session.AccessToken = authResponse.AccessToken;
                     session.RefreshToken = authResponse.RefreshToken;
                     session.TokenType = authResponse.TokenType;
                     session.ExpiresIn = DateTime.UtcNow.AddSeconds(authResponse.ExpiresIn);
 
+
+                    if (authResponse.User == null || string.IsNullOrEmpty( authResponse.User.Id) || string.IsNullOrEmpty( authResponse.User.Email ))
+                    {
+                        throw new InvalidOperationException("Invalid auth response: User data not complete");
+                    }
+
                     session.User = new Models.User
                     {
-                        Id = authResponse.User.Id,
-                        Email = authResponse.User.Email ?? string.Empty,
+                     
+                    Id = authResponse.User.Id,
+                        Email = authResponse.User.Email,
                         CreatedAt = authResponse.User.CreatedAt,
                         UserMetadata = new Models.UserMetadata
                         {
@@ -184,23 +217,6 @@ namespace CrocoManager.Services
             {
                 return false;
             }
-        }
-
-        public async Task<string?> GetTextMessageAsync()
-        {
-            //try
-            //{
-            //    var result = await _client.From<Test>().Get();
-            //    if (result.Models.Count > 0)
-            //    {
-            //        return result.Models[0].text;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    return $"Error: {ex.Message}";
-            //}
-            return null;
         }
     }
 }

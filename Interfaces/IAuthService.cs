@@ -14,7 +14,6 @@ namespace CrocoManager.Interfaces
     public interface IAuthService
     {
         Task<bool> TestConnectionAsync();
-        Task<string?> GetTextMessageAsync();
         Task<SupabaseSession?> RegisterAsync(string email, string password);
         Task<SupabaseSession?> LoginAsync(string email, string password);
     }
