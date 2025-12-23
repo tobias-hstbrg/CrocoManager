@@ -18,8 +18,8 @@ namespace CrocoManager.ViewModel
         public ObservableCollection<EmailWhitelistVM> WhitelistedEmails { get; } = new();
 
         [ObservableProperty] private Guid id;
-        [ObservableProperty] private string email;
-        [ObservableProperty] private string selectedRole;
+        [ObservableProperty] private string email = string.Empty;
+        [ObservableProperty] private string selectedRole = string.Empty;
 
         public List<string> Roles { get; }
 
