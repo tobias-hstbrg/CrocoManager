@@ -47,7 +47,7 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private async Task GoToLogin()
         {
-            await Application.Current.MainPage.Navigation.PopAsync(false);
+            await Shell.Current.GoToAsync($"///{nameof(LoginPage)}");
         }
     }
 }

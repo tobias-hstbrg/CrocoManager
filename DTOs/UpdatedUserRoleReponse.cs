@@ -12,17 +12,17 @@ namespace CrocoManager.DTOs
         [JsonPropertyName("success")]
         public bool Success { get; set; }
         [JsonPropertyName("user")]
-        public UserDto User { get; set; }
+        public required UserDto User { get; set; }
 
         public class UserDto
         {
             [JsonPropertyName("id")]
             public Guid Id { get; set; }
             [JsonPropertyName("email")]
-            public string Email { get; set; }
+            public required string Email { get; set; }
 
             [JsonPropertyName("role")]
-            public string Role { get; set; }
+            public required string Role { get; set; }
         }
     }
 }

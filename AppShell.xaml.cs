@@ -9,12 +9,13 @@ namespace CrocoManager
             InitializeComponent();
 
             // LoginPage as ShellContent WITHOUT a custom route
-            Items.Add(new ShellContent
-            {
-                ContentTemplate = new DataTemplate(() => MauiProgram.ServiceProvider.GetRequiredService<LoginPage>())
-            });
+            //Items.Add(new ShellContent
+            //{
+            //    ContentTemplate = new DataTemplate(() => MauiProgram.ServiceProvider.GetRequiredService<LoginPage>())
+            //});
 
-            // Register other routes
+
+            Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute("RegisterPage", typeof(RegisterPage));
             Routing.RegisterRoute("AdminPage", typeof(AdminPage));
             Routing.RegisterRoute("HomePage", typeof(HomePage));
