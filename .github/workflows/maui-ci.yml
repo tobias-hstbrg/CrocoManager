@@ -2,9 +2,9 @@
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -95,5 +95,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: windows-package
-        path: '**/bin/Release/**/win10-x64/publish/**'
+        path: ./artifacts/windows/**
         retention-days: 7
