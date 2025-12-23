@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -98,56 +98,4 @@ jobs:
       with:
         name: windows-package
         path: ./artifacts/windows/**
-        retention-days: 7
-
-  # Optional: Build Windows as unpackaged (portable)
-  build-windows-portable:
-    runs-on: windows-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-        
-    - name: Install .NET MAUI workload
-      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
-    
-    - name: Create appsettings.json
-      shell: pwsh
-      run: |
-        $settings = @{
-          Supabase = @{
-            Url = "${{ secrets.SUPABASE_URL }}"
-            AnonKey = "${{ secrets.SUPABASE_ANON_KEY }}"
-          }
-        } | ConvertTo-Json -Depth 3
-        $settings | Out-File -FilePath "appsettings.json" -Encoding UTF8
-    
-    - name: Restore dependencies
-      run: dotnet restore
-    
-    - name: Publish Windows Portable
-      run: |
-        dotnet publish `
-          -f net9.0-windows10.0.19041.0 `
-          -c Release `
-          -r win-x64 `
-          --self-contained true `
-          -p:PublishSingleFile=false `
-          -p:IncludeNativeLibrariesForSelfExtract=true `
-          -o ./artifacts/windows-portable
-    
-    - name: Create distribution package
-      shell: pwsh
-      run: |
-        Compress-Archive -Path ./artifacts/windows-portable/* -DestinationPath ./CrocoManager-Windows-Portable.zip
-    
-    - name: Upload Windows Portable
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-portable
-        path: ./CrocoManager-Windows-Portable.zip
         retention-days: 7
