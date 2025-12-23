@@ -42,14 +42,13 @@ jobs:
           -f net9.0-android `
           -c Release `
           -p:AndroidPackageFormat=apk `
-          -p:AndroidKeyStore=false `
-          -o ./artifacts/android
+          -p:AndroidKeyStore=false
     
     - name: Upload Android APK
       uses: actions/upload-artifact@v4
       with:
         name: android-apk
-        path: ./artifacts/android/**/*-Signed.apk
+        path: '**/*-Signed.apk'
         retention-days: 7
 
   build-windows:
@@ -80,7 +79,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     
-    - name: Build Windows MSIX
+    - name: Build Windows
       run: |
         dotnet publish `
           -f net9.0-windows10.0.19041.0 `
@@ -90,12 +89,11 @@ jobs:
           -p:WindowsAppSDKSelfContained=true `
           -p:SelfContained=true `
           -p:PublishSingleFile=false `
-          -p:PublishReadyToRun=false `
-          -o ./artifacts/windows
+          -p:PublishReadyToRun=false
     
     - name: Upload Windows Build
       uses: actions/upload-artifact@v4
       with:
         name: windows-package
-        path: ./artifacts/windows/**
+        path: '**/bin/Release/**/win10-x64/publish/**'
         retention-days: 7
