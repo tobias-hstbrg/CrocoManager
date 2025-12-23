@@ -79,7 +79,7 @@ namespace CrocoManager.ViewModel
             var roleUpdated = await _whitelistService.UpdateRoleAsync(emailVM.Id, roleEnum);
 
             if(!roleUpdated)
-                await Application.Current.Windows[0].Page.DisplayAlert("Warning", "User not updated", "OK");
+                await Shell.Current.DisplayAlert("Warning", "User not updated", "OK");
 
             await LoadEmails();
         }

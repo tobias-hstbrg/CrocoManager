@@ -28,7 +28,7 @@ namespace CrocoManager.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                await Application.Current.Windows[0].Page.DisplayAlert("Error", "Enter credentials", "OK");
+                await Shell.Current.DisplayAlert("Error", "Enter credentials", "OK");
                 return;
             }
 
@@ -36,11 +36,11 @@ namespace CrocoManager.ViewModel
 
             if (session != null)
             {
-                await Application.Current.Windows[0].Page.DisplayAlert("Success", $"Registered {session.User.Email}", "OK");
+                await Shell.Current.DisplayAlert("Success", $"Registered {session.User.Email}", "OK");
             }
             else
             {
-                await Application.Current.Windows[0].Page.DisplayAlert("Error", "Registration failed", "OK");
+                await Shell.Current.DisplayAlert("Error", "Registration failed", "OK");
             }
         }
 

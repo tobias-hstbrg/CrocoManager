@@ -13,8 +13,10 @@ namespace CrocoManager.ViewModel
 {
     public partial class LoginViewModel : ObservableObject
     {
-        [ObservableProperty] string? email;
-        [ObservableProperty] string? password;
+        [ObservableProperty]
+        private string? email;
+        [ObservableProperty]
+        private string? password;
 
         private readonly IAuthService _authService;
         public LoginViewModel(IAuthService authService)
@@ -25,29 +27,42 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         async Task LoginUserAsync()
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(Password))
+            if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                await Application.Current.Windows[0].Page.DisplayAlert("Error", "Enter credentials", "OK");
+                await Shell.Current.DisplayAlert("Error", "Please enter both email and password", "OK");
                 return;
             }
 
-            var session = await _authService.LoginAsync(email, Password);
+            var session = await _authService.LoginAsync(Email, Password);
 
-            if(session != null && session.User.UserMetadata.Role == Models.UserRole.Admin)
+            if (session == null)
             {
-                // Navigate to admin page
-                await Shell.Current.GoToAsync("AdminPage");
+                await Shell.Current.DisplayAlert("Anmeldung fehlgeschlagen", "Email oder Passwort falsch. Bitte versuche es erneut.", "OK");
+                return;
             }
-            else if(session != null && session.User.UserMetadata.Role != Models.UserRole.NotAssigned)
+
+            // Session exists but user data is missing (shouldn't happen, but you never know)
+            if (session.User?.UserMetadata == null)
             {
-                // Navigate to user page
-                await Shell.Current.GoToAsync("HomePage");
+                await Shell.Current.DisplayAlert("Error", "Nutzerdaten konnten nicht abgerufen werden. Bitte versuchen sie es später erneut.", "OK");
+                return;
+            }
+
+            // User hasn't been assigned a role yet
+            if (session.User.UserMetadata.Role == Models.UserRole.NotAssigned)
+            {
+                await Shell.Current.DisplayAlert("Account in Bearbeitung", "Ihr Account ist noch keiner Rolle zugewiesen worden. Bitte kontaktieren Sie ihren Administrator.", "OK");
+                return;
+            }
+
+            // Valid login - navigate based on role
+            if (session.User.UserMetadata.Role == Models.UserRole.Admin)
+            {
+                await Shell.Current.GoToAsync(nameof(AdminPage));
             }
             else
             {
-                await Application.Current.Windows[0].Page.DisplayAlert("Error", "Invalid credentials", "OK");
-                // Navigate to user page
-                //await Shell.Current.GoToAsync("UserPage");
+                await Shell.Current.GoToAsync(nameof(HomePage));
             }
 
         }
@@ -58,14 +73,14 @@ namespace CrocoManager.ViewModel
             //bool ok = await SupabaseService.Instance.TestConnectionAsync();
             
             var ok = await _authService.TestConnectionAsync();
-            await Application.Current.Windows[0].Page.DisplayAlert("Connection Test", ok ? "Connected" : "Failed", "OK");
+            await Shell.Current.DisplayAlert("Connection Test", ok ? "Connected" : "Failed", "OK");
         }
 
         [RelayCommand]
         async Task GetTextMessageAsync()
         {
             var msg = await _authService.GetTextMessageAsync();
-            await Application.Current.Windows[0].Page.DisplayAlert(
+            await Shell.Current.DisplayAlert(
                 "Supabase Response",
                 msg ?? "No message found",
                 "OK");
@@ -74,8 +89,7 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private async Task GoToRegister()
         {
-            var registerPage = MauiProgram.ServiceProvider.GetRequiredService<RegisterPage>();
-            await Application.Current.MainPage.Navigation.PushAsync(registerPage, false);
+            await Shell.Current.GoToAsync(nameof(RegisterPage));
         }
     }
 }
