@@ -14,6 +14,7 @@ namespace CrocoManager.ViewModel
     public partial class AdminViewModel : ObservableObject
     {
         private readonly IWhitelistService _whitelistService;
+        private readonly IAuthService _authService;
 
         public ObservableCollection<EmailWhitelistVM> WhitelistedEmails { get; } = new();
 
@@ -26,9 +27,10 @@ namespace CrocoManager.ViewModel
         public IAsyncRelayCommand LoadEmailsCommand { get; }
         public IAsyncRelayCommand AddEmailCommand { get; }
 
-        public AdminViewModel(IWhitelistService whitelistService)
+        public AdminViewModel(IWhitelistService whitelistService, IAuthService authService)
         {
             _whitelistService = whitelistService ?? throw new ArgumentNullException(nameof(whitelistService));
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
 
             Roles = Enum.GetNames(typeof(UserRole)).ToList();
 
@@ -83,5 +85,27 @@ namespace CrocoManager.ViewModel
 
             await LoadEmails();
         }
+
+        [RelayCommand]
+        private async Task SignOut()
+        {
+            try
+            {
+                bool successful = await _authService.SignOutAsync();
+                if (successful)
+                {
+                    await Shell.Current.GoToAsync("//LoginPage");
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Sign out failed: {ex.Message}");
+            }
+        }
+
     }
 }

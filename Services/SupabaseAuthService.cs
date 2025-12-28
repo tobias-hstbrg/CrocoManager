@@ -206,6 +206,21 @@ namespace CrocoManager.Services
             return null;
         }
 
+        public async Task<bool> SignOutAsync()
+        {
+            try
+            {
+                await _supabase.Client.Auth.SignOut();
+                await SecureStorage.SetAsync("supabase_session", string.Empty);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Logout failed: {ex.Message}");
+                return false;
+            }
+        }
+
         public async Task<bool> TestConnectionAsync()
         {
             try
