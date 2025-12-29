@@ -18,8 +18,8 @@
                         <Setter TargetName="HeaderStack" Property="StackLayout.Orientation" Value="Horizontal"/>
                         <Setter TargetName="HeaderStack" Property="StackLayout.Spacing" Value="10"/>
                         <Setter TargetName="DashboardTitle" Property="Label.FontSize" Value="28"/>
-                        <Setter TargetName="AddButton" Property="Button.WidthRequest" Value="50"/>
-                        <Setter TargetName="AddButton" Property="Button.HeightRequest" Value="50"/>
+                        <Setter TargetName="LogoutButton" Property="Button.WidthRequest" Value="50"/>
+                        <Setter TargetName="LogoutButton" Property="Button.HeightRequest" Value="50"/>
                         <Setter TargetName="StatsGrid" Property="Grid.ColumnDefinitions" Value="*"/>
                         <Setter TargetName="StatsGrid" Property="Grid.RowDefinitions" Value="Auto,Auto,Auto"/>
                         <Setter TargetName="Card1" Property="Grid.Column" Value="0"/>
@@ -46,8 +46,8 @@
                         <Setter TargetName="HeaderStack" Property="StackLayout.Orientation" Value="Horizontal"/>
                         <Setter TargetName="HeaderStack" Property="StackLayout.Spacing" Value="20"/>
                         <Setter TargetName="DashboardTitle" Property="Label.FontSize" Value="32"/>
-                        <Setter TargetName="AddButton" Property="Button.WidthRequest" Value="60"/>
-                        <Setter TargetName="AddButton" Property="Button.HeightRequest" Value="60"/>
+                        <Setter TargetName="LogoutButton" Property="Button.WidthRequest" Value="60"/>
+                        <Setter TargetName="LogoutButton" Property="Button.HeightRequest" Value="60"/>
                         <Setter TargetName="StatsGrid" Property="Grid.ColumnDefinitions" Value="*,*,*"/>
                         <Setter TargetName="StatsGrid" Property="Grid.RowDefinitions" Value="Auto"/>
                         <Setter TargetName="Card1" Property="Grid.Column" Value="0"/>
@@ -79,9 +79,22 @@
                            Text="Dashboard"
                            Style="{StaticResource PageTitle}"/>
 
-                    <Button x:Name="AddButton"
-                            Text="+"
-                            Style="{StaticResource FloatingActionButton}"/>
+                    <Button 
+                        x:Name="LogoutButton"
+                        Text="🚪"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource TextOnPrimary}"
+                        BorderColor="Transparent"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        CornerRadius="8"
+                        FontSize="16"
+                        Margin="0,16,16,0"
+                        HorizontalOptions="End"
+                        VerticalOptions="Start"
+                        Padding="8"
+                        ZIndex="1000"
+                        Command="{Binding SignOutCommand}"/>            
                 </StackLayout>
 
                 <!-- Statistics Cards -->
