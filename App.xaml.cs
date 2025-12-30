@@ -12,7 +12,12 @@ namespace CrocoManager
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            Window window = new Window(new AppShell());
+#if WINDOWS
+            window.MinimumWidth = 400;
+            window.MinimumHeight = 1000;
+#endif
+            return window;
         }
     }
 }
