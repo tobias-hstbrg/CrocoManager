@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CrocoManager.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +9,33 @@ using System.Threading.Tasks;
 
 namespace CrocoManager.ViewModel
 {
-    public class HomeViewModel
+    public partial class HomeViewModel : ObservableObject
     {
-
-        public HomeViewModel()
+        private readonly IAuthService _authService;
+        public HomeViewModel(IAuthService authService)
         {
+            _authService = authService;
+        }
+
+        [RelayCommand]
+        private async Task SignOut()
+        {
+            try
+            {
+                bool successful = await _authService.SignOutAsync();
+                if (successful)
+                {
+                    await Shell.Current.GoToAsync("//LoginPage");
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Sign out failed: {ex.Message}");
+            }
         }
     }
 }

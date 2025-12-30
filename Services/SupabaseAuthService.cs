@@ -155,55 +155,49 @@ namespace CrocoManager.Services
 
         public async Task<SupabaseSession?> LoginAsync(string email, string password)
         {
-            SupabaseSession session = new SupabaseSession();
             try
             {
                 var authResponse = await _supabase.Client.Auth.SignInWithPassword(email, password);
-                
-                if (authResponse != null && authResponse.User != null)
+
+                if (authResponse?.User == null)
+                    return null;
+
+                var session = BuildSession(authResponse);
+
+                // session validation before setting it.
+                if(string.IsNullOrEmpty(authResponse.AccessToken) || string.IsNullOrEmpty(authResponse.RefreshToken))
                 {
-                    if(string.IsNullOrEmpty(authResponse.AccessToken) ||
-                        string.IsNullOrEmpty(authResponse.RefreshToken) ||
-                        string.IsNullOrEmpty(authResponse.TokenType))
-                    {
-                        throw new InvalidOperationException("Invalid auth response: Missing tokens");
-                    }
-
-                    session.AccessToken = authResponse.AccessToken;
-                    session.RefreshToken = authResponse.RefreshToken;
-                    session.TokenType = authResponse.TokenType;
-                    session.ExpiresIn = DateTime.UtcNow.AddSeconds(authResponse.ExpiresIn);
-
-
-                    if (authResponse.User == null || string.IsNullOrEmpty( authResponse.User.Id) || string.IsNullOrEmpty( authResponse.User.Email ))
-                    {
-                        throw new InvalidOperationException("Invalid auth response: User data not complete");
-                    }
-
-                    session.User = new Models.User
-                    {
-                     
-                    Id = authResponse.User.Id,
-                        Email = authResponse.User.Email,
-                        CreatedAt = authResponse.User.CreatedAt,
-                        UserMetadata = new Models.UserMetadata
-                        {
-                            Role = Enum.TryParse(authResponse.User.UserMetadata?["role"]?.ToString(), true, out UserRole role)
-                                                 ? role
-                                                 : UserRole.NotAssigned
-                        }
-                    };
-
-                    var sessionJson = JsonSerializer.Serialize(session);
-                    await SecureStorage.SetAsync("supabase_session", sessionJson);
+                    throw new InvalidOperationException("Login failed: AccessToken or RefreshToken is null or empty.");
                 }
+                // setting session on the supabase client instance
+                await _supabase.Client.Auth.SetSession(authResponse.AccessToken, authResponse.RefreshToken);
+
+                // Save to secure storage
+                var sessionJson = JsonSerializer.Serialize(session);
+                await SecureStorage.SetAsync("supabase_session", sessionJson);
+
                 return session;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Login failed: {ex.Message}");
+                return null;
             }
-            return null;
+        }
+
+        public async Task<bool> SignOutAsync()
+        {
+            try
+            {
+                await _supabase.Client.Auth.SignOut();
+                SecureStorage.Remove("supabase_session");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Logout failed: {ex.Message}");
+                return false;
+            }
         }
 
         public async Task<bool> TestConnectionAsync()

@@ -16,5 +16,6 @@ namespace CrocoManager.Interfaces
         Task<bool> TestConnectionAsync();
         Task<SupabaseSession?> RegisterAsync(string email, string password);
         Task<SupabaseSession?> LoginAsync(string email, string password);
+        Task<bool> SignOutAsync();
     }
 }

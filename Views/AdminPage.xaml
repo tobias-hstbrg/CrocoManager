@@ -1,110 +1,347 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Name="AdminPageRoot"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:CrocoManager.ViewModel"
              x:Class="CrocoManager.Views.AdminPage"
-             Title="Admin Panel">
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15" HorizontalOptions="Center" MaximumWidthRequest="800">
-            
-            <Label Text="Manage User Access" FontSize="20" FontAttributes="Bold" Margin="0,0,0,10"/>
+             Title="Admin Panel"
+             BackgroundColor="{StaticResource PageBackground}">
 
-            <!-- Add New User Section -->
-            <Border Padding="15">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="14,14,14,14"/>
-                </Border.StrokeShape>
-                    <VerticalStackLayout Spacing="10">
-                    <Label Text="Add New User" FontSize="16" FontAttributes="Bold"/>
-                    <Entry Text="{Binding Email}" Placeholder="Enter email" Keyboard="Email" />
-                    <Picker Title="Select Role"
-                            ItemsSource="{Binding Roles}"
-                            SelectedItem="{Binding SelectedRole}" />
-                    <Button Text="Add Email" Command="{Binding AddEmailCommand}" 
-                            HorizontalOptions="End" WidthRequest="120"/>
-                </VerticalStackLayout>
-            </Border>
+    <Grid x:Name="MainGrid">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveStates">
+                <!-- Mobile Layout (width < 768) -->
+                <VisualState x:Name="Mobile">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter TargetName="ContentScroll" Property="ScrollView.Padding" Value="16"/>
+                        <Setter TargetName="ContentGrid" Property="Grid.MaximumWidthRequest" Value="600"/>
+                        <Setter TargetName="PageTitle" Property="Label.FontSize" Value="24"/>
+                        <Setter TargetName="PageSubtitle" Property="Label.FontSize" Value="14"/>
+                        <Setter TargetName="AddUserCard" Property="Border.Padding" Value="16"/>
+                        <Setter TargetName="AddUserTitle" Property="Label.FontSize" Value="16"/>
+                        <Setter TargetName="EmailEntry" Property="Entry.FontSize" Value="15"/>
+                        <Setter TargetName="EmailBorder" Property="Border.HeightRequest" Value="48"/>
+                        <Setter TargetName="RolePicker" Property="Picker.FontSize" Value="15"/>
+                        <Setter TargetName="RolePickerBorder" Property="Border.HeightRequest" Value="48"/>
+                        <Setter TargetName="AddEmailButton" Property="Button.HeightRequest" Value="48"/>
+                        <Setter TargetName="AddEmailButton" Property="Button.FontSize" Value="15"/>
+                        <Setter TargetName="ExistingUsersTitle" Property="Label.FontSize" Value="16"/>
+                        <Setter TargetName="LogoutButton" Property="Button.WidthRequest" Value="40"/>
+                        <Setter TargetName="LogoutButton" Property="Button.HeightRequest" Value="40"/>
+                        <Setter TargetName="LogoutButton" Property="Button.FontSize" Value="16"/>
+                        <Setter TargetName="LogoutButton" Property="Button.Margin" Value="0,16,16,0"/>
+                    </VisualState.Setters>
+                </VisualState>
 
-            <!-- Existing Users Section -->
-            <Label Text="Existing Users" FontSize="16" FontAttributes="Bold" Margin="0,10,0,0"/>
+                <!-- Desktop Layout (width >= 768) -->
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="768" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter TargetName="ContentScroll" Property="ScrollView.Padding" Value="40"/>
+                        <Setter TargetName="ContentGrid" Property="Grid.MaximumWidthRequest" Value="1000"/>
+                        <Setter TargetName="PageTitle" Property="Label.FontSize" Value="32"/>
+                        <Setter TargetName="PageSubtitle" Property="Label.FontSize" Value="16"/>
+                        <Setter TargetName="AddUserCard" Property="Border.Padding" Value="32"/>
+                        <Setter TargetName="AddUserTitle" Property="Label.FontSize" Value="20"/>
+                        <Setter TargetName="EmailEntry" Property="Entry.FontSize" Value="16"/>
+                        <Setter TargetName="EmailBorder" Property="Border.HeightRequest" Value="56"/>
+                        <Setter TargetName="RolePicker" Property="Picker.FontSize" Value="16"/>
+                        <Setter TargetName="RolePickerBorder" Property="Border.HeightRequest" Value="56"/>
+                        <Setter TargetName="AddEmailButton" Property="Button.HeightRequest" Value="56"/>
+                        <Setter TargetName="AddEmailButton" Property="Button.FontSize" Value="16"/>
+                        <Setter TargetName="ExistingUsersTitle" Property="Label.FontSize" Value="20"/>
+                        <Setter TargetName="LogoutButton" Property="Button.WidthRequest" Value="48"/>
+                        <Setter TargetName="LogoutButton" Property="Button.HeightRequest" Value="48"/>
+                        <Setter TargetName="LogoutButton" Property="Button.FontSize" Value="18"/>
+                        <Setter TargetName="LogoutButton" Property="Button.Margin" Value="0,24,24,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
-            <CollectionView ItemsSource="{Binding WhitelistedEmails}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Padding="10" Margin="10">
-                            <Grid ColumnSpacing="10" RowSpacing="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+        <!-- Logout Button in Top Right -->
+        <Button 
+            x:Name="LogoutButton"
+            Text="🚪"
+            BackgroundColor="{StaticResource Primary}"
+            TextColor="{StaticResource TextOnPrimary}"
+            BorderColor="Transparent"
+            WidthRequest="40"
+            HeightRequest="40"
+            CornerRadius="8"
+            FontSize="16"
+            Margin="0,16,16,0"
+            HorizontalOptions="End"
+            VerticalOptions="Start"
+            Padding="8"
+            ZIndex="1000"
+            Command="{Binding SignOutCommand}"/>
 
-                                <!--Defines vertical stacking for the elements-->
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
+        <ScrollView x:Name="ContentScroll" Padding="16">
+            <Grid x:Name="ContentGrid" 
+                  RowSpacing="20"
+                  MaximumWidthRequest="600"
+                  HorizontalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                                <!-- Desktop Layout -->
-                                <Label Grid.Column="0" Grid.Row="0"
-                                       Text="{Binding Email}" 
-                                       VerticalOptions="Center"
-                                       LineBreakMode="TailTruncation"/>
+                <!-- Header Section -->
+                <Grid Grid.Row="0" RowSpacing="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                                <Picker Grid.Column="1" Grid.Row="0"
-                                        Title="Select Role"
-                                        ItemsSource="{Binding BindingContext.Roles, Source={x:Reference AdminPageRoot}}"
-                                        SelectedItem="{Binding Role, Mode=TwoWay}"
-                                        ItemDisplayBinding="{Binding .}"
+                    <Label 
+                        x:Name="PageTitle"
+                        Grid.Row="0"
+                        Text="Manage User Access"
+                        FontAttributes="Bold"
+                        FontSize="24"
+                        TextColor="{StaticResource TextPrimary}"/>
+                    <Label 
+                        x:Name="PageSubtitle"
+                        Grid.Row="1"
+                        Text="Add, update, or remove user permissions"
+                        FontSize="14"
+                        TextColor="{StaticResource TextSecondary}"/>
+                </Grid>
+
+                <!-- Add New User Card -->
+                <Border 
+                    x:Name="AddUserCard"
+                    Grid.Row="1"
+                    Style="{StaticResource SecondaryCard}"
+                    Padding="16">
+
+                    <Grid RowSpacing="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label 
+                            x:Name="AddUserTitle"
+                            Grid.Row="0"
+                            Text="Add New User"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            TextColor="{StaticResource TextPrimary}"/>
+
+                        <!-- Email Field -->
+                        <Border
+                            x:Name="EmailBorder"
+                            Grid.Row="1"
+                            Style="{StaticResource EntryBorder}"
+                            Padding="12,0"
+                            HeightRequest="48">
+                            <Entry 
+                                x:Name="EmailEntry"
+                                Placeholder="Enter email" 
+                                Text="{Binding Email}"
+                                Keyboard="Email"
+                                TextColor="{StaticResource TextPrimary}"
+                                PlaceholderColor="{StaticResource PlaceholderText}"
+                                BackgroundColor="Transparent"
+                                FontSize="15"
+                                VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Role Picker -->
+                        <Border
+                            x:Name="RolePickerBorder"
+                            Grid.Row="2"
+                            Style="{StaticResource EntryBorder}"
+                            Padding="12,0"
+                            HeightRequest="48">
+                            <Picker 
+                                x:Name="RolePicker"
+                                Title="Select Role"
+                                ItemsSource="{Binding Roles}"
+                                SelectedItem="{Binding SelectedRole}"
+                                TextColor="{StaticResource TextPrimary}"
+                                BackgroundColor="Transparent"
+                                FontSize="15"
+                                VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Add Button -->
+                        <Button 
+                            x:Name="AddEmailButton"
+                            Grid.Row="3"
+                            Text="Add Email" 
+                            Command="{Binding AddEmailCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            HeightRequest="48"
+                            FontSize="15"/>
+                    </Grid>
+                </Border>
+
+                <!-- Existing Users Section -->
+                <Label 
+                    x:Name="ExistingUsersTitle"
+                    Grid.Row="2"
+                    Text="Existing Users"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    TextColor="{StaticResource TextPrimary}"/>
+
+                <!-- User List -->
+                <CollectionView 
+                    Grid.Row="3"
+                    ItemsSource="{Binding WhitelistedEmails}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border 
+                                Style="{StaticResource SecondaryCard}"
+                                Padding="16"
+                                Margin="0,0,0,12">
+
+                                <Grid x:Name="UserItemGrid" RowSpacing="12" ColumnSpacing="12">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="ItemAdaptiveStates">
+                                            <!-- Mobile Item Layout -->
+                                            <VisualState x:Name="MobileItem">
+                                                <VisualState.StateTriggers>
+                                                    <AdaptiveTrigger MinWindowWidth="0" />
+                                                </VisualState.StateTriggers>
+                                                <VisualState.Setters>
+                                                    <Setter TargetName="UserItemGrid" Property="Grid.ColumnDefinitions" Value="*"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.Column" Value="0"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.Row" Value="1"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.Column" Value="0"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.Row" Value="2"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.Column" Value="0"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="DeleteButton" Property="Grid.Row" Value="2"/>
+                                                    <Setter TargetName="DeleteButton" Property="Grid.Column" Value="1"/>
+                                                    <Setter TargetName="DeleteButton" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Label.FontSize" Value="14"/>
+                                                    <Setter TargetName="UserRolePicker" Property="Picker.FontSize" Value="14"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Border.HeightRequest" Value="44"/>
+                                                    <Setter TargetName="UpdateButton" Property="Button.FontSize" Value="14"/>
+                                                    <Setter TargetName="UpdateButton" Property="Button.HeightRequest" Value="44"/>
+                                                    <Setter TargetName="DeleteButton" Property="Button.FontSize" Value="14"/>
+                                                    <Setter TargetName="DeleteButton" Property="Button.HeightRequest" Value="44"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+
+                                            <!-- Desktop Item Layout -->
+                                            <VisualState x:Name="DesktopItem">
+                                                <VisualState.StateTriggers>
+                                                    <AdaptiveTrigger MinWindowWidth="768" />
+                                                </VisualState.StateTriggers>
+                                                <VisualState.Setters>
+                                                    <Setter TargetName="UserItemGrid" Property="Grid.ColumnDefinitions" Value="2*,1.5*,Auto,Auto"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.Column" Value="0"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.Column" Value="1"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.Column" Value="2"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="DeleteButton" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="DeleteButton" Property="Grid.Column" Value="3"/>
+                                                    <Setter TargetName="DeleteButton" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Label.FontSize" Value="15"/>
+                                                    <Setter TargetName="UserRolePicker" Property="Picker.FontSize" Value="15"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Border.HeightRequest" Value="48"/>
+                                                    <Setter TargetName="UpdateButton" Property="Button.FontSize" Value="15"/>
+                                                    <Setter TargetName="UpdateButton" Property="Button.HeightRequest" Value="48"/>
+                                                    <Setter TargetName="UpdateButton" Property="Button.WidthRequest" Value="100"/>
+                                                    <Setter TargetName="DeleteButton" Property="Button.FontSize" Value="15"/>
+                                                    <Setter TargetName="DeleteButton" Property="Button.HeightRequest" Value="48"/>
+                                                    <Setter TargetName="DeleteButton" Property="Button.WidthRequest" Value="100"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+
+                                    <!-- Email Label -->
+                                    <Label 
+                                        x:Name="UserEmailLabel"
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Text="{Binding Email}" 
                                         VerticalOptions="Center"
-                                        MinimumWidthRequest="120"/>
+                                        LineBreakMode="WordWrap"
+                                        TextColor="{StaticResource TextPrimary}"
+                                        FontSize="14"/>
 
-                                <Button Grid.Column="2" Grid.Row="0"
+                                    <!-- Role Picker -->
+                                    <Border
+                                        x:Name="UserRolePickerBorder"
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Style="{StaticResource EntryBorder}"
+                                        Padding="12,0"
+                                        HeightRequest="44">
+                                        <Picker 
+                                            x:Name="UserRolePicker"
+                                            Title="Select Role"
+                                            ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.Roles}"
+                                            SelectedItem="{Binding Role, Mode=TwoWay}"
+                                            ItemDisplayBinding="{Binding .}"
+                                            TextColor="{StaticResource TextPrimary}"
+                                            BackgroundColor="Transparent"
+                                            FontSize="14"
+                                            VerticalOptions="Center"/>
+                                    </Border>
+
+                                    <!-- Update Button -->
+                                    <Button 
+                                        x:Name="UpdateButton"
+                                        Grid.Row="2"
+                                        Grid.Column="0"
                                         Text="Update"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=UpdateRoleCommand}"
                                         CommandParameter="{Binding .}"
-                                        VerticalOptions="Center"
-                                        WidthRequest="80"
-                                        HeightRequest="40"/>
+                                        Style="{StaticResource PrimaryButton}"
+                                        HeightRequest="44"
+                                        FontSize="14"/>
 
-                                <Button Grid.Column="3" Grid.Row="0"
+                                    <!-- Delete Button -->
+                                    <Button 
+                                        x:Name="DeleteButton"
+                                        Grid.Row="2"
+                                        Grid.Column="1"
                                         Text="Delete"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteEmailCommand}"
                                         CommandParameter="{Binding .}"
-                                        VerticalOptions="Center"
-                                        WidthRequest="80"
-                                        HeightRequest="40"/>
-
-                                <!-- Mobile Layout -->
-                                <HorizontalStackLayout Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
-                                                       Spacing="10" HorizontalOptions="End"
-                                                       IsVisible="False"
-                                                       x:Name="MobileButtons">
-                                    <Button Text="Update"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=UpdateRoleCommand}"
-                                            CommandParameter="{Binding .}"
-                                            WidthRequest="100"/>
-                                    <Button Text="Delete"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteEmailCommand}"
-                                            CommandParameter="{Binding .}"
-                                            WidthRequest="100"/>
-                                </HorizontalStackLayout>
-                            </Grid>
-
-                            <!-- Resize Triggers for when the window size changes -->
-                            <Border.Triggers>
-                                <DataTrigger TargetType="Border" 
-                                            Binding="{Binding Source={x:Reference AdminPageRoot}, Path=Width}"
-                                            Value="{OnPlatform WinUI=600, Default=500}">
-                                    <Setter Property="Padding" Value="15"/>
-                                </DataTrigger>
-                            </Border.Triggers>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </VerticalStackLayout>
-    </ScrollView>
+                                        Style="{StaticResource SecondaryButton}"
+                                        HeightRequest="44"
+                                        FontSize="14"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </ScrollView>
+    </Grid>
 </ContentPage>
