@@ -162,14 +162,15 @@ namespace CrocoManager.Services
                 if (authResponse?.User == null)
                     return null;
 
-                // Build your custom session
                 var session = BuildSession(authResponse);
 
-                // IMPORTANT: Set the session on the Supabase client
+                // session validation before setting it.
+                if(string.IsNullOrEmpty(authResponse.AccessToken) || string.IsNullOrEmpty(authResponse.RefreshToken))
+                {
+                    throw new InvalidOperationException("Login failed: AccessToken or RefreshToken is null or empty.");
+                }
+                // setting session on the supabase client instance
                 await _supabase.Client.Auth.SetSession(authResponse.AccessToken, authResponse.RefreshToken);
-
-                // OR the client might already have it set automatically after SignInWithPassword
-                // Check: var currentSession = _supabase.Client.Auth.CurrentSession;
 
                 // Save to secure storage
                 var sessionJson = JsonSerializer.Serialize(session);
