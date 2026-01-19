@@ -75,7 +75,6 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header Section with Logout Button -->
                 <Grid Grid.Row="0" RowSpacing="4" ColumnSpacing="12">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -96,7 +95,6 @@
                         TextColor="{StaticResource TextPrimary}"
                         VerticalOptions="Center"/>
 
-                    <!-- Logout Button -->
                     <Button 
                         x:Name="LogoutButton"
                         Grid.Row="0"
@@ -146,7 +144,6 @@
                             FontSize="16"
                             TextColor="{StaticResource TextPrimary}"/>
 
-                        <!-- Email Field -->
                         <Border
                             x:Name="EmailBorder"
                             Grid.Row="1"
@@ -166,26 +163,52 @@
                                 HorizontalOptions="FillAndExpand"/>
                         </Border>
 
-                        <!-- Role Picker -->
                         <Border
                             x:Name="RolePickerBorder"
                             Grid.Row="2"
                             Style="{StaticResource EntryBorder}"
                             Padding="12,0"
                             HeightRequest="48">
-                            <Picker 
-                                x:Name="RolePicker"
-                                Title="Select Role"
-                                ItemsSource="{Binding Roles}"
-                                SelectedItem="{Binding SelectedRole}"
-                                TextColor="{StaticResource TextPrimary}"
-                                BackgroundColor="Transparent"
-                                FontSize="15"
-                                VerticalOptions="Center"
-                                HorizontalOptions="FillAndExpand"/>
+                            <Grid ColumnSpacing="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label
+                                    Grid.Column="0"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="FillAndExpand"
+                                    FontSize="15"
+                                    LineBreakMode="NoWrap">
+                                    <Label.Style>
+                                        <Style TargetType="Label">
+                                            <Setter Property="Text" Value="{Binding SelectedRole}" />
+                                            <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+                                            <Style.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding SelectedRole, TargetNullValue=''}" Value="">
+                                                    <Setter Property="Text" Value="Select Role" />
+                                                    <Setter Property="TextColor" Value="{StaticResource PlaceholderText}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Label.Style>
+                                </Label>
+
+                                <Picker
+                                    x:Name="RolePicker"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Title=""
+                                    ItemsSource="{Binding Roles}"
+                                    SelectedItem="{Binding SelectedRole}"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="FillAndExpand"
+                                    BackgroundColor="Transparent"
+                                    TextColor="Transparent"/>
+                            </Grid>
                         </Border>
 
-                        <!-- Add Button -->
                         <Button 
                             x:Name="AddEmailButton"
                             Grid.Row="3"
@@ -198,7 +221,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Existing Users Section -->
                 <Label 
                     x:Name="ExistingUsersTitle"
                     Grid.Row="2"
@@ -207,7 +229,6 @@
                     FontSize="16"
                     TextColor="{StaticResource TextPrimary}"/>
 
-                <!-- User List -->
                 <CollectionView 
                     Grid.Row="3"
                     ItemsSource="{Binding WhitelistedEmails}">
@@ -229,7 +250,6 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Email Label -->
                                     <Label 
                                         Grid.Row="0"
                                         Grid.Column="0"
@@ -240,7 +260,6 @@
                                         TextColor="{StaticResource TextPrimary}"
                                         FontSize="14"/>
 
-                                    <!-- Role Picker -->
                                     <Border
                                         Grid.Row="1"
                                         Grid.Column="0"
@@ -248,36 +267,61 @@
                                         Style="{StaticResource EntryBorder}"
                                         Padding="12,0"
                                         HeightRequest="44">
-                                        <Picker 
-                                            Title="Select Role"
-                                            ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.Roles}"
-                                            SelectedItem="{Binding Role, Mode=TwoWay}"
-                                            ItemDisplayBinding="{Binding .}"
-                                            TextColor="{StaticResource TextPrimary}"
-                                            BackgroundColor="Transparent"
-                                            FontSize="14"
-                                            VerticalOptions="Center"
-                                            HorizontalOptions="FillAndExpand"/>
+                                        <Grid ColumnSpacing="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label
+                                                Grid.Column="0"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="FillAndExpand"
+                                                FontSize="14"
+                                                LineBreakMode="NoWrap">
+                                                <Label.Style>
+                                                    <Style TargetType="Label">
+                                                        <Setter Property="Text" Value="{Binding Role}" />
+                                                        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger TargetType="Label" Binding="{Binding Role, TargetNullValue=''}" Value="">
+                                                                <Setter Property="Text" Value="Select Role" />
+                                                                <Setter Property="TextColor" Value="{StaticResource PlaceholderText}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Label.Style>
+                                            </Label>
+
+                                            <Picker
+                                                Grid.Column="0"
+                                                Grid.ColumnSpan="2"
+                                                Title=""
+                                                ItemsSource="{Binding Roles}"
+                                                SelectedItem="{Binding Role, Mode=TwoWay}"
+                                                HorizontalOptions="FillAndExpand"
+                                                VerticalOptions="FillAndExpand"
+                                                BackgroundColor="Transparent"
+                                                TextColor="Transparent"/>
+                                        </Grid>
                                     </Border>
 
-                                    <!-- Update Button -->
                                     <Button 
                                         Grid.Row="2"
                                         Grid.Column="0"
                                         Text="Update"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=UpdateRoleCommand}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.UpdateRoleCommand}"
                                         CommandParameter="{Binding .}"
                                         Style="{StaticResource PrimaryButton}"
                                         HeightRequest="44"
                                         FontSize="14"
                                         HorizontalOptions="FillAndExpand"/>
 
-                                    <!-- Delete Button -->
                                     <Button 
                                         Grid.Row="2"
                                         Grid.Column="1"
                                         Text="Delete"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteEmailCommand}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteEmailCommand}"
                                         CommandParameter="{Binding .}"
                                         Style="{StaticResource SecondaryButton}"
                                         HeightRequest="44"

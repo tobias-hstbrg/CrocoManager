@@ -1,28 +1,47 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CrocoManager.DTOs;
+using CrocoManager.Models;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
-public partial class EmailWhitelistVM : ObservableObject
+namespace CrocoManager.ViewModel
 {
-    public EmailWhitelist Model { get; }
-
-    [ObservableProperty]
-    private string role;
-
-    [ObservableProperty]
-    private string email;
-
-    public Guid Id => Model.Id;
-
-    public EmailWhitelistVM(EmailWhitelist model)
+    public partial class EmailWhitelistVM : ObservableObject
     {
-        Model = model;
-        Email = model.Email ?? string.Empty;
-        Role = model.Role ?? string.Empty;
-    }
+        public EmailWhitelist Model { get; }
 
-    public void SyncToModel()
-    {
-        Model.Role = Role;
+        [ObservableProperty]
+        private string role;
+
+        [ObservableProperty]
+        private string email;
+
+        public Guid Id => Model.Id;
+
+        public List<string> Roles { get; }
+
+        public EmailWhitelistVM(EmailWhitelist model)
+        {
+            Model = model;
+            Email = model.Email ?? string.Empty;
+            Roles = Enum.GetNames(typeof(UserRole)).ToList();
+
+            var modelRole = model.Role?.Trim();
+            if (!string.IsNullOrEmpty(modelRole))
+            {
+                Role = Roles.FirstOrDefault(r => r.Equals(modelRole, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+            }
+           else
+            {
+                Role = string.Empty;
+            }
+        }
+
+        public void SyncToModel()
+        {
+            Model.Role = Role;
+        }
     }
 }
