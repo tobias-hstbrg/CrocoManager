@@ -75,6 +75,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
+                <!-- Header Section with Logout Button -->
                 <Grid Grid.Row="0" RowSpacing="4" ColumnSpacing="12">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -95,6 +96,7 @@
                         TextColor="{StaticResource TextPrimary}"
                         VerticalOptions="Center"/>
 
+                    <!-- Logout Button -->
                     <Button 
                         x:Name="LogoutButton"
                         Grid.Row="0"
@@ -169,44 +171,16 @@
                             Style="{StaticResource EntryBorder}"
                             Padding="12,0"
                             HeightRequest="48">
-                            <Grid ColumnSpacing="5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Label
-                                    Grid.Column="0"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="FillAndExpand"
-                                    FontSize="15"
-                                    LineBreakMode="NoWrap">
-                                    <Label.Style>
-                                        <Style TargetType="Label">
-                                            <Setter Property="Text" Value="{Binding SelectedRole}" />
-                                            <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
-                                            <Style.Triggers>
-                                                <DataTrigger TargetType="Label" Binding="{Binding SelectedRole, TargetNullValue=''}" Value="">
-                                                    <Setter Property="Text" Value="Select Role" />
-                                                    <Setter Property="TextColor" Value="{StaticResource PlaceholderText}" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Label.Style>
-                                </Label>
-
-                                <Picker
-                                    x:Name="RolePicker"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="2"
-                                    Title=""
-                                    ItemsSource="{Binding Roles}"
-                                    SelectedItem="{Binding SelectedRole}"
-                                    HorizontalOptions="FillAndExpand"
-                                    VerticalOptions="FillAndExpand"
-                                    BackgroundColor="Transparent"
-                                    TextColor="Transparent"/>
-                            </Grid>
+                            <Picker 
+                                x:Name="RolePicker"
+                                Title="Select Role"
+                                ItemsSource="{Binding Roles}"
+                                SelectedItem="{Binding SelectedRole}"
+                                TextColor="{StaticResource TextPrimary}"
+                                BackgroundColor="Transparent"
+                                FontSize="15"
+                                VerticalOptions="Center"
+                                HorizontalOptions="FillAndExpand"/>
                         </Border>
 
                         <Button 
@@ -250,6 +224,71 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
+                                    <!-- Email Label -->
+                                        <VisualStateGroup x:Name="ItemAdaptiveStates">
+                                            <!-- Mobile Item Layout -->
+                                            <VisualState x:Name="MobileItem">
+                                                <VisualState.StateTriggers>
+                                                    <AdaptiveTrigger MinWindowWidth="0" />
+                                                </VisualState.StateTriggers>
+                                                <VisualState.Setters>
+                                                    <Setter TargetName="UserItemGrid" Property="Grid.ColumnDefinitions" Value="*"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.Column" Value="0"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.Row" Value="1"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.Column" Value="0"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.Row" Value="2"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.Column" Value="0"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.ColumnSpan" Value="1"/>
+                                        <Picker 
+                                            Title="Select Role"
+                                            ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.Roles}"
+                                            SelectedItem="{Binding Role, Mode=TwoWay}"
+                                            ItemDisplayBinding="{Binding .}"
+                                            TextColor="{StaticResource TextPrimary}"
+                                            BackgroundColor="Transparent"
+                                            FontSize="14"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="FillAndExpand"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+
+                                            <!-- Desktop Item Layout -->
+                                            <VisualState x:Name="DesktopItem">
+                                                <VisualState.StateTriggers>
+                                                    <AdaptiveTrigger MinWindowWidth="768" />
+                                                </VisualState.StateTriggers>
+                                                <VisualState.Setters>
+                                                    <Setter TargetName="UserItemGrid" Property="Grid.ColumnDefinitions" Value="2*,1.5*,Auto,Auto"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.Column" Value="0"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.Column" Value="1"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.Column" Value="2"/>
+                                                    <Setter TargetName="UpdateButton" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="DeleteButton" Property="Grid.Row" Value="0"/>
+                                                    <Setter TargetName="DeleteButton" Property="Grid.Column" Value="3"/>
+                                                    <Setter TargetName="DeleteButton" Property="Grid.ColumnSpan" Value="1"/>
+                                                    <Setter TargetName="UserEmailLabel" Property="Label.FontSize" Value="15"/>
+                                                    <Setter TargetName="UserRolePicker" Property="Picker.FontSize" Value="15"/>
+                                                    <Setter TargetName="UserRolePickerBorder" Property="Border.HeightRequest" Value="48"/>
+                                                    <Setter TargetName="UpdateButton" Property="Button.FontSize" Value="15"/>
+                                                    <Setter TargetName="UpdateButton" Property="Button.HeightRequest" Value="48"/>
+                                                    <Setter TargetName="UpdateButton" Property="Button.WidthRequest" Value="100"/>
+                                                    <Setter TargetName="DeleteButton" Property="Button.FontSize" Value="15"/>
+                                                    <Setter TargetName="DeleteButton" Property="Button.HeightRequest" Value="48"/>
+                                                    <Setter TargetName="DeleteButton" Property="Button.WidthRequest" Value="100"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+
+                                    <!-- Email Label -->
                                     <Label 
                                         Grid.Row="0"
                                         Grid.Column="0"
@@ -267,43 +306,16 @@
                                         Style="{StaticResource EntryBorder}"
                                         Padding="12,0"
                                         HeightRequest="44">
-                                        <Grid ColumnSpacing="5">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <Label
-                                                Grid.Column="0"
-                                                VerticalOptions="Center"
-                                                HorizontalOptions="FillAndExpand"
-                                                FontSize="14"
-                                                LineBreakMode="NoWrap">
-                                                <Label.Style>
-                                                    <Style TargetType="Label">
-                                                        <Setter Property="Text" Value="{Binding Role}" />
-                                                        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger TargetType="Label" Binding="{Binding Role, TargetNullValue=''}" Value="">
-                                                                <Setter Property="Text" Value="Select Role" />
-                                                                <Setter Property="TextColor" Value="{StaticResource PlaceholderText}" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Label.Style>
-                                            </Label>
-
-                                            <Picker
-                                                Grid.Column="0"
-                                                Grid.ColumnSpan="2"
-                                                Title=""
-                                                ItemsSource="{Binding Roles}"
-                                                SelectedItem="{Binding Role, Mode=TwoWay}"
-                                                HorizontalOptions="FillAndExpand"
-                                                VerticalOptions="FillAndExpand"
-                                                BackgroundColor="Transparent"
-                                                TextColor="Transparent"/>
-                                        </Grid>
+                                        <Picker 
+                                            x:Name="UserRolePicker"
+                                            Title="Select Role"
+                                            ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.Roles}"
+                                            SelectedItem="{Binding Role, Mode=TwoWay}"
+                                            ItemDisplayBinding="{Binding .}"
+                                            TextColor="{StaticResource TextPrimary}"
+                                            BackgroundColor="Transparent"
+                                            FontSize="14"
+                                            VerticalOptions="Center"/>
                                     </Border>
 
                                     <Button 
