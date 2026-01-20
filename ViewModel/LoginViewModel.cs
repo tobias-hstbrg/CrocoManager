@@ -81,5 +81,11 @@ namespace CrocoManager.ViewModel
         {
             await Shell.Current.GoToAsync(nameof(RegisterPage));
         }
+
+        [RelayCommand]
+        private async Task GoToResetPassword()
+        {
+            await Shell.Current.GoToAsync(nameof(ResetPasswordPage));
+        }
     }
 }
