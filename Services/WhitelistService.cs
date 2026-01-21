@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using static Supabase.Functions.Client;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace CrocoManager.Services
 {
