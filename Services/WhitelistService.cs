@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static Supabase.Functions.Client;
 
 namespace CrocoManager.Services
 {
@@ -66,9 +67,31 @@ namespace CrocoManager.Services
             return whitelistUpdated || userUpdated;
         }
 
-        public async Task DeleteEmailFromWhitelistAsync(Guid id)
+        public async Task<bool> DeleteEmailFromWhitelistAsync(Guid id, string email)
         {
-            await _supabase.Client.From<EmailWhitelist>().Where(entry => entry.Id == id).Delete();
+            var options = new InvokeFunctionOptions
+            {
+                Body = new Dictionary<string, object>
+        {
+            { "id", id },
+            { "email", email }
+        }
+            };
+
+            var response = await _supabase.Client.Functions.Invoke("delete-user", null, options);
+
+            if (string.IsNullOrWhiteSpace(response))
+                return false;
+
+            // Parse the JSON
+            using var doc = JsonDocument.Parse(response);
+            var root = doc.RootElement;
+
+            // Extract the success property
+            if (root.TryGetProperty("success", out var successProp) && successProp.ValueKind == JsonValueKind.True)
+                return true;
+
+            return false;
         }
 
         private async Task<bool> UpdateAuthUserRoleIfExists(string email, UserRole newRole)

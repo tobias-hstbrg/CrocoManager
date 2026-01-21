@@ -78,28 +78,28 @@ namespace CrocoManager.Services
 
         private async Task<EmailWhitelist?> CheckEmailWhitelist(string email)
         {
-            try
+            var options = new InvokeFunctionOptions
             {
-                var response = await _supabase.Client
-                    .From<EmailWhitelist>()
-                    .Filter("email", Supabase.Postgrest.Constants.Operator.Equals, email)
-                    .Single();
+                Body = new Dictionary<string, object>
+                {
+                    { "email", email }
+                }
+            };
 
-                return response;
-            }
-            catch (PostgrestException ex)
-            {
-                Console.WriteLine($"PostgrestException: {ex.Message}");
-                if (ex.Message.Contains("No rows"))
-                    return null;
+            var response = await _supabase.Client.Functions.Invoke("check-email-whitelist", null, options);
 
-                throw; // rethrow other Postgrest errors
-            }
-            catch (Exception ex)
+            if(string.IsNullOrWhiteSpace(response)) return null;
+
+
+            var result = JsonSerializer.Deserialize<WhitelistResponse>(response);
+
+            if(result == null || !result.Whitelisted) return null;
+
+            return new EmailWhitelist
             {
-                Console.WriteLine($"General Exception: {ex}");
-                throw; // rethrow to see where it bubbles up
-            }
+                Email = email,
+                Role = result.Role
+            };
         }
 
         private SupabaseSession BuildSession(Supabase.Gotrue.Session authResponse)
