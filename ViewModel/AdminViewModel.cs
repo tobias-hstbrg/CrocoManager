@@ -67,7 +67,7 @@ namespace CrocoManager.ViewModel
         {
             if (emailVM == null) return;
 
-            await _whitelistService.DeleteEmailFromWhitelistAsync(emailVM.Id);
+            bool success = await _whitelistService.DeleteEmailFromWhitelistAsync(emailVM.Id, emailVM.Email);
             await LoadEmails();
         }
 
