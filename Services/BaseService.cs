@@ -22,6 +22,20 @@ namespace CrocoManager.Services
             return response.Models;
         }
 
+        public virtual async Task<List<T>> FilterByAsync(string columnName, object value, Supabase.Postgrest.Constants.Operator op = Supabase.Postgrest.Constants.Operator.Equals)
+        {
+            try
+            {
+                var response = await _supabaseClient.Client.From<T>().Filter(columnName, op, value).Get();
+                return response.Models;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"FilterBy error: {ex.Message}");
+                return new List<T>();
+            }
+        }
+
         public virtual async Task<T?> GetByIdAsync(Guid id)
         {
             var response = await _supabaseClient.Client.From<T>().Filter("id", Supabase.Postgrest.Constants.Operator.Equals, id).Single();
