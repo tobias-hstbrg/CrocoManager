@@ -209,6 +209,7 @@
                         <Button 
                             x:Name="ForgotPasswordButton"
                             Text="Passwort vergessen?"
+                            Command="{Binding GoToResetPasswordCommand}"
                             BackgroundColor="Transparent"
                             TextColor="{StaticResource Primary}"
                             BorderWidth="0"

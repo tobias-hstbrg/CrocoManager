@@ -1,18 +1,19 @@
 ﻿using CrocoManager.DTOs;
 using CrocoManager.Interfaces;
 using CrocoManager.Models;
+using Microsoft.IdentityModel.Tokens;
 using Supabase;
-using Supabase.Postgrest.Exceptions;
 using Supabase.Interfaces;
+using Supabase.Postgrest.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static Supabase.Functions.Client;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CrocoManager.Services
 {
@@ -77,28 +78,28 @@ namespace CrocoManager.Services
 
         private async Task<EmailWhitelist?> CheckEmailWhitelist(string email)
         {
-            try
+            var options = new InvokeFunctionOptions
             {
-                var response = await _supabase.Client
-                    .From<EmailWhitelist>()
-                    .Filter("email", Supabase.Postgrest.Constants.Operator.Equals, email)
-                    .Single();
+                Body = new Dictionary<string, object>
+                {
+                    { "email", email }
+                }
+            };
 
-                return response;
-            }
-            catch (PostgrestException ex)
-            {
-                Console.WriteLine($"PostgrestException: {ex.Message}");
-                if (ex.Message.Contains("No rows"))
-                    return null;
+            var response = await _supabase.Client.Functions.Invoke("check-email-whitelist", null, options);
 
-                throw; // rethrow other Postgrest errors
-            }
-            catch (Exception ex)
+            if(string.IsNullOrWhiteSpace(response)) return null;
+
+
+            var result = JsonSerializer.Deserialize<WhitelistResponse>(response);
+
+            if(result == null || !result.Whitelisted) return null;
+
+            return new EmailWhitelist
             {
-                Console.WriteLine($"General Exception: {ex}");
-                throw; // rethrow to see where it bubbles up
-            }
+                Email = email,
+                Role = result.Role
+            };
         }
 
         private SupabaseSession BuildSession(Supabase.Gotrue.Session authResponse)
@@ -200,6 +201,37 @@ namespace CrocoManager.Services
             }
         }
 
+        public async Task<bool> ResetPasswordAsync(string email, string password)
+        {
+            try
+            {
+                var parameters = new Dictionary<string, object>
+                {
+                    { "user_email", email },
+                    { "new_password", password }
+                };
+
+                // Rpc gibt BaseResponse zurück
+                var response = await _supabase.Client
+                    .Rpc("unsafe_reset_password", parameters);
+
+                // Überprüfe Response Content
+                if (!string.IsNullOrEmpty(response.Content))
+                {
+                    var result = JsonSerializer.Deserialize<ResetPasswordResult>(response.Content);
+                    return result?.Success ?? false;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Reset password error: {ex.Message}");
+                return false;
+            }
+        }
+
+
         public async Task<bool> TestConnectionAsync()
         {
             try
@@ -212,5 +244,13 @@ namespace CrocoManager.Services
                 return false;
             }
         }
+    }
+    public class ResetPasswordResult
+    {
+        [JsonPropertyName("success")]
+        public bool Success { get; set; }
+
+        [JsonPropertyName("error")]
+        public string Error { get; set; }
     }
 }

@@ -38,11 +38,13 @@ namespace CrocoManager
             builder.Services.AddTransient<RegisterViewModel>();
             builder.Services.AddTransient<AdminViewModel>();
             builder.Services.AddTransient<HomeViewModel>();
+            builder.Services.AddTransient<PasswordResetViewModel>();
 
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<RegisterPage>();
             builder.Services.AddTransient<AdminPage>();
             builder.Services.AddTransient<HomePage>();
+            builder.Services.AddTransient<ResetPasswordPage>();
 
             // Shell
             builder.Services.AddSingleton<AppShell>();

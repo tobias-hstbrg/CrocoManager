@@ -22,8 +22,8 @@ namespace CrocoManager.ViewModel
         {
             try
             {
-                bool successful = await _authService.SignOutAsync();
-                if (successful)
+                bool succesfull = await _authService.SignOutAsync();
+                if (succesfull)
                 {
                     await Shell.Current.GoToAsync("//LoginPage");
                 }
