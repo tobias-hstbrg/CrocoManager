@@ -66,8 +66,4 @@
         <ShellContent ContentTemplate="{DataTemplate views:AdminPage}" />
     </FlyoutItem>
 
-    <MenuItem Text="Abmelden" 
-              IconImageSource="logout.png"
-              Clicked="OnLogoutClicked"/>
-
 </Shell>

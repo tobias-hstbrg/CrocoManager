@@ -26,11 +26,19 @@ namespace CrocoManager.ViewModel
                 bool succesfull = await _authService.SignOutAsync();
                 if (succesfull)
                 {
-                    Application.Current.MainPage = App.Current.Handler.MauiContext.Services.GetService<LoginPage>();
+                    var loginPage = App.Current?.Handler.MauiContext!.Services.GetRequiredService<LoginPage>();
+                    if (Application.Current?.Windows?.FirstOrDefault() is Window window)
+                    {
+                        window.Page = loginPage;
+                    }
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "OK");
+                    if (Application.Current?.Windows?.FirstOrDefault()?.Page is Page page)
+                    {
+                        await page.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "OK");
+                    }
+                    
                 }
             }
             catch (Exception ex)

@@ -14,11 +14,11 @@ namespace CrocoManager
 
             SetAdaptiveFlyout();
 
-            Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
-            Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
+            //Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+            //Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
             Routing.RegisterRoute(nameof(AdminPage), typeof(AdminPage));
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
-            Routing.RegisterRoute(nameof(ResetPasswordPage), typeof(ResetPasswordPage));
+            //Routing.RegisterRoute(nameof(ResetPasswordPage), typeof(ResetPasswordPage));
 
             if (!string.IsNullOrEmpty(startRoute))
             {
@@ -47,26 +47,6 @@ namespace CrocoManager
             else
             {
                 FlyoutBehavior = FlyoutBehavior.Disabled;
-            }
-        }
-
-        private async void OnLogoutClicked(object sender, EventArgs e)
-        {
-            bool confirm = await DisplayAlert(
-                "Abmelden",
-                "Möchten Sie sich wirklich abmelden?",
-                "Ja",
-                "Nein"
-            );
-
-            if (confirm)
-            {
-                await _authService.SignOutAsync();
-
-                var services = Application.Current!.Handler.MauiContext!.Services;
-                var loginPage = services.GetRequiredService<LoginPage>();
-
-                Application.Current.MainPage = new NavigationPage(loginPage);
             }
         }
     }
