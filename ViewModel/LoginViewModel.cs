@@ -72,10 +72,10 @@ namespace CrocoManager.ViewModel
 
             if (session.User.UserMetadata.Role == Models.UserRole.Admin)
             {
-                var appShell = new AppShell(_authService, startRoute: "//AdminPage");
+                var adminPage = _serviceProvider.GetRequiredService<AdminPage>();
                 if (Application.Current?.Windows?.FirstOrDefault() is Window window)
                 {
-                    window.Page = appShell;
+                    window.Page = adminPage;
                 }
             }
             else

@@ -12,8 +12,6 @@ namespace CrocoManager
             InitializeComponent();
             _authService = authService;
 
-            SetAdaptiveFlyout();
-
             //Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             //Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
             Routing.RegisterRoute(nameof(AdminPage), typeof(AdminPage));
@@ -29,24 +27,35 @@ namespace CrocoManager
             }
         }
 
-        private void SetAdaptiveFlyout()
+        private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
         {
-            var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
-            var width = displayInfo.Width / displayInfo.Density;
+            if(Expand.IsVisible)
+            {
+                var animation = new Animation((current) =>
+                {
+                    FlyoutWidth = current;
 
-            if (width >= 1024)
-            {
-                FlyoutBehavior = FlyoutBehavior.Locked;
-                FlyoutWidth = 350;
-            }
-            else if (width >= 768)
-            {
-                FlyoutBehavior = FlyoutBehavior.Flyout;
-                FlyoutWidth = 320;
+                }, 65, 250, null);
+
+                animation.Commit(this, "expand", finished: (value, cancelled) =>
+                {
+                    Expand.IsVisible = false;
+                    Minimize.IsVisible = true;
+                });
             }
             else
             {
-                FlyoutBehavior = FlyoutBehavior.Disabled;
+                var animation = new Animation((current) =>
+                {
+                    FlyoutWidth = current;
+
+                }, 250, 65, null);
+
+                animation.Commit(this, "minimize", finished: (value, cancelled) =>
+                {
+                    Expand.IsVisible = true;
+                    Minimize.IsVisible = false;
+                });
             }
         }
     }

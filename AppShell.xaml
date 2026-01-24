@@ -4,66 +4,42 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CrocoManager"
     xmlns:views="clr-namespace:CrocoManager.Views"
-    x:Name="AppShellRoot">
+    x:Name="AppShellRoot"
+    FlyoutBehavior="{OnIdiom Phone=Disabled, Default=Locked}"
+    FlyoutBackgroundColor="White"
+    Shell.ForegroundColor="Black"
+    Shell.TitleColor="Black"
+    FlyoutWidth="65"
+    Title="CrocoManager">
 
-    <Shell.FlyoutHeaderTemplate>
-        <DataTemplate>
-            <Grid BackgroundColor="{StaticResource Primary}" 
-                  Padding="24,20"
-                  HeightRequest="150">
-                <VerticalStackLayout VerticalOptions="Center" Spacing="4">
-                    <Label Text="🐊 CrocoManager" 
-                           FontSize="28" 
-                           FontAttributes="Bold"
-                           TextColor="White"
-                           HorizontalOptions="Start"/>
-                    <Label Text="Crocodile Management System" 
-                           FontSize="14"
-                           TextColor="White"
-                           Opacity="0.9"
-                           HorizontalOptions="Start"/>
-                </VerticalStackLayout>
-            </Grid>
-        </DataTemplate>
-    </Shell.FlyoutHeaderTemplate>
+    <Shell.Resources>
+        <Style TargetType="Shell">
+            <Setter Property="FlyoutBackdrop" Value="Transparent"/>
+        </Style>
+    </Shell.Resources>
 
-    <Shell.FlyoutFooterTemplate>
-        <DataTemplate>
-            <Grid Padding="20,10" 
-                  BackgroundColor="{StaticResource CardBackground}">
-                <VerticalStackLayout Spacing="4">
-                    <Label Text="Version 1.0.0" 
-                           FontSize="10"
-                           TextColor="{StaticResource TextSecondary}"
-                           HorizontalOptions="Start"/>
-                    <Label Text="© 2025 CrocoManager" 
-                           FontSize="10"
-                           TextColor="{StaticResource TextSecondary}"
-                           HorizontalOptions="Start"/>
-                </VerticalStackLayout>
-            </Grid>
-        </DataTemplate>
-    </Shell.FlyoutFooterTemplate>
-
-    <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
-        <Tab Title="Home" Icon="home.png">
-            <ShellContent ContentTemplate="{DataTemplate views:HomePage}" 
-                          Route="HomePage"/>
-        </Tab>
-    </TabBar>
+    <Shell.FlyoutFooter>
+        <Grid Padding="15, 20">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+            </Grid.GestureRecognizers>
+            <Image x:Name="Expand" Source="panel_open.png" HeightRequest="24" HorizontalOptions="End"/>
+            <Image x:Name="Minimize" IsVisible="False" Source="panel_close.png" HeightRequest="24" HorizontalOptions="End"/>
+        </Grid>
+    </Shell.FlyoutFooter>
 
     <FlyoutItem Title="Dashboard" 
-                Icon="home.png"
-                Route="HomePage"
-                IsVisible="{OnIdiom Phone=False, Default=True}">
+            Icon="home.png"
+            Route="HomePage">
         <ShellContent ContentTemplate="{DataTemplate views:HomePage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Admin Panel" 
-                Icon="shield.png"
-                Route="AdminPage"
-                IsVisible="{OnIdiom Phone=False, Default=True}">
-        <ShellContent ContentTemplate="{DataTemplate views:AdminPage}" />
-    </FlyoutItem>
 
+    <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
+        <ShellContent 
+            Title="Dashboard"
+            Icon="home.png"
+            Route="HomePage"
+            ContentTemplate="{DataTemplate views:HomePage}" />
+    </TabBar>
 </Shell>
