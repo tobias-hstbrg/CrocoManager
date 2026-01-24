@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Interfaces;
+using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace CrocoManager.ViewModel
                 bool succesfull = await _authService.SignOutAsync();
                 if (succesfull)
                 {
-                    await Shell.Current.GoToAsync("//LoginPage");
+                    Application.Current.MainPage = App.Current.Handler.MauiContext.Services.GetService<LoginPage>();
                 }
                 else
                 {

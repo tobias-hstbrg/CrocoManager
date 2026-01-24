@@ -1,4 +1,6 @@
-﻿using CrocoManager.Services;
+﻿using CrocoManager.Interfaces;
+using CrocoManager.Services;
+using CrocoManager.ViewModel;
 using CrocoManager.Views;
 
 namespace CrocoManager
@@ -8,11 +10,14 @@ namespace CrocoManager
         public App()
         {
             InitializeComponent();
+           
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            Window window = new Window(new AppShell());
+            var loginPage = Handler.MauiContext!.Services.GetRequiredService<LoginPage>();
+            MainPage = new NavigationPage(loginPage);
+            Window window = base.CreateWindow(activationState);
 #if WINDOWS
             window.MinimumWidth = 400;
             window.MinimumHeight = 1000;

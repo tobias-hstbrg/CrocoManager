@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Interfaces;
 using CrocoManager.Services;
 using CrocoManager.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,11 @@ namespace CrocoManager.ViewModel
         private string? password;
 
         private readonly IAuthService _authService;
-        public LoginViewModel(IAuthService authService)
+        private readonly IServiceProvider _serviceProvider;
+        public LoginViewModel(IAuthService authService, IServiceProvider serviceProvider)
         {
             _authService = authService;
+            _serviceProvider = serviceProvider;
         }
 
         [RelayCommand]
@@ -29,7 +32,10 @@ namespace CrocoManager.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                await Shell.Current.DisplayAlert("Error", "Please enter both email and password", "OK");
+                if (Application.Current?.Windows?.FirstOrDefault()?.Page is Page page)
+                {
+                    await page.DisplayAlert("Error", "Please enter both email and password", "OK");
+                }
                 return;
             }
 
@@ -37,32 +43,48 @@ namespace CrocoManager.ViewModel
 
             if (session == null)
             {
-                await Shell.Current.DisplayAlert("Anmeldung fehlgeschlagen", "Email oder Passwort falsch. Bitte versuche es erneut.", "OK");
+                if(Application.Current?.Windows?.FirstOrDefault()?.Page is Page page)
+                {
+                    await page.DisplayAlert("Anmeldung fehlgeschlagen", "Email oder Passwort falsch. Bitte versuche es erneut.", "OK");
+                }
                 return;
             }
 
             // Session exists but user data is missing (shouldn't happen, but you never know)
             if (session.User?.UserMetadata == null)
             {
-                await Shell.Current.DisplayAlert("Error", "Nutzerdaten konnten nicht abgerufen werden. Bitte versuchen sie es später erneut.", "OK");
+                if(Application.Current?.Windows?.FirstOrDefault()?.Page is Page page)
+                {
+                    await page.DisplayAlert("Error", "Nutzerdaten konnten nicht abgerufen werden. Bitte versuchen sie es später erneut.", "OK");
+                }
                 return;
             }
 
             // User hasn't been assigned a role yet
             if (session.User.UserMetadata.Role == Models.UserRole.NotAssigned)
             {
-                await Shell.Current.DisplayAlert("Account in Bearbeitung", "Ihr Account ist noch keiner Rolle zugewiesen worden. Bitte kontaktieren Sie ihren Administrator.", "OK");
+                if (Application.Current?.Windows?.FirstOrDefault()?.Page is Page page )
+                {
+                    await page.DisplayAlert("Account in Bearbeitung", "Ihr Account ist noch keiner Rolle zugewiesen worden. Bitte kontaktieren Sie ihren Administrator.", "OK");
+                }
                 return;
             }
 
-            // Valid login - navigate based on role
             if (session.User.UserMetadata.Role == Models.UserRole.Admin)
             {
-                await Shell.Current.GoToAsync(nameof(AdminPage));
+                var appShell = new AppShell(_authService, startRoute: "//AdminPage");
+                if (Application.Current?.Windows?.FirstOrDefault() is Window window)
+                {
+                    window.Page = appShell;
+                }
             }
             else
             {
-                await Shell.Current.GoToAsync(nameof(HomePage));
+                var appShell = new AppShell(_authService, startRoute: "//HomePage");
+                if (Application.Current?.Windows?.FirstOrDefault() is Window window)
+                {
+                    window.Page = appShell;
+                }
             }
 
         }
@@ -73,19 +95,30 @@ namespace CrocoManager.ViewModel
             //bool ok = await SupabaseService.Instance.TestConnectionAsync();
             
             var ok = await _authService.TestConnectionAsync();
-            await Shell.Current.DisplayAlert("Connection Test", ok ? "Connected" : "Failed", "OK");
+            if (Application.Current?.Windows?.FirstOrDefault()?.Page is Page page)
+            {
+                await page.DisplayAlert("Connection Test", ok ? "Connected" : "Failed", "OK");
+            }
         }
 
         [RelayCommand]
-        private async Task GoToRegister()
+        private void GoToRegister()
         {
-            await Shell.Current.GoToAsync(nameof(RegisterPage));
+            var page = _serviceProvider.GetRequiredService<RegisterPage>();
+            if (Application.Current?.Windows?.FirstOrDefault() is Window window)
+            {
+                window.Page = page;
+            }
         }
 
         [RelayCommand]
-        private async Task GoToResetPassword()
+        private void GoToResetPassword()
         {
-            await Shell.Current.GoToAsync(nameof(ResetPasswordPage));
+            var page = _serviceProvider.GetRequiredService<ResetPasswordPage>();
+            if (Application.Current?.Windows?.FirstOrDefault() is Window window)
+            {
+                window.Page = page;
+            }
         }
     }
 }
