@@ -34,6 +34,12 @@
         <ShellContent ContentTemplate="{DataTemplate views:HomePage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Tierverwaltung" 
+        Icon="animal_icon.png"
+        Route="AnimalPage">
+        <ShellContent ContentTemplate="{DataTemplate views:AnimalPage}" />
+    </FlyoutItem>
+
 
     <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
         <ShellContent 
@@ -41,5 +47,11 @@
             Icon="home.png"
             Route="HomePage"
             ContentTemplate="{DataTemplate views:HomePage}" />
+
+        <ShellContent 
+            Title="Tierverwaltung"
+            Icon="animal_icon.png"
+            Route="AnimalPage"
+            ContentTemplate="{DataTemplate views:AnimalPage}" />
     </TabBar>
 </Shell>

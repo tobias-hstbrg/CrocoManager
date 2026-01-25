@@ -3,10 +3,93 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CrocoManager.Views.AnimalPage"
              Title="AnimalPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid RowDefinitions="Auto,*">
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="0">
+            <!-- Scrollable Headers -->
+            <ScrollView Grid.Column="0" 
+                   Orientation="Horizontal" 
+                   x:Name="headerScroll"
+                   HorizontalScrollBarVisibility="Never">
+                <Grid ColumnDefinitions="150,150,150,150" 
+                  Padding="10" 
+                  BackgroundColor="#F5F5F5"
+                  ColumnSpacing="10"
+                  HeightRequest="50">
+                    <Label Grid.Column="0" Text="Name" FontAttributes="Bold" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="Geschlecht" FontAttributes="Bold" VerticalOptions="Center"/>
+                    <Label Grid.Column="2" Text="Alter" FontAttributes="Bold" VerticalOptions="Center"/>
+                    <Label Grid.Column="3" Text="Art" FontAttributes="Bold" VerticalOptions="Center"/>
+                </Grid>
+            </ScrollView>
+
+            <!-- Fixed Header -->
+            <Grid Grid.Column="1" 
+              Padding="10" 
+              BackgroundColor="#F5F5F5"
+              WidthRequest="100"
+              HeightRequest="50">
+                <Label Text="Aktion" FontAttributes="Bold" VerticalOptions="Center"/>
+            </Grid>
+        </Grid>
+
+        <!-- Combined Scrollable Content + Fixed Column -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="0">
+            <!-- Single ScrollView for ALL rows -->
+            <ScrollView Grid.Column="0" 
+                   Orientation="Horizontal"
+                   x:Name="contentScroll"
+                   Scrolled="OnContentScrolled"
+                   HorizontalScrollBarVisibility="Default">
+                <CollectionView ItemsSource="{Binding Animals}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <VerticalStackLayout Spacing="0">
+                                <Grid ColumnDefinitions="150,150,150,150" 
+                                  Padding="10" 
+                                  ColumnSpacing="10"
+                                  HeightRequest="60">
+                                    <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding Gender}" VerticalOptions="Center"/>
+                                    <Label Grid.Column="2" Text="{Binding Age}" VerticalOptions="Center"/>
+                                    <Label Grid.Column="3" Text="{Binding Species}" VerticalOptions="Center"/>
+                                </Grid>
+                                <BoxView HeightRequest="1" Color="#E0E0E0"/>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+
+            <!-- Fixed Actions Column -->
+            <CollectionView Grid.Column="1" 
+                       ItemsSource="{Binding Animals}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid Padding="10" 
+                              WidthRequest="100"
+                              HeightRequest="60">
+                                <HorizontalStackLayout Spacing="10" 
+                                                 VerticalOptions="Center"
+                                                 HorizontalOptions="Center">
+                                    <ImageButton Source="panel_open.png"
+                                           BackgroundColor="Transparent" 
+                                           WidthRequest="24" 
+                                           HeightRequest="24"
+                                           Clicked="OnEditClicked"/>
+                                    <ImageButton Source="panel_close.png"
+                                           BackgroundColor="Transparent" 
+                                           WidthRequest="24" 
+                                           HeightRequest="24"
+                                           Clicked="OnDeleteClicked"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="#E0E0E0"/>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </Grid>
 </ContentPage>
