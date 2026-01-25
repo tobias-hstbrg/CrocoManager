@@ -23,26 +23,36 @@ public partial class AnimalPage : ContentPage
         BindingContext = this;
     }
 
-    private async void OnContentScrolled(object sender, ScrolledEventArgs e)
+    private void OnAnyScrolled(object sender, ScrolledEventArgs e)
     {
         if (isScrolling) return;
 
         isScrolling = true;
-        await headerScroll.ScrollToAsync(e.ScrollX, 0, false);
-        isScrolling = false;
-    }
 
-    private void OnEditClicked(object sender, EventArgs e)
-    {
-        var button = sender as Button;
-        var animal = button?.BindingContext as Animal;
-        // Handle edit
-    }
+        try
+        {
+            var scrollView = sender as ScrollView;
 
-    private void OnDeleteClicked(object sender, EventArgs e)
-    {
-        var button = sender as Button;
-        var animal = button?.BindingContext as Animal;
-        // Handle delete
+            if (scrollView == headerScroll)
+            {
+                // Header scrolled horizontal -> sync content horizontal only
+                contentScroll.ScrollToAsync(e.ScrollX, contentScroll.ScrollY, false);
+            }
+            else if (scrollView == contentScroll)
+            {
+                // Content scrolled -> sync header horizontal AND move actions vertical
+                headerScroll.ScrollToAsync(e.ScrollX, 0, false);
+
+                // Move the actions stack vertically - SOFORT ohne Animation
+                actionsStack.TranslationY = -e.ScrollY;
+
+                // Debug output
+                System.Diagnostics.Debug.WriteLine($"Scroll Y: {e.ScrollY}, Translation: {actionsStack.TranslationY}");
+            }
+        }
+        finally
+        {
+            isScrolling = false;
+        }
     }
 }
