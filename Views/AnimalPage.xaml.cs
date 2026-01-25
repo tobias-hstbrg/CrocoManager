@@ -1,4 +1,5 @@
 using CrocoManager.Models;
+using CrocoManager.ViewModel;
 
 namespace CrocoManager.Views;
 
@@ -7,20 +8,22 @@ public partial class AnimalPage : ContentPage
     private bool isScrolling = false;
     public List<Animal> Animals { get; set; }
 
-    public AnimalPage()
+    public AnimalPage(AnimalViewModel viewModel)
 	{
 		InitializeComponent();
 
-        Animals = new List<Animal>
-        {
-            new Animal { Name = "Charlie", Gender = "Männlich", Age = 8, Species = "Amerikanischer Alligator" },
-            new Animal { Name = "Rex", Gender = "Männlich", Age = 12, Species = "Spitzkrokodil" },
-            new Animal { Name = "Bella", Gender = "Weiblich", Age = 5, Species = "Nilkrokodil" },
-            new Animal { Name = "Max", Gender = "Männlich", Age = 15, Species = "Leistenkrokodil" },
-            new Animal { Name = "Luna", Gender = "Weiblich", Age = 3, Species = "Sumpfkrokodil" }
-        };
+        BindingContext = viewModel;
+    }
 
-        BindingContext = this;
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (BindingContext is AnimalViewModel vm &&
+            vm.LoadAnimalsCommand.CanExecute(null))
+        {
+            vm.LoadAnimalsCommand.Execute(null);
+        }
     }
 
     private void OnAnyScrolled(object sender, ScrolledEventArgs e)

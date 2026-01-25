@@ -154,6 +154,77 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
+        private async Task SaveAnimal()
+        {
+            if (!ValidateForm())
+            {
+                return;
+            }
+
+            try
+            {
+                IsBusy = true;
+
+                if (IsEditing && SelectedAnimal != null)
+                {
+                    // Update existing animal
+                    SelectedAnimal.Name = Name;
+                    SelectedAnimal.Gender = Gender;
+                    SelectedAnimal.Age = Age;
+                    SelectedAnimal.Species = Species;
+                    SelectedAnimal.Enclosure = Enclosure;
+                    SelectedAnimal.Description = Description;
+
+                    var updatedAnimal = await _animalService.UpdateAsync(SelectedAnimal);
+
+                    if (updatedAnimal != null)
+                    {
+                        await ShowSuccessAsync("Tier aktualisiert", $"'{Name}' wurde erfolgreich aktualisiert.");
+                    }
+                    else
+                    {
+                        await ShowErrorAsync("Fehler", "Das Tier konnte nicht aktualisiert werden.");
+                    }
+                }
+                else
+                {
+                    // Add new animal
+                    var newAnimal = new Animal
+                    {
+                        Name = Name,
+                        Gender = Gender,
+                        Age = Age,
+                        Species = Species,
+                        Enclosure = Enclosure,
+                        Description = Description
+                    };
+
+                    var createdAnimal = await _animalService.AddAsync(newAnimal);
+
+                    if (createdAnimal != null)
+                    {
+                        Animals.Add(createdAnimal);
+                        await ShowSuccessAsync("Tier hinzugefügt", $"'{Name}' wurde erfolgreich hinzugefügt.");
+                    }
+                    else
+                    {
+                        await ShowErrorAsync("Fehler", "Das Tier konnte nicht hinzugefügt werden.");
+                    }
+                }
+
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                await ShowErrorAsync("Fehler beim Speichern", ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        [RelayCommand]
         private void Cancel()
         {
             ClearForm();
@@ -210,5 +281,4 @@ namespace CrocoManager.ViewModel
             return Application.Current.MainPage.DisplayAlert(title, message, "OK");
         }
     }
-}
 }
