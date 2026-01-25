@@ -5,7 +5,7 @@
 	xmlns:viewmodels="clr-namespace:CrocoManager.ViewModel"
     xmlns:models="clr-namespace:CrocoManager.Models"
              x:Class="CrocoManager.Views.AnimalPage"
-             Title="Tiere verwalten">
+             Title="">
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="20">
             <!-- Header Section -->
