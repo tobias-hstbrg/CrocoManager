@@ -37,7 +37,7 @@
                                    x:Name="headerScroll"
                                    Scrolled="OnAnyScrolled"
                                    HorizontalScrollBarVisibility="Never">
-                            <Grid ColumnDefinitions="150,150,100,200" 
+                            <Grid ColumnDefinitions="150,150,100,150,200" 
                                   Padding="15" 
                                   BackgroundColor="#F8F9FA"
                                   ColumnSpacing="15"
@@ -45,7 +45,8 @@
                                 <Label Grid.Column="0" Text="Name" FontAttributes="Bold" VerticalOptions="Center" FontSize="14"/>
                                 <Label Grid.Column="1" Text="Geschlecht" FontAttributes="Bold" VerticalOptions="Center" FontSize="14"/>
                                 <Label Grid.Column="2" Text="Alter" FontAttributes="Bold" VerticalOptions="Center" FontSize="14"/>
-                                <Label Grid.Column="3" Text="Art" FontAttributes="Bold" VerticalOptions="Center" FontSize="14"/>
+                                <Label Grid.Column="3" Text="Gehege" FontAttributes="Bold" VerticalOptions="Center" FontSize="14"/>
+                                <Label Grid.Column="4" Text="Art" FontAttributes="Bold" VerticalOptions="Center" FontSize="14"/>
                             </Grid>
                         </ScrollView>
                         <Grid Grid.Column="1" 
@@ -68,14 +69,15 @@
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="models:Animal">
                                         <VerticalStackLayout Spacing="0">
-                                            <Grid ColumnDefinitions="150,150,100,200" 
+                                            <Grid ColumnDefinitions="150,150,100,150,200" 
                                                   Padding="15" 
                                                   ColumnSpacing="15"
                                                   HeightRequest="60">
                                                 <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center" FontSize="14"/>
                                                 <Label Grid.Column="1" Text="{Binding Gender}" VerticalOptions="Center" FontSize="14"/>
                                                 <Label Grid.Column="2" Text="{Binding Age}" VerticalOptions="Center" FontSize="14"/>
-                                                <Label Grid.Column="3" Text="{Binding Species}" VerticalOptions="Center" FontSize="14" LineBreakMode="TailTruncation"/>
+                                                <Label Grid.Column="3" Text="{Binding Enclosure}" VerticalOptions="Center" FontSize="14"/>
+                                                <Label Grid.Column="4" Text="{Binding Species}" VerticalOptions="Center" FontSize="14" LineBreakMode="TailTruncation"/>
                                             </Grid>
                                             <BoxView HeightRequest="1" Color="#E9ECEF"/>
                                         </VerticalStackLayout>
