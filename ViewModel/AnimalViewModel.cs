@@ -144,11 +144,12 @@ namespace CrocoManager.ViewModel
 
             try
             {
+                string animalName = animal.Name;
                 IsBusy = true;
                 await _animalService.DeleteAsync(animal.Id);
                 Animals.Remove(animal);
 
-                await ShowSuccessAsync("Tier hinzugefügt", $"'{Name}' wurde erfolgreich hinzugefügt.");
+                await ShowSuccessAsync("Tier gelöscht", $"'{animalName}' wurde erfolgreich gelöscht.");
             }
             catch (Exception ex)
             {
@@ -163,7 +164,7 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private async Task SaveAnimal()
         {
-            if (!ValidateForm())
+            if (!await ValidateForm())
             {
                 return;
             }
@@ -237,29 +238,29 @@ namespace CrocoManager.ViewModel
             ClearForm();
         }
 
-        private bool ValidateForm()
+        private async Task<bool> ValidateForm()
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
-                ShowErrorAsync("Validierungsfehler", "Bitte geben Sie einen Namen ein.").Wait();
+                await ShowErrorAsync("Validierungsfehler", "Bitte geben Sie einen Namen ein.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(Gender))
             {
-                ShowErrorAsync("Validierungsfehler", "Bitte wählen Sie ein Geschlecht aus.").Wait();
+                await ShowErrorAsync("Validierungsfehler", "Bitte wählen Sie ein Geschlecht aus.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(Species))
             {
-                ShowErrorAsync("Validierungsfehler", "Bitte wählen Sie eine Art aus.").Wait();
+                await ShowErrorAsync("Validierungsfehler", "Bitte wählen Sie eine Art aus.");
                 return false;
             }
 
             if (Age < 0)
             {
-                ShowErrorAsync("Validierungsfehler", "Das Alter muss eine positive Zahl sein.").Wait();
+                await ShowErrorAsync("Validierungsfehler", "Das Alter muss eine positive Zahl sein.");
                 return false;
             }
 
@@ -278,14 +279,14 @@ namespace CrocoManager.ViewModel
             IsEditing = false;
         }
 
-        private Task ShowSuccessAsync(string title, string message)
+        private async Task ShowSuccessAsync(string title, string message)
         {
-            return Application.Current.MainPage.DisplayAlert(title, message, "OK");
+            await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
         }
 
-        private Task ShowErrorAsync(string title, string message)
+        private async Task ShowErrorAsync(string title, string message)
         {
-            return Application.Current.MainPage.DisplayAlert(title, message, "OK");
+            await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
         }
 
         [RelayCommand]

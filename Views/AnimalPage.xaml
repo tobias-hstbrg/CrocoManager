@@ -127,31 +127,47 @@
                                                   WidthRequest="120"
                                                   HeightRequest="60"
                                                   BackgroundColor="{StaticResource CardBackground}">
+
                                                 <HorizontalStackLayout Spacing="10"
-                                                                       VerticalOptions="Center"
-                                                                       HorizontalOptions="Center">
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center">  
 
                                                     <!-- Edit Button -->
-                                                    <ImageButton Source="edit.png"
-                                                                 BackgroundColor="Transparent"
-                                                                 WidthRequest="24"
-                                                                 HeightRequest="24"
-                                                                 Command="{Binding BindingContext.EditAnimalCommand,
-                                                                           Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                                 CommandParameter="{Binding .}"/>
+                                                    <Border BackgroundColor="Transparent"
+                                                     StrokeThickness="0">
+                                                        <Border.WidthRequest>
+                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="40"/>
+                                                        </Border.WidthRequest>
+                                                        <Border.HeightRequest>
+                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="40"/>
+                                                        </Border.HeightRequest>
+                                                        <ImageButton Source="edit.png"
+                                                         BackgroundColor="Transparent"
+                                                         Aspect="AspectFit"
+                                                         Command="{Binding BindingContext.EditAnimalCommand,
+                                                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                         CommandParameter="{Binding .}"/>
+                                                    </Border>
 
                                                     <!-- Delete Button -->
-                                                    <ImageButton Source="trash.png"
-                                                                 BackgroundColor="Transparent"
-                                                                 WidthRequest="24"
-                                                                 HeightRequest="24"
-                                                                 Command="{Binding BindingContext.DeleteAnimalCommand,
-                                                                           Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                                 CommandParameter="{Binding .}"/>
+                                                    <Border BackgroundColor="Transparent"
+                                                    StrokeThickness="0">
+                                                        <Border.WidthRequest>
+                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="45"/>
+                                                        </Border.WidthRequest>
+                                                        <Border.HeightRequest>
+                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="45"/>
+                                                        </Border.HeightRequest>
+                                                        <ImageButton Source="trash.png"
+                                                         BackgroundColor="Transparent"
+                                                         Aspect="AspectFit"
+                                                         Command="{Binding BindingContext.DeleteAnimalCommand,
+                                                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                         CommandParameter="{Binding .}"/>           
+                                                    </Border>
 
                                                 </HorizontalStackLayout>
                                             </Grid>
-
                                             <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
                                         </VerticalStackLayout>
                                     </DataTemplate>
