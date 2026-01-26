@@ -42,16 +42,17 @@
 
 
     <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
-        <ShellContent 
-            Title="Dashboard"
-            Icon="home.png"
-            Route="HomePage"
-            ContentTemplate="{DataTemplate views:HomePage}" />
 
         <ShellContent 
             Title="Tierverwaltung"
             Icon="animal_icon.png"
             Route="AnimalPage"
             ContentTemplate="{DataTemplate views:AnimalPage}" />
+
+        <ShellContent 
+            Title="Dashboard"
+            Icon="home.png"
+            Route="HomePage"
+            ContentTemplate="{DataTemplate views:HomePage}" />
     </TabBar>
 </Shell>
