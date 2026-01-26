@@ -83,10 +83,9 @@
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
                         </ScrollView>
-                        <!-- Fixed Actions Column -->
                         <ContentView Grid.Column="1"
-             BackgroundColor="White"
-             WidthRequest="120">
+                         BackgroundColor="White"
+                         WidthRequest="120">
 
                             <ContentView.Clip>
                                 <RectangleGeometry Rect="0,0,120,300"/>
@@ -98,31 +97,32 @@
                                         <VerticalStackLayout Spacing="0">
 
                                             <Grid Padding="15"
-                          WidthRequest="120"
-                          HeightRequest="60"
-                          BackgroundColor="White">
-
-                                                <HorizontalStackLayout Spacing="10"
+                                              WidthRequest="120"
+                                              HeightRequest="60"
+                                              BackgroundColor="White">
+                                              <HorizontalStackLayout Spacing="10"
                                                VerticalOptions="Center"
                                                HorizontalOptions="Center">
 
-                                                    <ImageButton Source="pencil.png"
-                                         BackgroundColor="Transparent"
-                                         WidthRequest="24"
-                                         HeightRequest="24"
-                                         Command="{Binding BindingContext.EditAnimalCommand,
-                                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                         CommandParameter="{Binding .}" />
+                                                    <!-- Edit Button -->
+                                                    <ImageButton Source="edit.png"
+                                                     BackgroundColor="Transparent"
+                                                     WidthRequest="24"
+                                                     HeightRequest="24"
+                                                     Command="{Binding BindingContext.EditAnimalCommand,
+                                                               Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                     CommandParameter="{Binding .}"/>
 
+                                                    <!-- Delete Button -->
                                                     <ImageButton Source="trash.png"
-                                         BackgroundColor="Transparent"
-                                         WidthRequest="24"
-                                         HeightRequest="24"
-                                         Command="{Binding BindingContext.DeleteAnimalCommand,
-                                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                         CommandParameter="{Binding .}" />
+                                                    BackgroundColor="Transparent"
+                                                    WidthRequest="24"
+                                                    HeightRequest="24"
+                                                    Command="{Binding BindingContext.DeleteAnimalCommand,
+                                                            Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                    CommandParameter="{Binding .}"/>
 
-                                                </HorizontalStackLayout>
+                                              </HorizontalStackLayout>
                                             </Grid>
 
                                             <BoxView HeightRequest="1" Color="#E9ECEF"/>

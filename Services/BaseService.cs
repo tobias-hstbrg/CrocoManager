@@ -59,7 +59,7 @@ namespace CrocoManager.Services
         {
             try
             {
-                await _supabaseClient.Client.From<T>().Filter("id", Supabase.Postgrest.Constants.Operator.Equals, id).Delete();
+                await _supabaseClient.Client.From<T>().Filter("id", Supabase.Postgrest.Constants.Operator.Equals, id.ToString()).Delete();
                 return true;
             }
             catch (Exception ex) {
