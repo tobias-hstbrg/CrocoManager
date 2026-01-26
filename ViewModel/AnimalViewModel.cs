@@ -1,7 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CrocoManager.Interfaces;
 using CrocoManager.Models;
 using CrocoManager.Services;
-using CommunityToolkit.Mvvm.Input;
+using CrocoManager.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,7 +17,8 @@ namespace CrocoManager.ViewModel
     public partial class AnimalViewModel : ObservableObject
     {
         private readonly AnimalService _animalService;
-
+        private readonly IAuthService _authService;
+        private readonly IServiceProvider _serviceProvider;
         [ObservableProperty]
         private ObservableCollection<Animal> animals;
 
@@ -46,13 +50,15 @@ namespace CrocoManager.ViewModel
         private bool isBusy;
 
         public ObservableCollection<string> GenderOptions { get; }
-        public ObservableCollection <string> SpeciesOptions { get; }
+        public ObservableCollection<string> SpeciesOptions { get; }
 
         public string PageTitle => IsEditing ? "Tier bearbeiten" : "Neues Tier erstellen";
 
-        public AnimalViewModel(AnimalService animalService)
+        public AnimalViewModel(IAuthService authService, IServiceProvider serviceProvider, AnimalService animalService)
         {
             _animalService = animalService;
+            _authService = authService;
+            _serviceProvider = serviceProvider;
 
             Animals = new ObservableCollection<Animal>();
 
@@ -94,7 +100,7 @@ namespace CrocoManager.ViewModel
                     Animals.Add(animal);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await ShowErrorAsync("Fehler beim Laden", ex.Message);
             }
@@ -130,11 +136,11 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private async Task DeleteAnimal(Animal animal)
         {
-            if(animal == null) return;
+            if (animal == null) return;
 
             bool confirm = await Application.Current.MainPage.DisplayAlert("Löschen bestätigen", $"Möchten Sie '{animal.Name}' wirklich löschen?", "Ja", "Nein");
 
-            if(!confirm) return;
+            if (!confirm) return;
 
             try
             {
@@ -144,7 +150,8 @@ namespace CrocoManager.ViewModel
 
                 await ShowSuccessAsync("Tier hinzugefügt", $"'{Name}' wurde erfolgreich hinzugefügt.");
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 await ShowErrorAsync("Fehler beim Speichern", ex.Message);
             }
             finally
@@ -279,6 +286,31 @@ namespace CrocoManager.ViewModel
         private Task ShowErrorAsync(string title, string message)
         {
             return Application.Current.MainPage.DisplayAlert(title, message, "OK");
+        }
+
+        [RelayCommand]
+        private async Task SignOut()
+        {
+            try
+            {
+                bool succesful = await _authService.SignOutAsync();
+                if (succesful)
+                {
+                    var loginPage = _serviceProvider.GetRequiredService<LoginPage>();
+                    if (Application.Current?.Windows?.FirstOrDefault() is Window window)
+                    {
+                        window.Page = loginPage;
+                    }
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "Ok");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Sign out failed: {ex.Message}");
+            }
         }
     }
 }
