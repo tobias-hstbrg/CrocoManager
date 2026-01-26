@@ -3,14 +3,12 @@
 	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 	xmlns:viewmodels="clr-namespace:CrocoManager.ViewModel"
-    xmlns:models="clr-namespace:CrocoManager.Models"
+	xmlns:models="clr-namespace:CrocoManager.Models"
              x:Class="CrocoManager.Views.AnimalPage"
              Title=""
              BackgroundColor="{StaticResource PageBackground}">
-
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="20">
-
             <!-- Header Section -->
             <Grid ColumnDefinitions="*,Auto, Auto" ColumnSpacing="15">
                 <Label Grid.Column="0" 
@@ -38,16 +36,14 @@
                         VerticalOptions="Center"
                         Command="{Binding SignOutCommand}"/>
             </Grid>
-
             <!-- Animals Grid Card -->
             <Border 
                     Style="{StaticResource SecondaryCard}"
                     Padding="0"
                     Margin="0,10">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="12"/>
-                    </Border.StrokeShape>
-
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
                 <Grid RowDefinitions="Auto,300" ColumnSpacing="0">
                     <!-- Grid Header -->
                     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="0" BackgroundColor="Transparent">
@@ -68,7 +64,6 @@
                                 <Label Grid.Column="4" Text="Art" FontAttributes="Bold" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
                             </Grid>
                         </ScrollView>
-
                         <Grid Grid.Column="1" 
                               Padding="15" 
                               BackgroundColor="{StaticResource CardBackground}"
@@ -77,64 +72,67 @@
                             <Label Text="Aktion" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
                         </Grid>
                     </Grid>
-
                     <!-- Grid Content -->
                     <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="0" BackgroundColor="Transparent">
-
-                        <ScrollView Grid.Column="0" 
-                                   Orientation="Both"
-                                   x:Name="contentScroll"
-                                   Scrolled="OnAnyScrolled"
-                                   HorizontalScrollBarVisibility="Default"
-                                   VerticalScrollBarVisibility="Default">
-                            <VerticalStackLayout x:Name="dataRows" BindableLayout.ItemsSource="{Binding Animals}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="models:Animal">
-                                        <VerticalStackLayout Spacing="0">
-                                            <Grid ColumnDefinitions="150,150,100,150,200" 
-                                                  Padding="15" 
-                                                  ColumnSpacing="15"
-                                                  HeightRequest="60"
-                                                  BackgroundColor="{StaticResource CardBackground}">
-                                                <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                                <Label Grid.Column="1" Text="{Binding Gender}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                                <Label Grid.Column="2" Text="{Binding Age}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                                <Label Grid.Column="3" Text="{Binding Enclosure}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                                <Label Grid.Column="4" Text="{Binding Species}" VerticalOptions="Center" FontSize="14" LineBreakMode="TailTruncation" TextColor="{StaticResource TextPrimary}"/>
-                                            </Grid>
-                                            <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
-                                        </VerticalStackLayout>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </VerticalStackLayout>
-                        </ScrollView>
-
+                        <!-- Scrollable Content mit Overlay-Gradient -->
+                        <Grid Grid.Column="0">
+                            <ScrollView Orientation="Both"
+                   x:Name="contentScroll"
+                   Scrolled="OnAnyScrolled"
+                   HorizontalScrollBarVisibility="Default"
+                   VerticalScrollBarVisibility="Default">
+                                <VerticalStackLayout x:Name="dataRows" BindableLayout.ItemsSource="{Binding Animals}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Animal">
+                                            <VerticalStackLayout Spacing="0">
+                                                <Grid ColumnDefinitions="150,150,100,150,200" 
+                                  Padding="15" 
+                                  ColumnSpacing="15"
+                                  HeightRequest="60"
+                                  BackgroundColor="{StaticResource CardBackground}">
+                                                    <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
+                                                    <Label Grid.Column="1" Text="{Binding Gender}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
+                                                    <Label Grid.Column="2" Text="{Binding Age}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
+                                                    <Label Grid.Column="3" Text="{Binding Enclosure}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
+                                                    <Label Grid.Column="4" Text="{Binding Species}" VerticalOptions="Center" FontSize="14" LineBreakMode="TailTruncation" TextColor="{StaticResource TextPrimary}"/>
+                                                </Grid>
+                                                <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </ScrollView>
+                            <Grid HorizontalOptions="End"
+              WidthRequest="32"
+              InputTransparent="True">
+                                <!-- Thin Vertical Line -->
+                                <BoxView HorizontalOptions="End"
+                     WidthRequest="1"
+                     Color="{StaticResource BorderColor}"
+                     Opacity="0.5"/>
+                            </Grid>
+                        </Grid>
                         <!-- Fixed Actions Column -->
                         <ContentView Grid.Column="1"
-                                     BackgroundColor="{StaticResource CardBackground}"
-                                     WidthRequest="120">
-
+                 BackgroundColor="{StaticResource CardBackground}"
+                 WidthRequest="120">
                             <ContentView.Clip>
                                 <RectangleGeometry Rect="0,0,120,300"/>
                             </ContentView.Clip>
-
                             <VerticalStackLayout x:Name="actionsStack" BindableLayout.ItemsSource="{Binding Animals}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="models:Animal">
                                         <VerticalStackLayout Spacing="0">
-
                                             <Grid Padding="15"
-                                                  WidthRequest="120"
-                                                  HeightRequest="60"
-                                                  BackgroundColor="{StaticResource CardBackground}">
-
+                              WidthRequest="120"
+                              HeightRequest="60"
+                              BackgroundColor="{StaticResource CardBackground}">
                                                 <HorizontalStackLayout Spacing="10"
-                                                   VerticalOptions="Center"
-                                                   HorizontalOptions="Center">  
-
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center">
                                                     <!-- Edit Button -->
                                                     <Border BackgroundColor="Transparent"
-                                                     StrokeThickness="0">
+                                 StrokeThickness="0">
                                                         <Border.WidthRequest>
                                                             <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="40"/>
                                                         </Border.WidthRequest>
@@ -142,16 +140,15 @@
                                                             <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="40"/>
                                                         </Border.HeightRequest>
                                                         <ImageButton Source="edit.png"
-                                                         BackgroundColor="Transparent"
-                                                         Aspect="AspectFit"
-                                                         Command="{Binding BindingContext.EditAnimalCommand,
-                                                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                         CommandParameter="{Binding .}"/>
+                                     BackgroundColor="Transparent"
+                                     Aspect="AspectFit"
+                                     Command="{Binding BindingContext.EditAnimalCommand,
+                                               Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                     CommandParameter="{Binding .}"/>
                                                     </Border>
-
                                                     <!-- Delete Button -->
                                                     <Border BackgroundColor="Transparent"
-                                                    StrokeThickness="0">
+                                StrokeThickness="0">
                                                         <Border.WidthRequest>
                                                             <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="45"/>
                                                         </Border.WidthRequest>
@@ -159,13 +156,12 @@
                                                             <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="45"/>
                                                         </Border.HeightRequest>
                                                         <ImageButton Source="trash.png"
-                                                         BackgroundColor="Transparent"
-                                                         Aspect="AspectFit"
-                                                         Command="{Binding BindingContext.DeleteAnimalCommand,
-                                                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                         CommandParameter="{Binding .}"/>           
+                                     BackgroundColor="Transparent"
+                                     Aspect="AspectFit"
+                                     Command="{Binding BindingContext.DeleteAnimalCommand,
+                                               Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                     CommandParameter="{Binding .}"/>
                                                     </Border>
-
                                                 </HorizontalStackLayout>
                                             </Grid>
                                             <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
@@ -173,27 +169,22 @@
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
-
                         </ContentView>
                     </Grid>
                 </Grid>
             </Border>
-
             <!-- Animal Form Card -->
             <Border
                     Style="{StaticResource SecondaryCard}" 
                     Padding="20">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="12"/>
-                    </Border.StrokeShape>
-
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
                 <VerticalStackLayout Spacing="20">
-
                     <Label Text="{Binding PageTitle}" 
                            FontSize="22" 
                            FontAttributes="Bold"
                            TextColor="{StaticResource TextPrimary}"/>
-
                     <!-- Name -->
                     <VerticalStackLayout Spacing="5">
                         <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
@@ -216,7 +207,6 @@
                                    VerticalOptions="Center"/>
                         </Border>
                     </VerticalStackLayout>
-
                     <!-- Geschlecht -->
                     <VerticalStackLayout Spacing="5">
                         <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
@@ -238,7 +228,6 @@
                                     VerticalOptions="Center"/>
                         </Border>
                     </VerticalStackLayout>
-
                     <!-- Alter -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Alter" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
@@ -255,7 +244,6 @@
                                    VerticalOptions="Center"/>
                         </Border>
                     </VerticalStackLayout>
-
                     <!-- Art -->
                     <VerticalStackLayout Spacing="5">
                         <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
@@ -277,7 +265,6 @@
                                     VerticalOptions="Center"/>
                         </Border>
                     </VerticalStackLayout>
-
                     <!-- Gehege -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Gehege" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
@@ -293,7 +280,6 @@
                                    VerticalOptions="Center"/>
                         </Border>
                     </VerticalStackLayout>
-
                     <!-- Beschreibung -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Beschreibung / Besonderheiten" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
@@ -309,7 +295,6 @@
                                     VerticalOptions="Fill"/>
                         </Border>
                     </VerticalStackLayout>
-
                     <!-- Action Buttons -->
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
                         <Button Grid.Column="0"
@@ -323,10 +308,8 @@
                                 Style="{StaticResource PrimaryButton}"
                                 HeightRequest="45"/>
                     </Grid>
-
                 </VerticalStackLayout>
             </Border>
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
