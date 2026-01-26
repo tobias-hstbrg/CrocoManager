@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CrocoManager.Models;
+using CrocoManager.Services;
+
+namespace CrocoManager.Services
+{
+    public class AnimalService : BaseService<Animal>
+    {
+        public AnimalService(SupabaseClientService supabaseClient)
+           : base(supabaseClient)
+        {
+        }
+
+        public async Task<int> GetTotalCount()
+        {
+            List<Animal> allAnimals = await GetAllAsync();
+            return allAnimals.Count;
+        }
+
+        public async Task<List<Animal>> GetBySpeciesAsync(string species)
+        {
+            return await FilterByAsync("species", species);
+        }
+    }
+}

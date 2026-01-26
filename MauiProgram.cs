@@ -39,12 +39,14 @@ namespace CrocoManager
             builder.Services.AddTransient<AdminViewModel>();
             builder.Services.AddTransient<HomeViewModel>();
             builder.Services.AddTransient<PasswordResetViewModel>();
+            builder.Services.AddTransient<AnimalViewModel>();
 
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<RegisterPage>();
             builder.Services.AddTransient<AdminPage>();
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<ResetPasswordPage>();
+            builder.Services.AddTransient<AnimalPage>();
 
             // Shell
             builder.Services.AddSingleton<AppShell>();
@@ -52,6 +54,7 @@ namespace CrocoManager
             builder.Services.AddSingleton<SupabaseClientService>();
             builder.Services.AddSingleton<IAuthService, SupabaseAuthService>();
             builder.Services.AddSingleton<IWhitelistService, WhitelistService>();
+            builder.Services.AddSingleton<AnimalService>();
 
             var app = builder.Build();
             _serviceProvider = app.Services;
