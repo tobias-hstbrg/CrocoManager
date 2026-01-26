@@ -180,7 +180,14 @@
 
                     <!-- Name -->
                     <VerticalStackLayout Spacing="5">
-                        <Label Text="Name *" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Name "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
                         <Border Style="{StaticResource EntryBorder}"
                                 Padding="12,0"
                                 HeightRequest="48">
@@ -196,7 +203,14 @@
 
                     <!-- Geschlecht -->
                     <VerticalStackLayout Spacing="5">
-                        <Label Text="Geschlecht *" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Geschlecht "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
                         <Border Style="{StaticResource EntryBorder}"
                                 Padding="12,0"
                                 HeightRequest="48">
@@ -228,7 +242,14 @@
 
                     <!-- Art -->
                     <VerticalStackLayout Spacing="5">
-                        <Label Text="Art *" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Art "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
                         <Border Style="{StaticResource EntryBorder}"
                                 Padding="12,0"
                                 HeightRequest="48">
