@@ -60,5 +60,11 @@
             Icon="home.png"
             Route="HomePage"
             ContentTemplate="{DataTemplate views:HomePage}" />
+
+        <ShellContent 
+            Title="Futterplanverwaltung"
+            Icon="animal_icon.png"
+            Route="FeedingPlanPage"
+            ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
     </TabBar>
 </Shell>
