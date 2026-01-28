@@ -40,6 +40,12 @@
         <ShellContent ContentTemplate="{DataTemplate views:AnimalPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Futterplanverwaltung" 
+    Icon="animal_icon.png"
+    Route="FeedingPlanPage">
+        <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
+    </FlyoutItem>
+
 
     <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
 

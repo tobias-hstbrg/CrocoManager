@@ -40,13 +40,13 @@ namespace CrocoManager.Models
     }
     public enum Weekday
     {
-        Monday,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday,
-        Saturday,
-        Sunday
+        Montag,
+        Dienstag,
+        Mittwoch,
+        Donnerstag,
+        Freitag,
+        Samstag,
+        Sonntag
     }
 
     /// <summary>
