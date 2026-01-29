@@ -1,18 +1,26 @@
-﻿using CrocoManager.Services;
+﻿using CrocoManager.Interfaces;
+using CrocoManager.Services;
+using CrocoManager.ViewModel;
 using CrocoManager.Views;
 
 namespace CrocoManager
 {
     public partial class App : Application
     {
-        public App()
+        private readonly IServiceProvider _serviceProvider;
+        public App(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
             InitializeComponent();
+           
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            Window window = new Window(new AppShell());
+            var loginPage = Handler.MauiContext!.Services.GetRequiredService<LoginPage>();
+
+            var window = new Window(loginPage);
+
 #if WINDOWS
             window.MinimumWidth = 400;
             window.MinimumHeight = 1000;

@@ -4,6 +4,7 @@
              x:Class="CrocoManager.Views.HomePage"
              Title="Dashboard"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="{OnIdiom Phone=True, Default=False}"
              BackgroundColor="{StaticResource PageBackground}">
 
     <Grid x:Name="MainGrid" Padding="20">
@@ -75,9 +76,11 @@
                            Orientation="Horizontal" 
                            HorizontalOptions="FillAndExpand"
                            VerticalOptions="Center">
+
                     <Label x:Name="DashboardTitle"
                            Text="Dashboard"
-                           Style="{StaticResource PageTitle}"/>
+                           Style="{StaticResource PageTitle}"
+                           HorizontalOptions="FillAndExpand"/>
 
                     <Button 
                         x:Name="LogoutButton"
@@ -94,7 +97,7 @@
                         VerticalOptions="Start"
                         Padding="8"
                         ZIndex="1000"
-                        Command="{Binding SignOutCommand}"/>            
+                        Command="{Binding SignOutCommand}"/>
                 </StackLayout>
 
                 <!-- Statistics Cards -->

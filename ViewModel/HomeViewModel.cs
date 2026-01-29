@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Interfaces;
+using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +26,19 @@ namespace CrocoManager.ViewModel
                 bool succesfull = await _authService.SignOutAsync();
                 if (succesfull)
                 {
-                    await Shell.Current.GoToAsync("//LoginPage");
+                    var loginPage = App.Current?.Handler.MauiContext!.Services.GetRequiredService<LoginPage>();
+                    if (Application.Current?.Windows?.FirstOrDefault() is Window window)
+                    {
+                        window.Page = loginPage;
+                    }
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "OK");
+                    if (Application.Current?.Windows?.FirstOrDefault()?.Page is Page page)
+                    {
+                        await page.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "OK");
+                    }
+                    
                 }
             }
             catch (Exception ex)

@@ -4,6 +4,7 @@ using CrocoManager.Interfaces;
 using CrocoManager.Models;
 using CrocoManager.Services;
 using CrocoManager.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,14 @@ namespace CrocoManager.ViewModel
     public partial class RegisterViewModel : ObservableObject
     {
         private readonly IAuthService _authService;
+        private readonly IServiceProvider _serviceProvider;
 
         [ObservableProperty] string? email;
         [ObservableProperty] string? password;
-        public RegisterViewModel(IAuthService authService)
+        public RegisterViewModel(IAuthService authService, IServiceProvider serviceProvider)
         {
             _authService = authService;
+            _serviceProvider = serviceProvider;
         }
 
         [RelayCommand]
@@ -28,7 +31,7 @@ namespace CrocoManager.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                await Shell.Current.DisplayAlert("Error", "Enter credentials", "OK");
+                await ShowAlert("Error", "Enter credentials");
                 return;
             }
 
@@ -36,18 +39,31 @@ namespace CrocoManager.ViewModel
 
             if (session != null)
             {
+                await ShowAlert("Success", $"Registred {session.User.Email}");
                 await Shell.Current.DisplayAlert("Success", $"Registered {session.User.Email}", "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlert("Error", "Registration failed", "OK");
+                await ShowAlert("Error", "Registration failed");
+            }
+        }
+        private async Task ShowAlert(string title, string message)
+        {
+            var page = Application.Current?.Windows?.FirstOrDefault()?.Page;
+            if (page != null)
+            {
+                await page.DisplayAlert(title, message, "OK");
             }
         }
 
         [RelayCommand]
-        private async Task GoToLogin()
+        private void GoToLogin()
         {
-            await Shell.Current.GoToAsync($"///{nameof(LoginPage)}");
+            var loginPage = _serviceProvider.GetRequiredService<LoginPage>();
+            if (Application.Current?.Windows?.FirstOrDefault() is Window window)
+            {
+                window.Page = loginPage;
+            }
         }
     }
 }

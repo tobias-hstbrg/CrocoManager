@@ -251,6 +251,6 @@ namespace CrocoManager.Services
         public bool Success { get; set; }
 
         [JsonPropertyName("error")]
-        public string Error { get; set; }
+        public string Error { get; set; } = string.Empty;
     }
 }
