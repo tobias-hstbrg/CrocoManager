@@ -35,10 +35,11 @@
                 </Border.StrokeShape>
                 <VerticalStackLayout Spacing="15">
                     <HorizontalStackLayout Spacing="10">
-                        <Label Text="✓" 
-                               FontSize="20" 
-                               TextColor="{StaticResource Success}"
-                               VerticalOptions="Center"/>
+                        <Image Source="active_plan.png"
+                        Aspect="AspectFit"
+                        WidthRequest="24"
+                        HeightRequest="24"
+                        VerticalOptions="Center"/>
                         <Label Text="Aktiver Plan" 
                                FontSize="18" 
                                FontAttributes="Bold"
@@ -68,11 +69,11 @@
                                TextColor="{StaticResource TextPrimary}"/>
 
                         <Label Grid.Row="2" Grid.Column="0" 
-                               Text="Frequenz:" 
+                               Text="Fütterungstage:" 
                                FontSize="14" 
                                TextColor="{StaticResource TextSecondary}"/>
                         <Label Grid.Row="2" Grid.Column="1" 
-                               Text="{Binding ActivePlan.FrequencyPerWeek, StringFormat='{0}x pro Woche'}" 
+                               Text="{Binding ActivePlan.WeekdaysFormatted}" 
                                FontSize="14" 
                                TextColor="{StaticResource TextPrimary}"/>
 

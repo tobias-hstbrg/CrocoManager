@@ -41,7 +41,7 @@
     </FlyoutItem>
 
     <FlyoutItem Title="Futterplanverwaltung" 
-    Icon="animal_icon.png"
+    Icon="calendar.png"
     Route="FeedingPlanPage">
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
     </FlyoutItem>
@@ -63,7 +63,7 @@
 
         <ShellContent 
             Title="Futterplanverwaltung"
-            Icon="animal_icon.png"
+            Icon="calendar.png"
             Route="FeedingPlanPage"
             ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
     </TabBar>
