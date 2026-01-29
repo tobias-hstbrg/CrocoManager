@@ -117,4 +117,8 @@
 		<PublishTrimmed>false</PublishTrimmed>
 	</PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <AndroidLinkMode>None</AndroidLinkMode>
+  </PropertyGroup>
+
 </Project>
