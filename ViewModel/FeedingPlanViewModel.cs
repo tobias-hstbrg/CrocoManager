@@ -1,7 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CrocoManager.Interfaces;
 using CrocoManager.Models;
 using CrocoManager.Services;
+using CrocoManager.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +18,8 @@ namespace CrocoManager.ViewModel
     public partial class FeedingPlanViewModel : ObservableObject
     {
         private readonly FeedingPlanService _feedingPlanService;
+        private readonly IAuthService _authService;
+        private readonly IServiceProvider _serviceProvider;
 
         [ObservableProperty]
         private ObservableCollection<FeedingPlan> feedingPlans;
@@ -54,9 +59,11 @@ namespace CrocoManager.ViewModel
 
         public string PageTitle => IsEditing ? "Plan bearbeiten" : "Neuen Plan erstellen";
 
-        public FeedingPlanViewModel(FeedingPlanService feedingPlanService)
+        public FeedingPlanViewModel(FeedingPlanService feedingPlanService, IAuthService authService, IServiceProvider serviceProvider)
         {
             _feedingPlanService = feedingPlanService;
+            _authService = authService;
+            _serviceProvider = serviceProvider;
             FeedingPlans = new ObservableCollection<FeedingPlan>();
             ClearForm();
         }
@@ -223,23 +230,11 @@ namespace CrocoManager.ViewModel
             {
                 IsBusy = true;
 
-                var weekdaysList = new List<Weekday>();
-                if (!string.IsNullOrWhiteSpace(Weekdays))
-                {
-                    var days = Weekdays.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-                    foreach (var day in days)
-                    {
-                        if (Enum.TryParse<Weekday>(day.Trim(), true, out var weekday))
-                        {
-                            weekdaysList.Add(weekday);
-                        }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine($"Failed to parse: '{day.Trim()}'");
-                        }
-                    }
-                }
+                var weekdaysList = Weekdays
+               .Split(',', StringSplitOptions.RemoveEmptyEntries)
+               .Select(d => Enum.Parse<Weekday>(d.Trim(), true))
+               .Distinct()
+               .ToList();
 
                 if (IsEditing && SelectedPlan != null)
                 {
@@ -253,20 +248,23 @@ namespace CrocoManager.ViewModel
 
                     var updatedPlan = await _feedingPlanService.UpdateAsync(SelectedPlan);
 
-                    if (updatedPlan != null)
+                    if (updatedPlan == null)
                     {
-                        // Update in local collection
-                        var index = FeedingPlans.IndexOf(SelectedPlan);
-                        if (index >= 0)
-                        {
-                            FeedingPlans[index] = updatedPlan;
-                        }
-                        await ShowSuccessAsync("Plan aktualisiert", $"'{Name}' wurde erfolgreich aktualisiert.");
+                        await ShowErrorAsync(
+                            "Fehler",
+                            "Der Plan konnte nicht aktualisiert werden."
+                        );
+                        return;
                     }
-                    else
-                    {
-                        await ShowErrorAsync("Fehler", "Der Plan konnte nicht aktualisiert werden.");
-                    }
+
+                    var index = FeedingPlans.IndexOf(SelectedPlan);
+                    if (index >= 0)
+                        FeedingPlans[index] = updatedPlan;
+
+                    await ShowSuccessAsync(
+                        "Plan aktualisiert",
+                        $"'{updatedPlan.Name}' wurde erfolgreich aktualisiert."
+                    );
                 }
                 else
                 {
@@ -340,6 +338,32 @@ namespace CrocoManager.ViewModel
                 return false;
             }
 
+            if (string.IsNullOrWhiteSpace(Weekdays))
+            {
+                await ShowErrorAsync(
+                    "Validierungsfehler",
+                    "Bitte geben Sie mindestens einen Wochentag an."
+                );
+                return false;
+            }
+
+            var entries = Weekdays.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var entry in entries)
+            {
+                var trimmed = entry.Trim();
+
+                if (!Enum.TryParse<Weekday>(trimmed, true, out _))
+                {
+                    await ShowErrorAsync(
+                        "Ungültiger Wochentag",
+                        $"'{trimmed}' ist kein gültiger Wochentag.\n" +
+                        $"Erlaubt sind: {string.Join(", ", Enum.GetNames(typeof(Weekday)))}"
+                    );
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -363,6 +387,31 @@ namespace CrocoManager.ViewModel
         private async Task ShowErrorAsync(string title, string message)
         {
             await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
+        }
+
+        [RelayCommand]
+        private async Task SignOut()
+        {
+            try
+            {
+                bool succesful = await _authService.SignOutAsync();
+                if (succesful)
+                {
+                    var loginPage = _serviceProvider.GetRequiredService<LoginPage>();
+                    if (Application.Current?.Windows?.FirstOrDefault() is Window window)
+                    {
+                        window.Page = loginPage;
+                    }
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "Ok");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Sign out failed: {ex.Message}");
+            }
         }
     }
 }

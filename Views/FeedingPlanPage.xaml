@@ -11,19 +11,42 @@
         <VerticalStackLayout Spacing="20" Padding="20">
 
             <!-- Header Section -->
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="15">
-                <Label Grid.Column="0" 
-                       Text="Futterpläne" 
-                       FontSize="28" 
-                       FontAttributes="Bold"
-                       TextColor="{StaticResource TextPrimary}"
-                       VerticalOptions="Center"/>
-                <Button Grid.Column="1" 
-                        Text="➕ Neuen Plan erstellen"
-                        Command="{Binding AddNewPlanCommand}"
-                        Style="{StaticResource PrimaryButton}"
-                        CornerRadius="8"
-                        Padding="20,10"/>
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <!-- Row 0: Label + SignOut button (aligned with end of row 1 button) -->
+                <Label Grid.Row="0" Grid.Column="0"
+               Text="Futterpläne"
+               FontSize="28"
+               FontAttributes="Bold"
+               TextColor="{StaticResource TextPrimary}"
+               VerticalOptions="Center"/>
+
+                <Button Grid.Row="0" Grid.Column="1"
+                Text="🚪"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="{StaticResource TextOnPrimary}"
+                BorderColor="Transparent"
+                WidthRequest="50"
+                HeightRequest="50"
+                CornerRadius="8"
+                FontSize="16"
+                Padding="10"
+                VerticalOptions="Start"
+                HorizontalOptions="End"
+                Margin="0,0,0,0"
+                Command="{Binding SignOutCommand}"/>
+
+                <!-- Row 1: Create Plan button below SignOut, aligned right -->
+                <Button Grid.Row="1" Grid.Column="1"
+                Text="➕ Plan erstellen"
+                Command="{Binding AddNewPlanCommand}"
+                Style="{StaticResource PrimaryButton}"
+                WidthRequest="150"
+                HeightRequest="50"
+                CornerRadius="8"
+                Padding="10"
+                VerticalOptions="Start"
+                HorizontalOptions="End"
+                Margin="0,8,0,0"/>
             </Grid>
 
             <!-- Active Plan Card -->
