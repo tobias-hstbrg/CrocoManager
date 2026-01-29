@@ -37,6 +37,12 @@ namespace CrocoManager.Models
 
         [Column("is_active")]
         public bool IsActive { get; set; }
+
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string WeekdaysFormatted => Weekdays != null && Weekdays.Any()
+        ? string.Join(", ", Weekdays.Select(w => w.ToString()))
+        : string.Empty;
     }
     public enum Weekday
     {
