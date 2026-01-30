@@ -43,6 +43,7 @@
     <!-- Border and Stroke Colors -->
     <Color x:Key="BorderLight">#E2E8F0</Color>
     <Color x:Key="BorderMedium">#BDBDBD</Color>
+    <Color x:Key="BorderColor">#E2E8F0</Color>
     <Color x:Key="StrokePrimary">#E2E8F0</Color>
 
     <!-- Shadow Colors -->
