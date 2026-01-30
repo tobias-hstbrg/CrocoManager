@@ -5,7 +5,7 @@ namespace CrocoManager.Views;
 
 public partial class FeedingPlanPage : ContentPage
 {
-    private bool isScrolling = false;
+    private bool isSyncing;
 
     public FeedingPlanPage(FeedingPlanViewModel viewModel)
     {
@@ -16,6 +16,7 @@ public partial class FeedingPlanPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
         if (BindingContext is FeedingPlanViewModel vm &&
             vm.LoadPlansCommand?.CanExecute(null) == true)
         {
@@ -23,30 +24,32 @@ public partial class FeedingPlanPage : ContentPage
         }
     }
 
-    private void OnAnyScrolled(object sender, ScrolledEventArgs e)
+    private async void OnAnyScrolled(object sender, ScrolledEventArgs e)
     {
-        if (isScrolling) return;
-        isScrolling = true;
+        if (isSyncing)
+            return;
+
+        isSyncing = true;
 
         try
         {
-            var scrollView = sender as ScrollView;
-            if (scrollView == headerScroll)
+            if (sender == headerScroll)
             {
-                // Header scrolled horizontal -> sync content horizontal only
-                contentScroll.ScrollToAsync(e.ScrollX, contentScroll.ScrollY, false);
+                await contentScroll.ScrollToAsync(e.ScrollX, contentScroll.ScrollY, false);
             }
-            else if (scrollView == contentScroll)
+            else if (sender == contentScroll)
             {
-                // Content scrolled -> sync header horizontal AND move actions vertical
-                headerScroll.ScrollToAsync(e.ScrollX, 0, false);
-                // Move the actions stack vertically
-                actionsStack.TranslationY = -e.ScrollY;
+                await headerScroll.ScrollToAsync(e.ScrollX, 0, false);
+                await actionsScroll.ScrollToAsync(0, e.ScrollY, false);
+            }
+            else if (sender == actionsScroll)
+            {
+                await contentScroll.ScrollToAsync(contentScroll.ScrollX, e.ScrollY, false);
             }
         }
         finally
         {
-            isScrolling = false;
+            isSyncing = false;
         }
     }
 }

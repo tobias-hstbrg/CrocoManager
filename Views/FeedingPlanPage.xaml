@@ -113,173 +113,200 @@
             </Border>
 
             <!-- Plans Grid Card -->
-            <Border 
-                Style="{StaticResource SecondaryCard}"
-                Padding="0"
-                Margin="0,10">
+            <Border Style="{StaticResource SecondaryCard}"
+        Padding="0"
+        Margin="0,10">
+
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>
-                <Grid RowDefinitions="Auto,300" ColumnSpacing="0">
-                    <!-- Grid Header -->
-                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="0" BackgroundColor="Transparent">
-                        <ScrollView Grid.Column="0" 
-                                   Orientation="Horizontal" 
-                                   x:Name="headerScroll"
-                                   Scrolled="OnAnyScrolled"
-                                   HorizontalScrollBarVisibility="Never">
-                            <Grid ColumnDefinitions="200,150,100,450,150" 
-                                  Padding="15" 
-                                  BackgroundColor="{StaticResource CardBackground}"
-                                  ColumnSpacing="15"
-                                  HeightRequest="50">
-                                <Label Grid.Column="0" Text="Name" FontAttributes="Bold" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                <Label Grid.Column="1" Text="Futterart" FontAttributes="Bold" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                <Label Grid.Column="2" Text="Menge" FontAttributes="Bold" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                <Label Grid.Column="3" Text="Wochentage" FontAttributes="Bold" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                <Label Grid.Column="4" Text="Frequenz" FontAttributes="Bold" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
+
+                <Grid RowDefinitions="Auto,300"
+          ColumnSpacing="0">
+
+                    <!-- ================= HEADER ================= -->
+                    <Grid Grid.Row="0"
+              ColumnDefinitions="*,Auto"
+              BackgroundColor="Transparent">
+
+                        <ScrollView x:Name="headerScroll"
+                        Grid.Column="0"
+                        Orientation="Horizontal"
+                        HorizontalScrollBarVisibility="Never"
+                        Scrolled="OnAnyScrolled">
+
+                            <Grid ColumnDefinitions="200,150,100,450,150"
+                      Padding="15"
+                      HeightRequest="50"
+                      ColumnSpacing="15"
+                      BackgroundColor="{StaticResource CardBackground}">
+
+                                <Label Grid.Column="0" Text="Name" FontAttributes="Bold"/>
+                                <Label Grid.Column="1" Text="Futterart" FontAttributes="Bold"/>
+                                <Label Grid.Column="2" Text="Menge" FontAttributes="Bold"/>
+                                <Label Grid.Column="3" Text="Wochentage" FontAttributes="Bold"/>
+                                <Label Grid.Column="4" Text="Frequenz" FontAttributes="Bold"/>
                             </Grid>
                         </ScrollView>
-                        <Grid Grid.Column="1" 
-                          Padding="15" 
-                          BackgroundColor="{StaticResource CardBackground}"
-                          WidthRequest="180"
-                          HeightRequest="50">
-                            <Label Text="Aktion" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
+
+                        <Grid Grid.Column="1"
+                  WidthRequest="180"
+                  HeightRequest="50"
+                  Padding="15"
+                  BackgroundColor="{StaticResource CardBackground}">
+                            <Label Text="Aktion"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
                         </Grid>
                     </Grid>
 
-                    <!-- Grid Content -->
-                    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="0" BackgroundColor="Transparent">
-                        <!-- Scrollable Content -->
-                        <Grid Grid.Column="0">
-                            <ScrollView Orientation="Both"
-                                       x:Name="contentScroll"
-                                       Scrolled="OnAnyScrolled"
-                                       HorizontalScrollBarVisibility="Default"
-                                       VerticalScrollBarVisibility="Default">
-                                <VerticalStackLayout x:Name="dataRows" BindableLayout.ItemsSource="{Binding FeedingPlans}">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate x:DataType="models:FeedingPlan">
-                                            <VerticalStackLayout Spacing="0">
-                                                <Grid ColumnDefinitions="200,150,100,450,150" 
-                                                      Padding="15" 
-                                                      ColumnSpacing="15"
-                                                      HeightRequest="60"
-                                                      BackgroundColor="{StaticResource CardBackground}">
-                                                    <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                                    <Label Grid.Column="1" Text="{Binding FoodType}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                                    <Label Grid.Column="2" Text="{Binding AmountKg, StringFormat='{0} kg'}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                                    <Label Grid.Column="3" Text="{Binding WeekdaysFormatted}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                                    <Label Grid.Column="4" Text="{Binding FrequencyPerWeek, StringFormat='{0}x/Woche'}" VerticalOptions="Center" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                                </Grid>
-                                                <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
-                                            </VerticalStackLayout>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </VerticalStackLayout>
-                            </ScrollView>
-                            <Grid HorizontalOptions="End"
-                                  WidthRequest="32"
-                                  InputTransparent="True">
-                                <!-- Thin Vertical Line -->
-                                <BoxView HorizontalOptions="End"
-                                         WidthRequest="1"
-                                         Color="{StaticResource BorderColor}"
-                                         Opacity="0.5"/>
-                            </Grid>
-                        </Grid>
+                    <!-- ================= CONTENT ================= -->
+                    <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto">
 
-                        <!-- Fixed Actions Column -->
-                        <ContentView Grid.Column="1"
-                         BackgroundColor="{StaticResource CardBackground}"
-                         WidthRequest="{OnIdiom Desktop=180, Phone=130}">
-                            <ContentView.Clip>
-                                <RectangleGeometry Rect="0,0,180,300"/>
-                            </ContentView.Clip>
-                            <VerticalStackLayout x:Name="actionsStack" BindableLayout.ItemsSource="{Binding FeedingPlans}">
+                        <!-- DATA COLUMNS -->
+                        <ScrollView x:Name="contentScroll"
+                        Grid.Column="0"
+                        Orientation="Both"
+                        Scrolled="OnAnyScrolled">
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding FeedingPlans}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="models:FeedingPlan">
                                         <VerticalStackLayout Spacing="0">
+
+                                            <Grid ColumnDefinitions="200,150,100,450,150"
+                                      Padding="15"
+                                      HeightRequest="60"
+                                      ColumnSpacing="15"
+                                      BackgroundColor="{StaticResource CardBackground}">
+
+                                                <Label Grid.Column="0" Text="{Binding Name}"/>
+                                                <Label Grid.Column="1" Text="{Binding FoodType}"/>
+                                                <Label Grid.Column="2" Text="{Binding AmountKg, StringFormat='{0} kg'}"/>
+                                                <Label Grid.Column="3" Text="{Binding WeekdaysFormatted}"/>
+                                                <Label Grid.Column="4" Text="{Binding FrequencyPerWeek, StringFormat='{0}x/Woche'}"/>
+                                            </Grid>
+
+                                            <BoxView HeightRequest="1"
+                                         Color="{StaticResource BorderColor}"/>
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </ScrollView>
+
+                        <!-- ================= ACTIONS (FROZEN) ================= -->
+                        <ScrollView x:Name="actionsScroll"
+            Grid.Column="1"
+            Orientation="Vertical"
+            VerticalScrollBarVisibility="Never"
+            WidthRequest="{OnIdiom Desktop=180, Phone=130}"
+            BackgroundColor="{StaticResource CardBackground}"
+            Scrolled="OnAnyScrolled">
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding FeedingPlans}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:FeedingPlan">
+                                        <VerticalStackLayout Spacing="0">
+
                                             <Grid Padding="10"
-                                              WidthRequest="180"
-                                              HeightRequest="60"
-                                              BackgroundColor="{StaticResource CardBackground}">
+                          HeightRequest="60"
+                          WidthRequest="180"
+                          BackgroundColor="{StaticResource CardBackground}">
+
                                                 <HorizontalStackLayout Spacing="10"
-                                                   VerticalOptions="Center"
-                                                   HorizontalOptions="Center">
-                                                    <!-- Active Toggle Button -->
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center">
+
+                                                    <!-- ACTIVE TOGGLE -->
                                                     <Border BackgroundColor="Transparent"
-                                                    StrokeThickness="0">
+                                    StrokeThickness="0">
                                                         <Border.WidthRequest>
-                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="40"/>
+                                                            <OnIdiom x:TypeArguments="x:Double"
+                                             Phone="28"
+                                             Desktop="40"/>
                                                         </Border.WidthRequest>
                                                         <Border.HeightRequest>
-                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="40"/>
+                                                            <OnIdiom x:TypeArguments="x:Double"
+                                             Phone="28"
+                                             Desktop="40"/>
                                                         </Border.HeightRequest>
+
                                                         <ImageButton BackgroundColor="Transparent"
-                                                         Aspect="AspectFit"
-                                                         Command="{Binding BindingContext.ToggleActivePlanCommand,
-                                                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                         CommandParameter="{Binding .}">
+                                             Aspect="AspectFit"
+                                             Command="{Binding BindingContext.ToggleActivePlanCommand,
+                                               Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                             CommandParameter="{Binding .}">
                                                             <ImageButton.Source>
                                                                 <FileImageSource File="inactive_plan.png"/>
                                                             </ImageButton.Source>
                                                             <ImageButton.Triggers>
                                                                 <DataTrigger TargetType="ImageButton"
-                                                                 Binding="{Binding IsActive}"
-                                                                 Value="True">
-                                                                    <Setter Property="Source">
-                                                                        <Setter.Value>
-                                                                            <FileImageSource File="active_plan.png"/>
-                                                                        </Setter.Value>
-                                                                    </Setter>
+                                                     Binding="{Binding IsActive}"
+                                                     Value="True">
+                                                                    <Setter Property="Source"
+                                                    Value="active_plan.png"/>
                                                                 </DataTrigger>
                                                             </ImageButton.Triggers>
                                                         </ImageButton>
                                                     </Border>
 
-                                                    <!-- Edit Button -->
+                                                    <!-- EDIT -->
                                                     <Border BackgroundColor="Transparent"
-                                                    StrokeThickness="0">
+                                    StrokeThickness="0">
                                                         <Border.WidthRequest>
-                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="40"/>
+                                                            <OnIdiom x:TypeArguments="x:Double"
+                                             Phone="28"
+                                             Desktop="40"/>
                                                         </Border.WidthRequest>
                                                         <Border.HeightRequest>
-                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="40"/>
+                                                            <OnIdiom x:TypeArguments="x:Double"
+                                             Phone="28"
+                                             Desktop="40"/>
                                                         </Border.HeightRequest>
+
                                                         <ImageButton Source="edit.png"
-                                                         BackgroundColor="Transparent"
-                                                         Aspect="AspectFit"
-                                                         Command="{Binding BindingContext.EditPlanCommand,
-                                                                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                         CommandParameter="{Binding .}"/>
+                                             BackgroundColor="Transparent"
+                                             Aspect="AspectFit"
+                                             Command="{Binding BindingContext.EditPlanCommand,
+                                               Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                             CommandParameter="{Binding .}"/>
                                                     </Border>
 
-                                                    <!-- Delete Button -->
+                                                    <!-- DELETE -->
                                                     <Border BackgroundColor="Transparent"
                                                     StrokeThickness="0">
                                                         <Border.WidthRequest>
-                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="45"/>
+                                                            <OnIdiom x:TypeArguments="x:Double"
+                                             Phone="28"
+                                             Desktop="45"/>
                                                         </Border.WidthRequest>
                                                         <Border.HeightRequest>
-                                                            <OnIdiom x:TypeArguments="x:Double" Phone="28" Desktop="45"/>
+                                                            <OnIdiom x:TypeArguments="x:Double"
+                                             Phone="28"
+                                             Desktop="45"/>
                                                         </Border.HeightRequest>
+
                                                         <ImageButton Source="trash.png"
-                                                        BackgroundColor="Transparent"
-                                                        Aspect="AspectFit"
-                                                        Command="{Binding BindingContext.DeletePlanCommand,
-                                                                Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                        CommandParameter="{Binding .}"/>
+                                             BackgroundColor="Transparent"
+                                             Aspect="AspectFit"
+                                             Command="{Binding BindingContext.DeletePlanCommand,
+                                               Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                             CommandParameter="{Binding .}"/>
                                                     </Border>
+
                                                 </HorizontalStackLayout>
                                             </Grid>
-                                            <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
+
+                                            <BoxView HeightRequest="1"
+                                            Color="{StaticResource BorderColor}"/>
                                         </VerticalStackLayout>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
-                        </ContentView>
+                        </ScrollView>
                     </Grid>
                 </Grid>
             </Border>
