@@ -73,10 +73,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.9" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.110" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.12" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.12" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.12" />
 		<PackageReference Include="Supabase" Version="1.1.1" />
 	</ItemGroup>
 
@@ -91,6 +91,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\AnimalPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\FeedingPlanPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\HomePage.xaml">
@@ -108,10 +111,18 @@
 	  <None Include=".github\workflows\maui-ci.yml" />
 	</ItemGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+    <RunAOTCompilation>false</RunAOTCompilation>
+  </PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<RunAOTCompilation>false</RunAOTCompilation>
 		<UseInterpreter>true</UseInterpreter>
 		<PublishTrimmed>false</PublishTrimmed>
 	</PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <AndroidLinkMode>None</AndroidLinkMode>
+  </PropertyGroup>
 
 </Project>
