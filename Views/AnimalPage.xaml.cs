@@ -5,13 +5,11 @@ namespace CrocoManager.Views;
 
 public partial class AnimalPage : ContentPage
 {
-    private bool isScrolling = false;
-    public List<Animal> Animals { get; set; }
+    private bool isSyncing;
 
     public AnimalPage(AnimalViewModel viewModel)
-	{
-		InitializeComponent();
-
+    {
+        InitializeComponent();
         BindingContext = viewModel;
     }
 
@@ -26,36 +24,32 @@ public partial class AnimalPage : ContentPage
         }
     }
 
-    private void OnAnyScrolled(object sender, ScrolledEventArgs e)
+    private async void OnAnyScrolled(object sender, ScrolledEventArgs e)
     {
-        if (isScrolling) return;
+        if (isSyncing)
+            return;
 
-        isScrolling = true;
+        isSyncing = true;
 
         try
         {
-            var scrollView = sender as ScrollView;
-
-            if (scrollView == headerScroll)
+            if (sender == headerScroll)
             {
-                // Header scrolled horizontal -> sync content horizontal only
-                contentScroll.ScrollToAsync(e.ScrollX, contentScroll.ScrollY, false);
+                await contentScroll.ScrollToAsync(e.ScrollX, contentScroll.ScrollY, false);
             }
-            else if (scrollView == contentScroll)
+            else if (sender == contentScroll)
             {
-                // Content scrolled -> sync header horizontal AND move actions vertical
-                headerScroll.ScrollToAsync(e.ScrollX, 0, false);
-
-                // Move the actions stack vertically - SOFORT ohne Animation
-                actionsStack.TranslationY = -e.ScrollY;
-
-                // Debug output
-                System.Diagnostics.Debug.WriteLine($"Scroll Y: {e.ScrollY}, Translation: {actionsStack.TranslationY}");
+                await headerScroll.ScrollToAsync(e.ScrollX, 0, false);
+                await actionsScroll.ScrollToAsync(0, e.ScrollY, false);
+            }
+            else if (sender == actionsScroll)
+            {
+                await contentScroll.ScrollToAsync(contentScroll.ScrollX, e.ScrollY, false);
             }
         }
         finally
         {
-            isScrolling = false;
+            isSyncing = false;
         }
     }
 }
