@@ -40,6 +40,12 @@
         <ShellContent ContentTemplate="{DataTemplate views:AnimalPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Futterplanverwaltung" 
+    Icon="calendar.png"
+    Route="FeedingPlanPage">
+        <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
+    </FlyoutItem>
+
 
     <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
 
@@ -54,5 +60,11 @@
             Icon="home.png"
             Route="HomePage"
             ContentTemplate="{DataTemplate views:HomePage}" />
+
+        <ShellContent 
+            Title="Futterplanverwaltung"
+            Icon="calendar.png"
+            Route="FeedingPlanPage"
+            ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
     </TabBar>
 </Shell>
