@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CrocoManager.Services
 {
-    public class FeedingPlanService : BaseService<FeedingPlan>
+    public class FeedingPlanService : BaseService<FeedingPlanDto>
     {
         public FeedingPlanService(SupabaseClientService supabaseClient)
            : base(supabaseClient)
@@ -16,16 +16,16 @@ namespace CrocoManager.Services
 
         public async Task<bool> ToggleActiveAsync(Guid id)
         {
-            FeedingPlan? plan = await GetByIdAsync(id);
+            FeedingPlanDto? plan = await GetByIdAsync(id);
             if (plan == null) throw new NullReferenceException();
             plan.IsActive = !plan.IsActive;
             await UpdateAsync(plan);
             return plan.IsActive;
         }
 
-        public async Task<FeedingPlan> GetActivePlanAsync()
+        public async Task<FeedingPlanDto> GetActivePlanAsync()
         {
-            List<FeedingPlan> plans = await FilterByAsync("is_active", true);
+            List<FeedingPlanDto> plans = await FilterByAsync("is_active", true);
             if (plans.Count == 0)
                 throw new InvalidOperationException("No active feeding plan found.");
             if(plans.Count > 1)

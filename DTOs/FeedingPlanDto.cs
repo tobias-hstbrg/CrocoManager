@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace CrocoManager.DTOs
 {
     [Table("feeding_plan")]
-    public class FeedingPlan : BaseModel
+    public class FeedingPlanDto : BaseModel
     {
         [PrimaryKey("id")]
         public Guid Id { get; set; }
