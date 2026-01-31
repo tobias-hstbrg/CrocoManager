@@ -13,11 +13,9 @@ using System.Threading.Tasks;
 
 namespace CrocoManager.ViewModel
 {
-    public partial class AdminViewModel : ObservableObject
+    public partial class AdminViewModel : BaseViewModel
     {
         private readonly IWhitelistService _whitelistService;
-        private readonly IAuthService _authService;
-        private readonly IServiceProvider _serviceProvider;
 
         public ObservableCollection<EmailWhitelistVM> WhitelistedEmails { get; } = new();
 
@@ -30,11 +28,9 @@ namespace CrocoManager.ViewModel
         public IAsyncRelayCommand LoadEmailsCommand { get; }
         public IAsyncRelayCommand AddEmailCommand { get; }
 
-        public AdminViewModel(IWhitelistService whitelistService, IAuthService authService, IServiceProvider serviceProvider)
+        public AdminViewModel(IWhitelistService whitelistService, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             _whitelistService = whitelistService ?? throw new ArgumentNullException(nameof(whitelistService));
-            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
             Roles = Enum.GetNames(typeof(UserRole)).ToList();
 
@@ -57,7 +53,7 @@ namespace CrocoManager.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Email))
             {
-                await ShowAlert("Warnung", "Um einen Benutzer auf die Whitelist zu setzen, muss eine E-Mailadresse und eine Benutzerrolle angegeben werden!");
+                await NotificationService.ShowWarningAsync("Warnung", "Um einen Benutzer auf die Whitelist zu setzen, muss eine E-Mailadresse und eine Benutzerrolle angegeben werden!");
                 return;
             }
             var targetRole = SelectedRole;
@@ -89,43 +85,9 @@ namespace CrocoManager.ViewModel
             var roleUpdated = await _whitelistService.UpdateRoleAsync(emailVM.Id, roleEnum);
 
             if(!roleUpdated)
-                await ShowAlert("Warnung", "Benutzerrolle konnte nicht aktualisiert werden.");
+                await NotificationService.ShowWarningAsync("Warnung", "Benutzerrolle konnte nicht aktualisiert werden.");
 
             await LoadEmails();
         }
-        private async Task ShowAlert(string title, string message)
-        {
-            var page = Application.Current?.Windows?.FirstOrDefault()?.Page;
-            if (page != null)
-            {
-                await page.DisplayAlert(title, message, "OK");
-            }
-        }
-
-        [RelayCommand]
-        private async Task SignOut()
-        {
-            try
-            {
-                bool succesful = await _authService.SignOutAsync();
-                if(succesful)
-                {
-                    var loginPage = _serviceProvider.GetRequiredService<LoginPage>();
-                    if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-                    {
-                        window.Page = loginPage;
-                    }
-                }
-                else
-                {
-                    await ShowAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Sign out failed: {ex.Message}");
-            }
-        }
-
     }
 }

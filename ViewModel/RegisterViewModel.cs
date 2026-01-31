@@ -13,17 +13,13 @@ using System.Threading.Tasks;
 
 namespace CrocoManager.ViewModel
 {
-    public partial class RegisterViewModel : ObservableObject
+    public partial class RegisterViewModel : BaseViewModel
     {
-        private readonly IAuthService _authService;
-        private readonly IServiceProvider _serviceProvider;
 
         [ObservableProperty] string? email;
         [ObservableProperty] string? password;
-        public RegisterViewModel(IAuthService authService, IServiceProvider serviceProvider)
+        public RegisterViewModel(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            _authService = authService;
-            _serviceProvider = serviceProvider;
         }
 
         [RelayCommand]
@@ -31,35 +27,26 @@ namespace CrocoManager.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                await ShowAlert("Error", "Enter credentials");
+                await NotificationService.ShowErrorAsync("Error", "Enter credentials");
                 return;
             }
 
-            var session = await _authService.RegisterAsync(Email, Password);
+            var session = await AuthService.RegisterAsync(Email, Password);
 
             if (session != null)
             {
-                await ShowAlert("Success", $"Registred {session.User.Email}");
-                await Shell.Current.DisplayAlert("Success", $"Registered {session.User.Email}", "OK");
+                await NotificationService.ShowSuccessAsync("Success", $"Registred {session.User.Email}");
             }
             else
             {
-                await ShowAlert("Error", "Registration failed");
-            }
-        }
-        private async Task ShowAlert(string title, string message)
-        {
-            var page = Application.Current?.Windows?.FirstOrDefault()?.Page;
-            if (page != null)
-            {
-                await page.DisplayAlert(title, message, "OK");
+                await NotificationService.ShowErrorAsync("Error", "Registration failed");
             }
         }
 
         [RelayCommand]
         private void GoToLogin()
         {
-            var loginPage = _serviceProvider.GetRequiredService<LoginPage>();
+            var loginPage = ServiceProvider.GetRequiredService<LoginPage>();
             if (Application.Current?.Windows?.FirstOrDefault() is Window window)
             {
                 window.Page = loginPage;
