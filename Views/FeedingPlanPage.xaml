@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewmodels="clr-namespace:CrocoManager.ViewModel"
-    xmlns:models="clr-namespace:CrocoManager.Models"
+    xmlns:models="clr-namespace:CrocoManager.DTOs"
     x:Class="CrocoManager.Views.FeedingPlanPage"
     Title=""
     BackgroundColor="{StaticResource PageBackground}">
@@ -163,7 +163,7 @@
                                 Scrolled="OnContentScrolled">
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding FeedingPlans}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:FeedingPlan">
+                                <DataTemplate x:DataType="models:FeedingPlanDto">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid ColumnDefinitions="200,150,100,450,150"
                                               Padding="15"
@@ -193,7 +193,7 @@
                                 BackgroundColor="{StaticResource CardBackground}">
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding FeedingPlans}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:FeedingPlan">
+                                <DataTemplate x:DataType="models:FeedingPlanDto">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid Padding="10"
                                               HeightRequest="60"
