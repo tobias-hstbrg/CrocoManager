@@ -1,4 +1,4 @@
-﻿using CrocoManager.Models;
+﻿using CrocoManager.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

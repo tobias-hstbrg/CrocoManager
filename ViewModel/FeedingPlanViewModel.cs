@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CrocoManager.DTOs;
 using CrocoManager.Interfaces;
-using CrocoManager.Models;
 using CrocoManager.Services;
 using CrocoManager.Views;
 using Microsoft.Extensions.DependencyInjection;
