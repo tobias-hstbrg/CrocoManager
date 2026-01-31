@@ -12,18 +12,19 @@ namespace CrocoManager.ViewModel
 {
     public abstract partial class BaseViewModel : ObservableObject
     {
-        protected readonly INotificationService _notificationService;
-        protected readonly IAuthService _authService;
-        protected readonly IServiceProvider _serviceProvider;
+        protected INotificationService NotificationService { get; }
+        protected IAuthService AuthService { get; }
+        protected IServiceProvider ServiceProvider { get; }
 
         [ObservableProperty]
         private bool isBusy;
 
-        protected BaseViewModel(INotificationService notificationService, IAuthService authService, IServiceProvider serviceProvider)
+        protected BaseViewModel(IServiceProvider serviceProvider)
         {
-            _notificationService = notificationService;
-            _authService = authService;
-            _serviceProvider = serviceProvider;
+            ServiceProvider = serviceProvider;
+
+            NotificationService = serviceProvider.GetRequiredService<INotificationService>();
+            AuthService = serviceProvider.GetRequiredService<IAuthService>();
         }
 
         [RelayCommand]
@@ -31,15 +32,15 @@ namespace CrocoManager.ViewModel
         {
             try
             {
-                bool confirm = await _notificationService.ShowConfirmationAsync("Abmelden", "Möchten Sie sich wirklich abmelden?", "Ja", "Nein");
+                bool confirm = await NotificationService.ShowConfirmationAsync("Abmelden", "Möchten Sie sich wirklich abmelden?", "Ja", "Nein");
 
                 if (!confirm) return;
 
-                bool successful = await _authService.SignOutAsync();
+                bool successful = await AuthService.SignOutAsync();
 
                 if(successful)
                 {
-                    var loginPage = _serviceProvider.GetRequiredService<LoginPage>();
+                    var loginPage = ServiceProvider.GetRequiredService<LoginPage>();
                     if(Application.Current?.Windows.FirstOrDefault() is Window window)
                     {
                         window.Page = loginPage;
@@ -47,12 +48,12 @@ namespace CrocoManager.ViewModel
                 }
                 else
                 {
-                    await _notificationService.ShowErrorAsync("Fehler", "Abmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.");
+                    await NotificationService.ShowErrorAsync("Fehler", "Abmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.");
                 }
             }
             catch (Exception ex)
             {
-                await _notificationService.ShowErrorAsync("Fehler", $"Ein fehler ist aufgetreten: {ex.Message}");
+                await NotificationService.ShowErrorAsync("Fehler", $"Ein fehler ist aufgetreten: {ex.Message}");
             }
         }
     }
