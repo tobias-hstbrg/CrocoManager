@@ -56,6 +56,7 @@ namespace CrocoManager
             builder.Services.AddSingleton<SupabaseClientService>();
             builder.Services.AddSingleton<IAuthService, SupabaseAuthService>();
             builder.Services.AddSingleton<IWhitelistService, WhitelistService>();
+            builder.Services.AddSingleton<INotificationService, NotificationService>();
             builder.Services.AddSingleton<AnimalService>();
             builder.Services.AddSingleton<FeedingPlanService>();
 
