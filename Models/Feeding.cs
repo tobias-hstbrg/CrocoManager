@@ -13,7 +13,7 @@ namespace CrocoManager.Models
         public DateTime FeedingDate { get; init; }
         public string PerformedByEmail { get; init; } = string.Empty;
         public FeedingPlan FeedingPlan { get; init; } = null!;
-        public IReadOnlyList<Animal> Animals { get; init; } = [];
+        public IReadOnlyList<AnimalDto> Animals { get; init; } = [];
 
 
     }
