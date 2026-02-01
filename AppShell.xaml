@@ -46,6 +46,13 @@
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Fuetterung durchfuehren" 
+    Icon="calendar.png"
+    Route="FeedingPage">
+        <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
+    </FlyoutItem>
+
+
 
     <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
 

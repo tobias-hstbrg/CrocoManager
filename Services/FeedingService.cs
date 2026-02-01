@@ -1,86 +1,132 @@
 ﻿using CrocoManager.DTOs;
 using CrocoManager.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CrocoManager.ViewModel;
+using static Supabase.Postgrest.Constants;
 
-namespace CrocoManager.Services
+namespace CrocoManager.Services;
+
+public class FeedingService
 {
-    public class FeedingService
+    private readonly SupabaseClientService _supabase;
+
+    public FeedingService(SupabaseClientService supabase)
     {
-        private readonly SupabaseClientService _supabase;
+        _supabase = supabase;
+    }
 
-        public FeedingService(SupabaseClientService supabaseClient)
+    public async Task<Feeding> GetTodayFeedingDraftAsync()
+    {
+        var plan = (await _supabase.Client
+            .From<FeedingPlanDto>()
+            .Filter("is_active", Operator.Equals, "true")
+            .Get()).Models.Single();
+
+        var animals = (await _supabase.Client
+            .From<AnimalDto>()
+            .Get()).Models;
+
+        return new Feeding
         {
-            _supabase = supabaseClient;
-        }
-
-        public async Task<List<Feeding>> GetAllAsync()
-        {
-            var feedingDtos = (await _supabase.Client.From<FeedingDto>().Get()).Models;
-
-            if (feedingDtos.Count == 0)
-                return [];
-
-            var feedingIds = feedingDtos.Select(entry => entry.Id).ToList();
-            var planIds = feedingDtos.Select(entry => entry.FeedingPlanId).Distinct().ToList();
-
-            var plans = (await _supabase.Client.From<FeedingPlanDto>()
-                .Filter("Id", Supabase.Postgrest.Constants.Operator.In, planIds)
-                .Get()).Models;
-
-            var feedingAnimals = (await _supabase.Client.From<FeedingAnimalDto>()
-                .Filter("feeding_id", Supabase.Postgrest.Constants.Operator.In, feedingIds)
-                .Get()).Models;
-
-            var animalIds = feedingAnimals.Select(entry => entry.AnimalId).Distinct().ToList();
-
-            var animals = (await _supabase.Client.From<AnimalDto>()
-                .Filter("Id", Supabase.Postgrest.Constants.Operator.In, animalIds)
-                .Get()).Models;
-
-            return Assemble(feedingDtos, plans, feedingAnimals, animals);
-        }
-
-        private static List<Feeding> Assemble( List<FeedingDto> feedings, List<FeedingPlanDto> plans, List<FeedingAnimalDto> feedingAnimals, List<AnimalDto> animals)
-        {
-            return feedings.Select(entry =>
+            FeedingDate = DateTime.Now,
+            FeedingPlan = Map(plan),
+            Animals = animals.Select(a => new FeedingAnimalStatus
             {
-                var plan = plans.Single(p => p.Id == entry.FeedingPlanId);
+                Animal = MapAnimal(a),
+                WasFed = false
+            }).ToList()
+        };
+    }
 
-                var fedAnimalIds = feedingAnimals.Where(fa => fa.FeedingId == entry.Id && fa.WasFed)
-                    .Select(fa => fa.AnimalId)
-                    .ToHashSet();
+    public async Task SaveFeedingAsync(Feeding feeding, string rangerEmail)
+    {
+        var feedingDto = new FeedingDto
+        {
+            Id = Guid.NewGuid(),
+            FeedingDate = feeding.FeedingDate,
+            FeedingPlanId = feeding.FeedingPlan.Id,
+            PerformedByEmail = rangerEmail
+        };
 
-                var fedAnimals = animals
-                    .Where(a => fedAnimalIds.Contains(a.Id))
-                    .ToList();
+        // Insert feeding
+        var response = await _supabase.Client
+            .From<FeedingDto>()
+            .Insert(feedingDto);
 
-                return new Feeding
-                {
-                    Id = entry.Id,
-                    FeedingDate = entry.FeedingDate,
-                    PerformedByEmail = entry.PerformedByEmail,
-                    FeedingPlan = Map(plan),
-                    Animals = fedAnimals
-                };
-            }).ToList();
+        if (response?.Models?.FirstOrDefault() == null)
+        {
+            throw new Exception("Fütterung konnte nicht gespeichert werden");
         }
 
-        private static FeedingPlan Map(FeedingPlanDto dto)
-        {
-            return new FeedingPlan
+        var insertedFeeding = response.Models.First();
+
+        // Batch-Insert aller Tier-Verknüpfungen
+        var feedingAnimals = feeding.Animals
+            .Select(animal => new FeedingAnimalDto
             {
-                Id = dto.Id,
-                Name = dto.Name,
-                FoodType = dto.FoodType,
-                AmountKg = ((decimal)dto.AmountKg),
-                FrequencyPerWeek = dto.FrequencyPerWeek,
-                Weekdays = dto.Weekdays,
-                IsActive = dto.IsActive
-            };
+                FeedingId = insertedFeeding.Id,
+                AnimalId = animal.Animal.Id,
+                WasFed = animal.WasFed
+            })
+            .ToList();
+
+        if (feedingAnimals.Any())
+        {
+            await _supabase.Client
+                .From<FeedingAnimalDto>()
+                .Insert(feedingAnimals);
         }
     }
+
+    public async Task<List<FeedingHistoryEntry>> GetHistoryAsync()
+    {
+        var feedings = (await _supabase.Client.From<FeedingDto>().Get()).Models;
+        if (feedings.Count == 0)
+            return [];
+
+        var planIds = feedings.Select(f => f.FeedingPlanId).Distinct().ToList();
+        var plans = (await _supabase.Client
+            .From<FeedingPlanDto>()
+            .Filter("id", Operator.In, planIds)
+            .Get()).Models;
+
+        var feedingIds = feedings.Select(f => f.Id).ToList();
+        var feedingAnimals = (await _supabase.Client
+            .From<FeedingAnimalDto>()
+            .Filter("feeding_id", Operator.In, feedingIds)
+            .Get()).Models;
+
+        return feedings.Select(f =>
+        {
+            var plan = plans.Single(p => p.Id == f.FeedingPlanId);
+            var animals = feedingAnimals.Where(fa => fa.FeedingId == f.Id).ToList();
+
+            return new FeedingHistoryEntry
+            {
+                FeedingDate = f.FeedingDate,
+                FeedingPlanName = plan.Name,
+                FedAnimals = animals.Count(a => a.WasFed),
+                TotalAnimals = animals.Count,
+                PerformedByEmail = f.PerformedByEmail
+            };
+        }).ToList();
+    }
+    private static FeedingPlan Map(FeedingPlanDto dto) => new()
+    {
+        Id = dto.Id,
+        Name = dto.Name,
+        FoodType = dto.FoodType,
+        AmountKg = (decimal)dto.AmountKg,
+        FrequencyPerWeek = dto.FrequencyPerWeek,
+        Weekdays = dto.Weekdays,
+        IsActive = dto.IsActive
+    };
+
+    private static Animal MapAnimal(AnimalDto dto) => new()
+    {
+        Id = dto.Id,
+        Name = dto.Name,
+        Species = dto.Species,
+        Enclosure = dto.Enclosure,
+        AgeYears = dto.Age!.Value
+    };
 }
