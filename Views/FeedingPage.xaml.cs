@@ -18,4 +18,5 @@ public partial class FeedingPage : ContentPage
         await _viewModel.LoadAsync();
         await _viewModel.LoadHistoryAsync();
     }
+
 }
