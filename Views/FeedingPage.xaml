@@ -113,7 +113,7 @@
                                           ColumnSpacing="12">
                                         <CheckBox Grid.Column="0" 
                                                   IsChecked="{Binding WasFed}"
-                                                  Color="#16a085"
+                                                  Color="{StaticResource PrimaryLight}"
                                                   VerticalOptions="Center"/>
 
                                         <VerticalStackLayout Grid.Column="1" 
