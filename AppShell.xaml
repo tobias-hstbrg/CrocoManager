@@ -47,7 +47,7 @@
     </FlyoutItem>
 
     <FlyoutItem Title="Fuetterung durchfuehren" 
-    Icon="calendar.png"
+    Icon="feeding.png"
     Route="FeedingPage">
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
     </FlyoutItem>
@@ -73,5 +73,11 @@
             Icon="calendar.png"
             Route="FeedingPlanPage"
             ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
+
+        <ShellContent 
+        Title="Fuetterung"
+        Icon="feeding.png"
+        Route="FeedingPage"
+        ContentTemplate="{DataTemplate views:FeedingPage}" />
     </TabBar>
 </Shell>

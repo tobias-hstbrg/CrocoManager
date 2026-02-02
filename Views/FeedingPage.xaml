@@ -4,9 +4,36 @@
     xmlns:viewmodels="clr-namespace:CrocoManager.ViewModel"
     xmlns:models="clr-namespace:CrocoManager.Models"
     x:Class="CrocoManager.Views.FeedingPage"
-    x:DataType="viewmodels:FeedingViewModel">
+    x:DataType="viewmodels:FeedingViewModel"
+    BackgroundColor="{StaticResource PageBackground}"
+    Title="">
 
     <VerticalStackLayout Padding="24" Spacing="16">
+        <!-- Header Section -->
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+            <!-- Row 0: Label + SignOut button (aligned with end of row 1 button) -->
+            <Label Grid.Row="0" Grid.Column="0"
+           Text="Fütterung"
+           FontSize="28"
+           FontAttributes="Bold"
+           TextColor="{StaticResource TextPrimary}"
+           VerticalOptions="Center"/>
+
+            <Button Grid.Row="0" Grid.Column="1"
+            Text="🚪"
+            BackgroundColor="{StaticResource Primary}"
+            TextColor="{StaticResource TextOnPrimary}"
+            BorderColor="Transparent"
+            WidthRequest="50"
+            HeightRequest="50"
+            CornerRadius="8"
+            FontSize="16"
+            Padding="10"
+            VerticalOptions="Start"
+            HorizontalOptions="End"
+            Margin="0,0,0,0"
+            Command="{Binding SignOutCommand}"/>
+        </Grid>
 
         <!-- Heutige Fütterung -->
         <Frame BackgroundColor="#16a085" CornerRadius="12">
