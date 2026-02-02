@@ -1,4 +1,4 @@
-<Shell
+﻿<Shell
     x:Class="CrocoManager.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -46,7 +46,7 @@
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Fuetterung durchfuehren" 
+    <FlyoutItem Title="Fütterungen" 
     Icon="feeding.png"
     Route="FeedingPage">
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
@@ -75,7 +75,7 @@
             ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
 
         <ShellContent 
-        Title="Fuetterung"
+        Title="Fütterungen"
         Icon="feeding.png"
         Route="FeedingPage"
         ContentTemplate="{DataTemplate views:FeedingPage}" />
