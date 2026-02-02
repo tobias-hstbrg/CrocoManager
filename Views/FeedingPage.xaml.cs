@@ -16,5 +16,6 @@ public partial class FeedingPage : ContentPage
     {
         base.OnAppearing();
         await _viewModel.LoadAsync();
+        await _viewModel.LoadHistoryAsync();
     }
 }

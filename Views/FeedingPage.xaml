@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -7,72 +8,245 @@
     x:DataType="viewmodels:FeedingViewModel"
     BackgroundColor="{StaticResource PageBackground}"
     Title="">
+    <ScrollView>
+        <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" Padding="20" RowSpacing="20">
 
-    <VerticalStackLayout Padding="24" Spacing="16">
-        <!-- Header Section -->
-        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" ColumnSpacing="10">
-            <!-- Row 0: Label + SignOut button (aligned with end of row 1 button) -->
-            <Label Grid.Row="0" Grid.Column="0"
-           Text="Fütterung"
-           FontSize="28"
-           FontAttributes="Bold"
-           TextColor="{StaticResource TextPrimary}"
-           VerticalOptions="Center"/>
+            <!-- Header Section -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <Label Grid.Column="0"
+                       Text="Fütterung"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       VerticalOptions="Center"/>
 
-            <Button Grid.Row="0" Grid.Column="1"
-            Text="🚪"
-            BackgroundColor="{StaticResource Primary}"
-            TextColor="{StaticResource TextOnPrimary}"
-            BorderColor="Transparent"
-            WidthRequest="50"
-            HeightRequest="50"
-            CornerRadius="8"
-            FontSize="16"
-            Padding="10"
-            VerticalOptions="Start"
-            HorizontalOptions="End"
-            Margin="0,0,0,0"
-            Command="{Binding SignOutCommand}"/>
+                <Button Grid.Column="1"
+                        Text="🚪"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource TextOnPrimary}"
+                        BorderColor="Transparent"
+                        WidthRequest="50"
+                        HeightRequest="50"
+                        CornerRadius="8"
+                        FontSize="16"
+                        Padding="10"
+                        VerticalOptions="Center"
+                        Command="{Binding SignOutCommand}"/>
+            </Grid>
+
+            <!-- Heutige Fütterung Card -->
+            <Border Grid.Row="1"
+                    BackgroundColor="#16a085"
+                    Padding="20"
+                    Margin="0"
+                    IsVisible="{Binding HasCurrentFeeding}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Heutige Fütterung"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" 
+                          ColumnSpacing="10" RowSpacing="5">
+                        <Label Grid.Row="0" Grid.Column="0" 
+                               Text="Datum:" 
+                               FontSize="14" 
+                               TextColor="White"/>
+                        <Label Grid.Row="0" Grid.Column="1" 
+                               Text="{Binding CurrentFeeding.FeedingDate, StringFormat='{0:dd.MM.yyyy}'}" 
+                               FontSize="14" 
+                               TextColor="White"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" 
+                               Text="Plan:" 
+                               FontSize="14" 
+                               TextColor="White"/>
+                        <Label Grid.Row="1" Grid.Column="1" 
+                               Text="{Binding CurrentFeeding.FeedingPlan.Name}" 
+                               FontSize="14" 
+                               TextColor="White"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" 
+                               Text="Futter:" 
+                               FontSize="14" 
+                               TextColor="White"/>
+                        <Label Grid.Row="2" Grid.Column="1" 
+                               Text="{Binding CurrentFeeding.FeedingPlan.FoodType}" 
+                               FontSize="14" 
+                               TextColor="White"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Section Header -->
+            <Label Grid.Row="2"
+                   Text="Tiere als gefüttert markieren"
+                   FontSize="14"
+                   TextColor="{StaticResource TextSecondary}"
+                   Margin="0,5,0,-5"/>
+
+            <!-- Animals List -->
+            <Border Grid.Row="3"
+                    Style="{StaticResource SecondaryCard}"
+                    Padding="0"
+                    Margin="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+
+                <CollectionView ItemsSource="{Binding Animals}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:FeedingAnimalStatus">
+                            <Border BackgroundColor="Transparent"
+                                    Padding="0">
+                                <VerticalStackLayout Spacing="0">
+                                    <Grid ColumnDefinitions="Auto,*" 
+                                          Padding="15,12"
+                                          ColumnSpacing="12">
+                                        <CheckBox Grid.Column="0" 
+                                                  IsChecked="{Binding WasFed}"
+                                                  Color="#16a085"
+                                                  VerticalOptions="Center"/>
+
+                                        <VerticalStackLayout Grid.Column="1" 
+                                                             Spacing="3"
+                                                             VerticalOptions="Center">
+                                            <Label Text="{Binding Animal.Name}" 
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextPrimary}"/>
+                                            <Label FontSize="13" 
+                                                   TextColor="{StaticResource TextSecondary}">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding Animal.Species}"/>
+                                                        <Span Text=" • Gehege "/>
+                                                        <Span Text="{Binding Animal.Enclosure}"/>
+                                                        <Span Text=" • "/>
+                                                        <Span Text="{Binding Animal.AgeYears}"/>
+                                                        <Span Text=" Jahre"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <BoxView HeightRequest="1" 
+                                             Color="{StaticResource BorderColor}"
+                                             Margin="15,0"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border>
+
+            <!-- Action Buttons -->
+            <Grid Grid.Row="4" 
+                  ColumnDefinitions="*,*" 
+                  ColumnSpacing="15" 
+                  Margin="0,10,0,0">
+                <Button Grid.Column="0"
+                        Text="Fütterung abschließen"
+                        BackgroundColor="#16a085"
+                        TextColor="White"
+                        HeightRequest="50"
+                        CornerRadius="8"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        Command="{Binding SaveCommand}"/>
+
+                <Button Grid.Column="1"
+                Text="Abbrechen"
+                Command="{Binding CancelCommand}"
+                Style="{StaticResource SecondaryButton}"
+                HeightRequest="45"/>
+            </Grid>
+
+            <!-- Feeding History Table -->
+            <Border Grid.Row="5"
+                    Style="{StaticResource SecondaryCard}"
+                    Padding="0"
+                    Margin="0,10,0,0"
+                    IsVisible="{Binding HasHistory}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+
+                <Grid RowDefinitions="50,*">
+                    <!-- Header Row -->
+                    <ScrollView Grid.Row="0"
+                                Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never">
+                        <Grid ColumnDefinitions="1.5*,2*,1.5*,2*"
+                              Padding="15"
+                              HeightRequest="50"
+                              ColumnSpacing="15"
+                              BackgroundColor="{StaticResource CardBackground}">
+                            <Label Grid.Column="0" 
+                                   Text="Datum" 
+                                   FontAttributes="Bold" 
+                                   VerticalOptions="Center"
+                                   TextColor="{StaticResource TextPrimary}"/>
+                            <Label Grid.Column="1" 
+                                   Text="Plan" 
+                                   FontAttributes="Bold" 
+                                   VerticalOptions="Center"
+                                   TextColor="{StaticResource TextPrimary}"/>
+                            <Label Grid.Column="2" 
+                                   Text="Tiere gefüttert" 
+                                   FontAttributes="Bold" 
+                                   VerticalOptions="Center"
+                                   TextColor="{StaticResource TextPrimary}"/>
+                            <Label Grid.Column="3" 
+                                   Text="Durchgeführt von" 
+                                   FontAttributes="Bold" 
+                                   VerticalOptions="Center"
+                                   TextColor="{StaticResource TextPrimary}"/>
+                        </Grid>
+                    </ScrollView>
+
+                    <!-- Content Rows -->
+                    <ScrollView Grid.Row="1"
+                                Orientation="Both">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding FeedingHistory}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="viewmodels:FeedingHistoryEntry">
+                                    <VerticalStackLayout Spacing="0">
+                                        <Grid ColumnDefinitions="1.5*,2*,1.5*,2*"
+                                              Padding="15"
+                                              HeightRequest="60"
+                                              ColumnSpacing="15"
+                                              BackgroundColor="{StaticResource CardBackground}">
+                                            <Label Grid.Column="0" 
+                                                   Text="{Binding FeedingDate, StringFormat='{0:dd.MM.yyyy}'}" 
+                                                   VerticalOptions="Center"
+                                                   TextColor="{StaticResource TextPrimary}"/>
+                                            <Label Grid.Column="1" 
+                                                   Text="{Binding FeedingPlanName}" 
+                                                   VerticalOptions="Center"
+                                                   TextColor="{StaticResource TextPrimary}"/>
+                                            <Label Grid.Column="2" 
+                                                   Text="{Binding FedAnimals}" 
+                                                   VerticalOptions="Center"
+                                                   TextColor="{StaticResource TextPrimary}"/>
+                                            <Label Grid.Column="3" 
+                                                   Text="{Binding PerformedByEmail}" 
+                                                   VerticalOptions="Center"
+                                                   TextColor="{StaticResource TextPrimary}"/>
+                                        </Grid>
+                                        <BoxView HeightRequest="1" 
+                                                 Color="{StaticResource BorderColor}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </Grid>
+            </Border>
         </Grid>
-
-        <!-- Heutige Fütterung -->
-        <Frame BackgroundColor="#16a085" CornerRadius="12">
-            <VerticalStackLayout>
-                <Label Text="Heutige Fütterung"
-                       FontSize="18"
-                       TextColor="White" />
-
-                <Label Text="{Binding CurrentFeeding.FeedingDate}"
-                       TextColor="White" />
-
-                <Label Text="{Binding CurrentFeeding.FeedingPlan.Name}"
-                       TextColor="White" />
-
-                <Label Text="{Binding CurrentFeeding.FeedingPlan.FoodType}"
-                       TextColor="White" />
-            </VerticalStackLayout>
-        </Frame>
-
-        <!-- Tiere -->
-        <CollectionView ItemsSource="{Binding Animals}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:FeedingAnimalStatus">
-                    <HorizontalStackLayout Spacing="12">
-                        <CheckBox IsChecked="{Binding WasFed}" />
-                        <Label Text="{Binding Animal.Name}" />
-                    </HorizontalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
-        <!-- Buttons -->
-        <Button
-            Text="Fütterung abschließen"
-            Command="{Binding SaveCommand}" />
-
-        <Button
-            Text="Abbrechen"
-            Command="{Binding SignOutCommand}" />
-
-    </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -24,8 +24,15 @@ public partial class FeedingViewModel : BaseViewModel
     [ObservableProperty]
     private Feeding? currentFeeding;
 
-    public ObservableCollection<FeedingAnimalStatus> Animals { get; }
-        = new();
+    [ObservableProperty]
+    private bool hasHistory;
+
+    [ObservableProperty]
+    private bool hasCurrentFeeding;
+
+    public ObservableCollection<FeedingAnimalStatus> Animals { get; } = new();
+
+    public ObservableCollection<FeedingHistoryEntry> FeedingHistory { get; } = new();
 
     [RelayCommand]
     public async Task LoadAsync()
@@ -36,6 +43,7 @@ public partial class FeedingViewModel : BaseViewModel
         try
         {
             CurrentFeeding = await _feedingService.GetTodayFeedingDraftAsync();
+            HasCurrentFeeding = CurrentFeeding != null;
 
             Animals.Clear();
 
@@ -68,10 +76,55 @@ public partial class FeedingViewModel : BaseViewModel
             await NotificationService.ShowSuccessAsync(
                 "Erfolgreich",
                 "Fütterung gespeichert");
+
+            await LoadHistoryAsync();
+            await ClearSelection();
         }
         finally
         {
             IsBusy = false;
         }
+    }
+
+    [RelayCommand]
+    public async Task LoadHistoryAsync()
+    {
+        try
+        {
+            var history = await _feedingService.GetHistoryAsync();
+            FeedingHistory.Clear();
+
+            // Sort by date descending (newest first) and take last 10
+            foreach (var entry in history.OrderByDescending(h => h.FeedingDate).Take(10))
+            {
+                FeedingHistory.Add(entry);
+            }
+
+            HasHistory = FeedingHistory.Count > 0;
+        }
+        catch (Exception ex)
+        {
+            await NotificationService.ShowErrorAsync(
+                "Fehler beim Laden des Verlaufs",
+                ex.Message);
+        }
+    }
+
+    [RelayCommand]
+    public async Task Cancel()
+    {
+        await ClearSelection();
+    }
+
+    private async Task ClearSelection()
+    {
+        // Uncheck all animals
+        foreach (var animal in Animals)
+        {
+            animal.WasFed = false;
+        }
+
+        // Reload current feeding to reset state
+        await LoadAsync();
     }
 }
