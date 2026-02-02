@@ -15,11 +15,9 @@ using System.Threading.Tasks;
 
 namespace CrocoManager.ViewModel
 {
-    public partial class FeedingPlanViewModel : ObservableObject
+    public partial class FeedingPlanViewModel : BaseViewModel
     {
         private readonly FeedingPlanService _feedingPlanService;
-        private readonly IAuthService _authService;
-        private readonly IServiceProvider _serviceProvider;
 
         [ObservableProperty]
         private ObservableCollection<FeedingPlan> feedingPlans;
@@ -59,11 +57,9 @@ namespace CrocoManager.ViewModel
 
         public string PageTitle => IsEditing ? "Plan bearbeiten" : "Neuen Plan erstellen";
 
-        public FeedingPlanViewModel(FeedingPlanService feedingPlanService, IAuthService authService, IServiceProvider serviceProvider)
+        public FeedingPlanViewModel(FeedingPlanService feedingPlanService, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             _feedingPlanService = feedingPlanService;
-            _authService = authService;
-            _serviceProvider = serviceProvider;
             FeedingPlans = new ObservableCollection<FeedingPlan>();
             ClearForm();
         }
@@ -94,7 +90,7 @@ namespace CrocoManager.ViewModel
             }
             catch (Exception ex)
             {
-                await ShowErrorAsync("Fehler beim Laden", ex.Message);
+                await NotificationService.ShowErrorAsync("Fehler beim Laden", ex.Message);
             }
             finally
             {
@@ -138,7 +134,7 @@ namespace CrocoManager.ViewModel
         {
             if (plan == null) return;
 
-            bool confirm = await Application.Current.MainPage.DisplayAlert(
+            bool confirm = await NotificationService.ShowConfirmationAsync(
                 "Löschen bestätigen",
                 $"Möchten Sie '{plan.Name}' wirklich löschen?",
                 "Ja",
@@ -159,11 +155,11 @@ namespace CrocoManager.ViewModel
                     HasActivePlan = false;
                 }
 
-                await ShowSuccessAsync("Plan gelöscht", $"'{planName}' wurde erfolgreich gelöscht.");
+                await NotificationService.ShowSuccessAsync("Plan gelöscht", $"'{planName}' wurde erfolgreich gelöscht.");
             }
             catch (Exception ex)
             {
-                await ShowErrorAsync("Fehler beim Löschen", ex.Message);
+                await NotificationService.ShowErrorAsync("Fehler beim Löschen", ex.Message);
             }
             finally
             {
@@ -206,11 +202,11 @@ namespace CrocoManager.ViewModel
                     FeedingPlans.Add(p);
                 }
 
-                await ShowSuccessAsync("Plan aktiviert", $"'{plan.Name}' ist jetzt der aktive Plan.");
+                await NotificationService.ShowSuccessAsync("Plan aktiviert", $"'{plan.Name}' ist jetzt der aktive Plan.");
             }
             catch (Exception ex)
             {
-                await ShowErrorAsync("Fehler beim Aktivieren", ex.Message);
+                await NotificationService.ShowErrorAsync("Fehler beim Aktivieren", ex.Message);
             }
             finally
             {
@@ -250,7 +246,7 @@ namespace CrocoManager.ViewModel
 
                     if (updatedPlan == null)
                     {
-                        await ShowErrorAsync(
+                        await NotificationService.ShowErrorAsync(
                             "Fehler",
                             "Der Plan konnte nicht aktualisiert werden."
                         );
@@ -261,7 +257,7 @@ namespace CrocoManager.ViewModel
                     if (index >= 0)
                         FeedingPlans[index] = updatedPlan;
 
-                    await ShowSuccessAsync(
+                    await NotificationService.ShowSuccessAsync(
                         "Plan aktualisiert",
                         $"'{updatedPlan.Name}' wurde erfolgreich aktualisiert."
                     );
@@ -286,11 +282,11 @@ namespace CrocoManager.ViewModel
                     if (createdPlan != null)
                     {
                         FeedingPlans.Add(createdPlan);
-                        await ShowSuccessAsync("Plan hinzugefügt", $"'{Name}' wurde erfolgreich hinzugefügt.");
+                        await NotificationService.ShowSuccessAsync("Plan hinzugefügt", $"'{Name}' wurde erfolgreich hinzugefügt.");
                     }
                     else
                     {
-                        await ShowErrorAsync("Fehler", "Der Plan konnte nicht hinzugefügt werden.");
+                        await NotificationService.ShowErrorAsync("Fehler", "Der Plan konnte nicht hinzugefügt werden.");
                     }
                 }
 
@@ -298,7 +294,7 @@ namespace CrocoManager.ViewModel
             }
             catch (Exception ex)
             {
-                await ShowErrorAsync("Fehler beim Speichern", ex.Message);
+                await NotificationService.ShowErrorAsync("Fehler beim Speichern", ex.Message);
             }
             finally
             {
@@ -316,31 +312,31 @@ namespace CrocoManager.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
-                await ShowErrorAsync("Validierungsfehler", "Bitte geben Sie einen Namen ein.");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Bitte geben Sie einen Namen ein.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(FoodType))
             {
-                await ShowErrorAsync("Validierungsfehler", "Bitte geben Sie eine Futterart ein.");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Bitte geben Sie eine Futterart ein.");
                 return false;
             }
 
             if (AmountKg <= 0)
             {
-                await ShowErrorAsync("Validierungsfehler", "Die Futtermenge muss größer als 0 sein.");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Die Futtermenge muss größer als 0 sein.");
                 return false;
             }
 
             if (FrequencyPerWeek <= 0)
             {
-                await ShowErrorAsync("Validierungsfehler", "Die Frequenz muss größer als 0 sein.");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Die Frequenz muss größer als 0 sein.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(Weekdays))
             {
-                await ShowErrorAsync(
+                await NotificationService.ShowErrorAsync(
                     "Validierungsfehler",
                     "Bitte geben Sie mindestens einen Wochentag an."
                 );
@@ -355,7 +351,7 @@ namespace CrocoManager.ViewModel
 
                 if (!Enum.TryParse<Weekday>(trimmed, true, out _))
                 {
-                    await ShowErrorAsync(
+                    await NotificationService.ShowErrorAsync(
                         "Ungültiger Wochentag",
                         $"'{trimmed}' ist kein gültiger Wochentag.\n" +
                         $"Erlaubt sind: {string.Join(", ", Enum.GetNames(typeof(Weekday)))}"
@@ -377,41 +373,6 @@ namespace CrocoManager.ViewModel
             Description = string.Empty;
             SelectedPlan = null;
             IsEditing = false;
-        }
-
-        private async Task ShowSuccessAsync(string title, string message)
-        {
-            await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
-        }
-
-        private async Task ShowErrorAsync(string title, string message)
-        {
-            await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
-        }
-
-        [RelayCommand]
-        private async Task SignOut()
-        {
-            try
-            {
-                bool succesful = await _authService.SignOutAsync();
-                if (succesful)
-                {
-                    var loginPage = _serviceProvider.GetRequiredService<LoginPage>();
-                    if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-                    {
-                        window.Page = loginPage;
-                    }
-                }
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "Ok");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Sign out failed: {ex.Message}");
-            }
         }
     }
 }

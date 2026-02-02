@@ -14,11 +14,10 @@ using System.Threading.Tasks;
 
 namespace CrocoManager.ViewModel
 {
-    public partial class AnimalViewModel : ObservableObject
+    public partial class AnimalViewModel : BaseViewModel
     {
         private readonly AnimalService _animalService;
-        private readonly IAuthService _authService;
-        private readonly IServiceProvider _serviceProvider;
+
         [ObservableProperty]
         private ObservableCollection<Animal> animals;
 
@@ -54,11 +53,9 @@ namespace CrocoManager.ViewModel
 
         public string PageTitle => IsEditing ? "Tier bearbeiten" : "Neues Tier erstellen";
 
-        public AnimalViewModel(IAuthService authService, IServiceProvider serviceProvider, AnimalService animalService)
+        public AnimalViewModel(IServiceProvider serviceProvider, AnimalService animalService) : base(serviceProvider)
         {
             _animalService = animalService;
-            _authService = authService;
-            _serviceProvider = serviceProvider;
 
             Animals = new ObservableCollection<Animal>();
 
@@ -85,9 +82,9 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
-        private async Task LoadAnimals()
+        private async Task LoadAnimalsAsync()
         {
-            if (isBusy) return;
+            if (IsBusy) return;
 
             try
             {
@@ -102,7 +99,7 @@ namespace CrocoManager.ViewModel
             }
             catch (Exception ex)
             {
-                await ShowErrorAsync("Fehler beim Laden", ex.Message);
+                await NotificationService.ShowErrorAsync("Fehler beim Laden", ex.Message);
             }
             finally
             {
@@ -138,7 +135,7 @@ namespace CrocoManager.ViewModel
         {
             if (animal == null) return;
 
-            bool confirm = await Application.Current.MainPage.DisplayAlert("Löschen bestätigen", $"Möchten Sie '{animal.Name}' wirklich löschen?", "Ja", "Nein");
+            bool confirm = await NotificationService.ShowConfirmationAsync("Löschen bestätigen", $"Möchten Sie '{animal.Name}' wirklich löschen?", "Ja", "Nein");
 
             if (!confirm) return;
 
@@ -149,11 +146,11 @@ namespace CrocoManager.ViewModel
                 await _animalService.DeleteAsync(animal.Id);
                 Animals.Remove(animal);
 
-                await ShowSuccessAsync("Tier gelöscht", $"'{animalName}' wurde erfolgreich gelöscht.");
+                await NotificationService.ShowSuccessAsync("Tier gelöscht", $"'{animalName}' wurde erfolgreich gelöscht.");
             }
             catch (Exception ex)
             {
-                await ShowErrorAsync("Fehler beim Speichern", ex.Message);
+                await NotificationService.ShowErrorAsync("Fehler beim Speichern", ex.Message);
             }
             finally
             {
@@ -187,11 +184,11 @@ namespace CrocoManager.ViewModel
 
                     if (updatedAnimal != null)
                     {
-                        await ShowSuccessAsync("Tier aktualisiert", $"'{Name}' wurde erfolgreich aktualisiert.");
+                        await NotificationService.ShowSuccessAsync("Tier aktualisiert", $"'{Name}' wurde erfolgreich aktualisiert.");
                     }
                     else
                     {
-                        await ShowErrorAsync("Fehler", "Das Tier konnte nicht aktualisiert werden.");
+                        await NotificationService.ShowErrorAsync("Fehler", "Das Tier konnte nicht aktualisiert werden.");
                     }
                 }
                 else
@@ -212,11 +209,11 @@ namespace CrocoManager.ViewModel
                     if (createdAnimal != null)
                     {
                         Animals.Add(createdAnimal);
-                        await ShowSuccessAsync("Tier hinzugefügt", $"'{Name}' wurde erfolgreich hinzugefügt.");
+                        await NotificationService.ShowSuccessAsync("Tier hinzugefügt", $"'{Name}' wurde erfolgreich hinzugefügt.");
                     }
                     else
                     {
-                        await ShowErrorAsync("Fehler", "Das Tier konnte nicht hinzugefügt werden.");
+                        await NotificationService.ShowErrorAsync("Fehler", "Das Tier konnte nicht hinzugefügt werden.");
                     }
                 }
 
@@ -224,7 +221,7 @@ namespace CrocoManager.ViewModel
             }
             catch (Exception ex)
             {
-                await ShowErrorAsync("Fehler beim Speichern", ex.Message);
+                await NotificationService.ShowErrorAsync("Fehler beim Speichern", ex.Message);
             }
             finally
             {
@@ -242,25 +239,25 @@ namespace CrocoManager.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
-                await ShowErrorAsync("Validierungsfehler", "Bitte geben Sie einen Namen ein.");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Bitte geben Sie einen Namen ein.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(Gender))
             {
-                await ShowErrorAsync("Validierungsfehler", "Bitte wählen Sie ein Geschlecht aus.");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Bitte wählen Sie ein Geschlecht aus.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(Species))
             {
-                await ShowErrorAsync("Validierungsfehler", "Bitte wählen Sie eine Art aus.");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Bitte wählen Sie eine Art aus.");
                 return false;
             }
 
             if (Age < 0)
             {
-                await ShowErrorAsync("Validierungsfehler", "Das Alter muss eine positive Zahl sein.");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Das Alter muss eine positive Zahl sein.");
                 return false;
             }
 
@@ -277,41 +274,6 @@ namespace CrocoManager.ViewModel
             Description = string.Empty;
             SelectedAnimal = null;
             IsEditing = false;
-        }
-
-        private async Task ShowSuccessAsync(string title, string message)
-        {
-            await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
-        }
-
-        private async Task ShowErrorAsync(string title, string message)
-        {
-            await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
-        }
-
-        [RelayCommand]
-        private async Task SignOut()
-        {
-            try
-            {
-                bool succesful = await _authService.SignOutAsync();
-                if (succesful)
-                {
-                    var loginPage = _serviceProvider.GetRequiredService<LoginPage>();
-                    if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-                    {
-                        window.Page = loginPage;
-                    }
-                }
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert("Fehler", "Abmeldung fehlgeschlagen. Bitte versuche es erneut.", "Ok");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Sign out failed: {ex.Message}");
-            }
         }
     }
 }
