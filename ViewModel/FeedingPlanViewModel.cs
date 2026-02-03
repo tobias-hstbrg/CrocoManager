@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CrocoManager.DTOs;
 using CrocoManager.Interfaces;
-using CrocoManager.Models;
 using CrocoManager.Services;
 using CrocoManager.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,13 +20,13 @@ namespace CrocoManager.ViewModel
         private readonly FeedingPlanService _feedingPlanService;
 
         [ObservableProperty]
-        private ObservableCollection<FeedingPlan> feedingPlans;
+        private ObservableCollection<FeedingPlanDto> feedingPlans;
 
         [ObservableProperty]
-        private FeedingPlan? selectedPlan;
+        private FeedingPlanDto? selectedPlan;
 
         [ObservableProperty]
-        private FeedingPlan? activePlan;
+        private FeedingPlanDto? activePlan;
 
         [ObservableProperty]
         private bool hasActivePlan;
@@ -60,7 +60,7 @@ namespace CrocoManager.ViewModel
         public FeedingPlanViewModel(FeedingPlanService feedingPlanService, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             _feedingPlanService = feedingPlanService;
-            FeedingPlans = new ObservableCollection<FeedingPlan>();
+            FeedingPlans = new ObservableCollection<FeedingPlanDto>();
             ClearForm();
         }
 
@@ -106,7 +106,7 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
-        private void EditPlan(FeedingPlan plan)
+        private void EditPlan(FeedingPlanDto plan)
         {
             if (plan == null) return;
 
@@ -130,7 +130,7 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
-        private async Task DeletePlan(FeedingPlan plan)
+        private async Task DeletePlan(FeedingPlanDto plan)
         {
             if (plan == null) return;
 
@@ -168,7 +168,7 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
-        private async Task ToggleActivePlan(FeedingPlan plan)
+        private async Task ToggleActivePlan(FeedingPlanDto plan)
         {
             if (plan == null) return;
 
@@ -265,7 +265,7 @@ namespace CrocoManager.ViewModel
                 else
                 {
                     // Add new plan
-                    var newPlan = new FeedingPlan
+                    var newPlan = new FeedingPlanDto
                     {
                         Id = Guid.NewGuid(),
                         Name = Name,

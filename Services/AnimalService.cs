@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CrocoManager.Models;
+using CrocoManager.DTOs;
 using CrocoManager.Services;
 
 namespace CrocoManager.Services
 {
-    public class AnimalService : BaseService<Animal>
+    public class AnimalService : BaseService<AnimalDto>
     {
         public AnimalService(SupabaseClientService supabaseClient)
            : base(supabaseClient)
@@ -17,11 +17,11 @@ namespace CrocoManager.Services
 
         public async Task<int> GetTotalCount()
         {
-            List<Animal> allAnimals = await GetAllAsync();
+            List<AnimalDto> allAnimals = await GetAllAsync();
             return allAnimals.Count;
         }
 
-        public async Task<List<Animal>> GetBySpeciesAsync(string species)
+        public async Task<List<AnimalDto>> GetBySpeciesAsync(string species)
         {
             return await FilterByAsync("species", species);
         }

@@ -231,6 +231,12 @@ namespace CrocoManager.Services
             }
         }
 
+        public async Task<string?> GetUserEmail()
+        {
+            var session = await _supabase.Client.Auth.RetrieveSessionAsync();
+            return session?.User?.Email;
+        }
+
 
         public async Task<bool> TestConnectionAsync()
         {

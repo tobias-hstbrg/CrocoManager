@@ -3,7 +3,7 @@
 	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 	xmlns:viewmodels="clr-namespace:CrocoManager.ViewModel"
-	xmlns:models="clr-namespace:CrocoManager.Models"
+	xmlns:models="clr-namespace:CrocoManager.DTOs"
              x:Class="CrocoManager.Views.AnimalPage"
              Title=""
              BackgroundColor="{StaticResource PageBackground}">
@@ -90,7 +90,7 @@
                         <VerticalStackLayout x:Name="dataRows"
                                              BindableLayout.ItemsSource="{Binding Animals}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:Animal">
+                                <DataTemplate x:DataType="models:AnimalDto">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid ColumnDefinitions="150,150,100,150,200"
                                               Padding="15"
@@ -123,7 +123,7 @@
                         <VerticalStackLayout x:Name="actionsStack"
                                              BindableLayout.ItemsSource="{Binding Animals}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:Animal">
+                                <DataTemplate x:DataType="models:AnimalDto">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid Padding="15"
                                               HeightRequest="60"
