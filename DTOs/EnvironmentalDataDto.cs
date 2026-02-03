@@ -15,19 +15,19 @@ namespace CrocoManager.DTOs
         public Guid Id { get; set; }
 
         [Column("measurement_date")]
-        public DateTime MeasurementDate { get; set; }
+        public DateOnly MeasurementDate { get; set; }
 
         [Column("measurement_time")]
         public TimeSpan MeasurementTime { get; set; }
 
-        [Column("air_temperature_celcius")]
-        public decimal AirTemperatureCelcius { get; set; }
+        [Column("air_temperature_celsius")]
+        public decimal AirTemperatureCelsius { get; set; }
 
         [Column("humidity_percent")]
         public decimal HumidityPercent { get; set; }
 
-        [Column("water_temperature_celcius")]
-        public decimal WaterTemperatureCelcius { get; set; }
+        [Column("water_temperature_celsius")]
+        public decimal WaterTemperatureCelsius { get; set; }
 
         [Column("ph_value")]
         public decimal PhValue { get; set; }
