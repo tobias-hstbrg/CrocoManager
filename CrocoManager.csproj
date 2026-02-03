@@ -93,6 +93,9 @@
 	  <MauiXaml Update="Views\AnimalPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\FeedingPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\FeedingPlanPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CrocoManager.DTOs;
 using CrocoManager.Interfaces;
-using CrocoManager.Models;
 using CrocoManager.Services;
 using CrocoManager.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,10 +19,10 @@ namespace CrocoManager.ViewModel
         private readonly AnimalService _animalService;
 
         [ObservableProperty]
-        private ObservableCollection<Animal> animals;
+        private ObservableCollection<AnimalDto> animals;
 
         [ObservableProperty]
-        private Animal selectedAnimal;
+        private AnimalDto selectedAnimal;
 
         [ObservableProperty]
         private bool isEditing;
@@ -57,7 +57,7 @@ namespace CrocoManager.ViewModel
         {
             _animalService = animalService;
 
-            Animals = new ObservableCollection<Animal>();
+            Animals = new ObservableCollection<AnimalDto>();
 
             GenderOptions = new ObservableCollection<string>()
             {
@@ -115,7 +115,7 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
-        private void EditAnimal(Animal animal)
+        private void EditAnimal(AnimalDto animal)
         {
             if (animal == null) return;
 
@@ -131,7 +131,7 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
-        private async Task DeleteAnimal(Animal animal)
+        private async Task DeleteAnimal(AnimalDto animal)
         {
             if (animal == null) return;
 
@@ -194,7 +194,7 @@ namespace CrocoManager.ViewModel
                 else
                 {
                     // Add new animal
-                    var newAnimal = new Animal
+                    var newAnimal = new AnimalDto
                     {
                         Name = Name,
                         Gender = Gender,
