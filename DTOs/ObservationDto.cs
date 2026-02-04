@@ -1,4 +1,5 @@
 ﻿using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace CrocoManager.DTOs
 {
     [Table("observations")]
-    public class ObservationDto
+    public class ObservationDto : BaseModel
     {
         [PrimaryKey("id")]
         public Guid Id { get; set; }

@@ -8,7 +8,7 @@ namespace CrocoManager.Models
 {
     public class EnvironmentalData
     {
-        public Guid Id { get; }
+        public Guid Id { get; init; }
         public DateOnly MeasurementDate { get; }
         public TimeSpan MeasurementTime { get; }
         public decimal AirTemperatureCelsius { get; }
@@ -27,7 +27,7 @@ namespace CrocoManager.Models
             decimal phValue,
             decimal salinityPpt)
         {
-            Id = id;
+            Id = Guid.Empty;
             MeasurementDate = measurementDate;
             MeasurementTime = measurementTime;
             AirTemperatureCelsius = airTemperatureCelsius;
@@ -35,6 +35,18 @@ namespace CrocoManager.Models
             WaterTemperatureCelsius = waterTemperatureCelsius;
             PhValue = phValue;
             SalinityPpt = salinityPpt;
+        }
+
+        public EnvironmentalData(
+        DateOnly measurementDate,
+        TimeSpan measurementTime,
+        decimal airTemperatureCelsius,
+        decimal humidityPercent,
+        decimal waterTemperatureCelsius,
+        decimal phValue,
+        decimal salinityPpt)
+        : this(Guid.Empty, measurementDate, measurementTime, airTemperatureCelsius, humidityPercent, waterTemperatureCelsius, phValue, salinityPpt)
+        {
         }
     }
 }

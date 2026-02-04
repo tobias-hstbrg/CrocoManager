@@ -3,6 +3,7 @@ using CrocoManager.Services;
 using CrocoManager.ViewModel;
 using CrocoManager.Views;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CrocoManager
 {
@@ -61,6 +62,7 @@ namespace CrocoManager
             builder.Services.AddSingleton<INotificationService, NotificationService>();
             builder.Services.AddSingleton<AnimalService>();
             builder.Services.AddSingleton<FeedingPlanService>();
+            builder.Services.AddHttpClient<ObservationService>();
             builder.Services.AddSingleton<FeedingService>();
 
             var app = builder.Build();
