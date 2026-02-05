@@ -53,6 +53,12 @@
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Fütterungen" 
+    Icon="feeding.png"
+    Route="ObservationPage">
+        <ShellContent ContentTemplate="{DataTemplate views:ObservationPage}" />
+    </FlyoutItem>
+
 
 
     <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">

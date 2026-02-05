@@ -119,18 +119,6 @@ namespace CrocoManager.Services
         }
 
         /// <summary>
-        /// Converts a value from microsiemens (μS/cm) to parts per thousand (ppt).
-        /// </summary>
-        /// <remarks>This conversion uses a simple linear factor and does not account for temperature or
-        /// other environmental variables that may affect conductivity measurements.</remarks>
-        /// <param name="microSiemens">The electrical conductivity value in microsiemens (μS/cm) to convert. Must be greater than or equal to zero.</param>
-        /// <returns>The equivalent value in parts per thousand (ppt).</returns>
-        static private decimal ConvertMicroSiemensToPpt(decimal microSiemens)
-        {
-            return Math.Round(microSiemens * 0.001m, 1);
-        }
-
-        /// <summary>
         /// Generates a pseudo-random pH value that simulates natural fluctuations over time.
         /// <remarks>
         /// The value is influenced by the number of times this method has been called, creating a pattern of gradual increases and decreases to mimic real-world environmental changes.

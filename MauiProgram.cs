@@ -43,6 +43,7 @@ namespace CrocoManager
             builder.Services.AddTransient<AnimalViewModel>();
             builder.Services.AddTransient<FeedingPlanViewModel>();
             builder.Services.AddTransient<FeedingViewModel>();
+            builder.Services.AddTransient<ObservationViewModel>();
 
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<RegisterPage>();
@@ -52,6 +53,7 @@ namespace CrocoManager
             builder.Services.AddTransient<AnimalPage>();
             builder.Services.AddTransient<FeedingPlanPage>();
             builder.Services.AddTransient<FeedingPage>();
+            builder.Services.AddTransient<ObservationPage>();
 
             // Shell
             builder.Services.AddSingleton<AppShell>();
