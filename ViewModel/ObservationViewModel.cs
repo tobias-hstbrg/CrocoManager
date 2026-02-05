@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CrocoManager.Mappers;
 using CrocoManager.Models;
 using CrocoManager.Services;
 using System.Collections.ObjectModel;
@@ -27,7 +28,10 @@ namespace CrocoManager.ViewModel
         [ObservableProperty] private string? feedingBehavior;
         [ObservableProperty] private string? notes;
 
-        public ObservationViewModel( IServiceProvider serviceProvider, ObservationService observationService, AnimalService animalService)
+        public ObservationViewModel(
+            IServiceProvider serviceProvider,
+            ObservationService observationService,
+            AnimalService animalService)
             : base(serviceProvider)
         {
             _observationService = observationService;
@@ -58,10 +62,12 @@ namespace CrocoManager.ViewModel
                 PhValue = env.PhValue;
                 Salinity = env.SalinityPpt;
 
-                var animals = await _animalService.GetAllAsync();
+                var animalDtos = await _animalService.GetAllAsync();
                 Animals.Clear();
-                foreach (var a in animals)
-                    Animals.Add(a);
+                foreach (var dto in animalDtos)
+                {
+                    Animals.Add(dto.ToModel());
+                }
             }
             catch (Exception ex)
             {

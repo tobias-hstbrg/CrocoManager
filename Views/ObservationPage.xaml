@@ -1,76 +1,295 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CrocoManager.Views.ObservationPage"
-             Title=""
-             BackgroundColor="{StaticResource PageBackground}">
-    
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:CrocoManager.ViewModel"
+    xmlns:models="clr-namespace:CrocoManager.Models"
+    x:Class="CrocoManager.Views.ObservationPage"
+    x:DataType="viewmodels:ObservationViewModel"
+    BackgroundColor="{StaticResource PageBackground}"
+    Title="">
+
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+        <VerticalStackLayout Padding="20" Spacing="20">
 
+            <!-- Header Section -->
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <Label Grid.Column="0"
+                       Text="Forschung"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       VerticalOptions="Center"/>
 
-            <!-- Aktuelle Umweltdaten -->
-            <Border BackgroundColor="#1BAA8A" Padding="16">
-                <VerticalStackLayout Spacing="12">
+                <Button Grid.Column="1"
+                Text="🚪"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="{StaticResource TextOnPrimary}"
+                BorderColor="Transparent"
+                WidthRequest="50"
+                HeightRequest="50"
+                CornerRadius="8"
+                FontSize="16"
+                Padding="10"
+                VerticalOptions="Center"
+                Command="{Binding SignOutCommand}"/>    
+            </Grid>
+
+            <!-- Environmental Data Card -->
+            <Border BackgroundColor="#16a085"
+                    Padding="20"
+                    Margin="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="15">
                     <Label Text="Aktuelle Umweltdaten (Everglades, FL)"
-                    FontAttributes="Bold"
-                    TextColor="White" />
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
 
+                    <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="10">
+                        <!-- Lufttemperatur -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="White"
+                                Padding="10"
+                                HeightRequest="70">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                                <Label Text="Lufttemperatur"
+                                       FontSize="10"
+                                       TextColor="#16a085"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="{Binding AirTemperature, StringFormat='{0:F1}°C'}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
 
-                    <Grid ColumnDefinitions="*,*,*,*,*" RowDefinitions="Auto">
-                        <Label Grid.Column="0" Text="Lufttemp.\n{Binding AirTemperature, StringFormat='{}{0} °C'}" TextColor="White" />
-                        <Label Grid.Column="1" Text="Luftfeuchte\n{Binding Humidity, StringFormat='{}{0} %'}" TextColor="White" />
-                        <Label Grid.Column="2" Text="Wassertemp.\n{Binding WaterTemperature, StringFormat='{}{0} °C'}" TextColor="White" />
-                        <Label Grid.Column="3" Text="pH-Wert\n{Binding PhValue}" TextColor="White" />
-                        <Label Grid.Column="4" Text="Salzgehalt\n{Binding Salinity, StringFormat='{}{0} ppt'}" TextColor="White" />
+                        <!-- Luftfeuchtigkeit -->
+                        <Border Grid.Column="1"
+                                BackgroundColor="White"
+                                Padding="10"
+                                HeightRequest="70">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                                <Label Text="Luftfeuchtigkeit"
+                                       FontSize="10"
+                                       TextColor="#16a085"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="{Binding Humidity, StringFormat='{0:F0}%'}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Wassertemperatur -->
+                        <Border Grid.Column="2"
+                                BackgroundColor="White"
+                                Padding="10"
+                                HeightRequest="70">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                                <Label Text="Lufttemperatur"
+                                       FontSize="10"
+                                       TextColor="#16a085"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="{Binding WaterTemperature, StringFormat='{0:F1}°C'}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- pH-Wert -->
+                        <Border Grid.Column="3"
+                                BackgroundColor="White"
+                                Padding="10"
+                                HeightRequest="70">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                                <Label Text="pH-Wert"
+                                       FontSize="10"
+                                       TextColor="#16a085"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="{Binding PhValue, StringFormat='{0:F1}'}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Salzgehalt -->
+                        <Border Grid.Column="4"
+                                BackgroundColor="White"
+                                Padding="10"
+                                HeightRequest="70">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                                <Label Text="Salzgehalt"
+                                       FontSize="10"
+                                       TextColor="#16a085"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="{Binding Salinity, StringFormat='{0:F1} ppt'}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Observation Form Card -->
+            <Border Style="{StaticResource SecondaryCard}"
+                    Padding="20">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
 
-            <!-- Neue Beobachtung -->
-            <Border Padding="16">
-                <VerticalStackLayout Spacing="12">
+                <VerticalStackLayout Spacing="20">
                     <Label Text="Neue Beobachtung dokumentieren"
-                    FontAttributes="Bold"
-                    FontSize="Medium" />    
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
 
+                    <!-- Tier auswählen -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Tier auswählen "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Picker ItemsSource="{Binding Animals}"
+                                    ItemDisplayBinding="{Binding PickerName}"
+                                    SelectedItem="{Binding SelectedAnimal}"
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
 
-                    <Picker Title="Tier auswählen"
-                    ItemsSource="{Binding Animals}"
-                    ItemDisplayBinding="{Binding Name}"
-                    SelectedItem="{Binding SelectedAnimal}" />
+                    <!-- Tier Fütterung auswählen -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Tier Fütterung auswählen "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Picker ItemsSource="{Binding Feedings}"
+                                    SelectedItem="{Binding SelectedFeeding}"
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
 
+                    <!-- Fressverhalten -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Fressverhalten "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Picker ItemsSource="{Binding FeedingBehaviors}"
+                                    SelectedItem="{Binding FeedingBehavior}"
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
 
-                    <Picker Title="Tier Fütterung auswählen"
-                    ItemsSource="{Binding Feedings}"
-                    ItemDisplayBinding="{Binding DisplayName}"
-                    SelectedItem="{Binding SelectedFeeding}" />
+                    <!-- Beobachtungen / Notizen -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Beobachtungen / Notizen"
+                               FontSize="14"
+                               TextColor="{StaticResource TextSecondary}"/>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12"
+                                HeightRequest="120">
+                            <Editor Text="{Binding Notes}"
+                                    Placeholder="Beschreiben Sie besonderes Verhalten des Tieres..."
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    PlaceholderColor="{StaticResource PlaceholderText}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Fill"/>
+                        </Border>
+                    </VerticalStackLayout>
 
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Text="Beobachtung speichern"
+                                BackgroundColor="#16a085"
+                                TextColor="White"
+                                HeightRequest="50"
+                                CornerRadius="8"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                Command="{Binding SaveObservationCommand}"/>
 
-                    <Picker Title="Fressverhalten"
-                    ItemsSource="{Binding FeedingBehaviors}"
-                    SelectedItem="{Binding FeedingBehavior}" />
-
-
-                    <Editor Placeholder="Beschreiben Sie besonderes Verhalten des Tieres..."
-                    HeightRequest="100"
-                    Text="{Binding Notes}" />
-
-
-                    <HorizontalStackLayout Spacing="12">
-                        <Button Text="Beobachtung speichern"
-                        Command="{Binding SaveObservationCommand}"
-                        BackgroundColor="#1BAA8A"
-                        TextColor="White" />
-
-
-                        <Button Text="Abbrechen"
-                        Command="{Binding CancelCommand}" />
-                    </HorizontalStackLayout>
+                        <Button Grid.Column="1"
+                                Text="Abbrechen"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource TextSecondary}"
+                                BorderColor="{StaticResource BorderColor}"
+                                BorderWidth="1"
+                                HeightRequest="50"
+                                CornerRadius="8"
+                                FontSize="16"
+                                Command="{Binding CancelCommand}"/>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Recent Observations Section (Optional) -->
+            <Label Text="Letzte Beobachtungen"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   Margin="0,10,0,0"/>
+
+            <!-- Observations List would go here -->
 
         </VerticalStackLayout>
     </ScrollView>
