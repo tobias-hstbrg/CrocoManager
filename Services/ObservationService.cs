@@ -17,7 +17,7 @@ namespace CrocoManager.Services
         private readonly HttpClient _httpClient;
         private readonly string _waterDataApiUrl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=251457080395802&parameterCd=00010,00480&period=PT2H";
         private readonly string _weatherDataApiUrl = "https://api.weather.gov/stations/KTMB/observations/latest";
-
+        private static int _phCallCount = 0;
         public ObservationService(SupabaseClientService supabaseClient, HttpClient httpClient)
            : base(supabaseClient)
         {
@@ -30,13 +30,15 @@ namespace CrocoManager.Services
 
             var (airTemp, humidity) = await FetchWeatherData();
 
+            decimal phValue = ((decimal)GeneratePhValues());
+
             return new EnvironmentalData(
                 measurementDate: DateOnly.FromDateTime(DateTime.UtcNow),
                 measurementTime: DateTime.UtcNow.TimeOfDay,
-                airTemperatureCelsius: 0,
-                humidityPercent: 0,
+                airTemperatureCelsius: airTemp,
+                humidityPercent: humidity,
                 waterTemperatureCelsius: waterTemp,
-                phValue: 0,
+                phValue: phValue,
                 salinityPpt: salinity
             );
         }
@@ -66,7 +68,7 @@ namespace CrocoManager.Services
             var properties = root.GetProperty("properties");
 
             decimal airTemperature = properties.GetProperty("temperature").GetProperty("value").GetDecimal();
-            decimal relativeHumidity = Math.Round(properties.GetProperty("relativeHumidity").GetProperty("value").GetDecimal(), 0 );
+            decimal relativeHumidity = properties.GetProperty("relativeHumidity").GetProperty("value").GetDecimal();
 
             return (airTemperature, relativeHumidity);
         }
@@ -126,6 +128,35 @@ namespace CrocoManager.Services
         static private decimal ConvertMicroSiemensToPpt(decimal microSiemens)
         {
             return Math.Round(microSiemens * 0.001m, 1);
+        }
+
+        /// <summary>
+        /// Generates a pseudo-random pH value that simulates natural fluctuations over time.
+        /// <remarks>
+        /// The value is influenced by the number of times this method has been called, creating a pattern of gradual increases and decreases to mimic real-world environmental changes.
+        /// The base pH value starts around 7.6 and can vary up to 0.6 in either direction, with additional micro-fluctuations that create a more dynamic and realistic output.
+        /// </remarks>
+        /// </summary>
+        /// <returns>Random pH value</returns>
+        private static double GeneratePhValues()
+        {
+            _phCallCount++;
+
+            int bucket = _phCallCount / 10;
+            int hash = bucket.GetHashCode();
+            double baseVariation = (Math.Abs(hash) % 100) / 100.00;
+            double basePh = 7.6 + (baseVariation * 0.6);
+
+            // Create pseudo-random but deterministic zigzag
+            int microStep = _phCallCount % 10;
+            int seed = bucket * 1000 + microStep;
+            Random stepRnd = new Random(seed);
+
+            // Each step randomly goes -0.02, 0, or +0.02
+            double microChange = (stepRnd.Next(3) - 1) * 0.02;
+
+            double ph = basePh + microChange;
+            return Math.Round(Math.Max(7.0, Math.Min(8.4, ph)), 2);
         }
     }
 }
