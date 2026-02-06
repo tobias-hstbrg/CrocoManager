@@ -37,125 +37,286 @@
 
             <!-- Environmental Data Card -->
             <Border BackgroundColor="#16a085"
-                    Padding="20"
-                    Margin="0">
+        Padding="20"
+        Margin="0">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>
 
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="Aktuelle Umweltdaten (Everglades, FL)"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="White"/>
+                <Grid RowDefinitions="Auto,Auto" RowSpacing="15">
+                    <Label Grid.Row="0"
+               Text="Aktuelle Umweltdaten (Everglades, FL)"
+               FontSize="16"
+               FontAttributes="Bold"
+               TextColor="White"/>
 
-                    <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="10">
+                    <!-- Desktop: Horizontal Grid -->
+                    <Grid Grid.Row="1" ColumnSpacing="10">
+                        <Grid.IsVisible>
+                            <OnIdiom x:TypeArguments="x:Boolean"
+                         Phone="False"
+                         Tablet="True"
+                         Desktop="True"/>
+                        </Grid.IsVisible>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
                         <!-- Lufttemperatur -->
                         <Border Grid.Column="0"
-                                BackgroundColor="White"
-                                Padding="10"
-                                HeightRequest="70">
+                    BackgroundColor="White"
+                    Padding="10"
+                    HeightRequest="70">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
-                                <Label Text="Lufttemperatur"
-                                       FontSize="10"
-                                       TextColor="#16a085"
-                                       HorizontalTextAlignment="Center"/>
-                                <Label Text="{Binding AirTemperature, StringFormat='{0:F1}°C'}"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextPrimary}"
-                                       HorizontalTextAlignment="Center"/>
-                            </VerticalStackLayout>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                           Text="Lufttemperatur"
+                           FontSize="10"
+                           TextColor="#16a085"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Row="1"
+                           Text="{Binding AirTemperature, StringFormat='{0:F1}°C'}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
                         </Border>
 
                         <!-- Luftfeuchtigkeit -->
                         <Border Grid.Column="1"
-                                BackgroundColor="White"
-                                Padding="10"
-                                HeightRequest="70">
+                    BackgroundColor="White"
+                    Padding="10"
+                    HeightRequest="70">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
-                                <Label Text="Luftfeuchtigkeit"
-                                       FontSize="10"
-                                       TextColor="#16a085"
-                                       HorizontalTextAlignment="Center"/>
-                                <Label Text="{Binding Humidity, StringFormat='{0:F0}%'}"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextPrimary}"
-                                       HorizontalTextAlignment="Center"/>
-                            </VerticalStackLayout>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                           Text="Luftfeuchtigkeit"
+                           FontSize="10"
+                           TextColor="#16a085"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Row="1"
+                           Text="{Binding Humidity, StringFormat='{0:F0}%'}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
                         </Border>
 
                         <!-- Wassertemperatur -->
                         <Border Grid.Column="2"
-                                BackgroundColor="White"
-                                Padding="10"
-                                HeightRequest="70">
+                    BackgroundColor="White"
+                    Padding="10"
+                    HeightRequest="70">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
-                                <Label Text="Lufttemperatur"
-                                       FontSize="10"
-                                       TextColor="#16a085"
-                                       HorizontalTextAlignment="Center"/>
-                                <Label Text="{Binding WaterTemperature, StringFormat='{0:F1}°C'}"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextPrimary}"
-                                       HorizontalTextAlignment="Center"/>
-                            </VerticalStackLayout>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                           Text="Wassertemperatur"
+                           FontSize="10"
+                           TextColor="#16a085"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Row="1"
+                           Text="{Binding WaterTemperature, StringFormat='{0:F1}°C'}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
                         </Border>
 
                         <!-- pH-Wert -->
                         <Border Grid.Column="3"
-                                BackgroundColor="White"
-                                Padding="10"
-                                HeightRequest="70">
+                    BackgroundColor="White"
+                    Padding="10"
+                    HeightRequest="70">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
-                                <Label Text="pH-Wert"
-                                       FontSize="10"
-                                       TextColor="#16a085"
-                                       HorizontalTextAlignment="Center"/>
-                                <Label Text="{Binding PhValue, StringFormat='{0:F1}'}"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextPrimary}"
-                                       HorizontalTextAlignment="Center"/>
-                            </VerticalStackLayout>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                           Text="pH-Wert"
+                           FontSize="10"
+                           TextColor="#16a085"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Row="1"
+                           Text="{Binding PhValue, StringFormat='{0:F1}'}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
                         </Border>
 
                         <!-- Salzgehalt -->
                         <Border Grid.Column="4"
-                                BackgroundColor="White"
-                                Padding="10"
-                                HeightRequest="70">
+                    BackgroundColor="White"
+                    Padding="10"
+                    HeightRequest="70">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <VerticalStackLayout Spacing="5" VerticalOptions="Center">
-                                <Label Text="Salzgehalt"
-                                       FontSize="10"
-                                       TextColor="#16a085"
-                                       HorizontalTextAlignment="Center"/>
-                                <Label Text="{Binding Salinity, StringFormat='{0:F1} ppt'}"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextPrimary}"
-                                       HorizontalTextAlignment="Center"/>
-                            </VerticalStackLayout>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                           Text="Salzgehalt"
+                           FontSize="10"
+                           TextColor="#16a085"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Row="1"
+                           Text="{Binding Salinity, StringFormat='{0:F1} ppt'}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
                         </Border>
                     </Grid>
-                </VerticalStackLayout>
+
+                    <!-- Mobile: Vertical Grid -->
+                    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
+                        <Grid.IsVisible>
+                            <OnIdiom x:TypeArguments="x:Boolean"
+                         Phone="True"
+                         Tablet="False"
+                         Desktop="False"/>
+                        </Grid.IsVisible>
+
+                        <!-- Lufttemperatur -->
+                        <Border Grid.Row="0"
+                    BackgroundColor="White"
+                    Padding="15"
+                    HeightRequest="60">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Label Grid.Column="0"
+                           Text="Lufttemperatur"
+                           FontSize="12"
+                           TextColor="#16a085"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Column="1"
+                           Text="{Binding AirTemperature, StringFormat='{0:F1}°C'}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Luftfeuchtigkeit -->
+                        <Border Grid.Row="1"
+                    BackgroundColor="White"
+                    Padding="15"
+                    HeightRequest="60">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Label Grid.Column="0"
+                           Text="Luftfeuchtigkeit"
+                           FontSize="12"
+                           TextColor="#16a085"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Column="1"
+                           Text="{Binding Humidity, StringFormat='{0:F0}%'}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Wassertemperatur -->
+                        <Border Grid.Row="2"
+                    BackgroundColor="White"
+                    Padding="15"
+                    HeightRequest="60">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Label Grid.Column="0"
+                           Text="Wassertemperatur"
+                           FontSize="12"
+                           TextColor="#16a085"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Column="1"
+                           Text="{Binding WaterTemperature, StringFormat='{0:F1}°C'}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- pH-Wert -->
+                        <Border Grid.Row="3"
+                    BackgroundColor="White"
+                    Padding="15"
+                    HeightRequest="60">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Label Grid.Column="0"
+                           Text="pH-Wert"
+                           FontSize="12"
+                           TextColor="#16a085"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Column="1"
+                           Text="{Binding PhValue, StringFormat='{0:F1}'}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Salzgehalt -->
+                        <Border Grid.Row="4"
+                    BackgroundColor="White"
+                    Padding="15"
+                    HeightRequest="60">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Label Grid.Column="0"
+                           Text="Salzgehalt"
+                           FontSize="12"
+                           TextColor="#16a085"
+                           VerticalTextAlignment="Center"/>
+                                <Label Grid.Column="1"
+                           Text="{Binding Salinity, StringFormat='{0:F1} ppt'}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"
+                           VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
             </Border>
 
             <!-- Observation Form Card -->

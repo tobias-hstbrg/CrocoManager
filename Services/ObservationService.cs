@@ -16,7 +16,7 @@ namespace CrocoManager.Services
     {
         private readonly HttpClient _httpClient;
         private readonly string _waterDataApiUrl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=251457080395802&parameterCd=00010,00480&period=PT2H";
-        private readonly string _weatherDataApiUrl = "https://api.weather.gov/stations/KTMB/observations/latest";
+        private readonly string _weatherDataApiUrl = "https://api.weather.gov/stations/KHST/observations/latest";
         private static int _phCallCount = 0;
         public ObservationService(SupabaseClientService supabaseClient, HttpClient httpClient)
            : base(supabaseClient)
