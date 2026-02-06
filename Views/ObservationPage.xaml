@@ -370,6 +370,7 @@
                                 HeightRequest="48">
                             <Picker ItemsSource="{Binding Feedings}"
                                     SelectedItem="{Binding SelectedFeeding}"
+                                    ItemDisplayBinding="{Binding DisplayName}"
                                     FontSize="16"
                                     TextColor="{StaticResource TextPrimary}"
                                     BackgroundColor="Transparent"

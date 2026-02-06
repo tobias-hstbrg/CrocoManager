@@ -5,13 +5,13 @@ using static Supabase.Postgrest.Constants;
 
 namespace CrocoManager.Services;
 
-public class FeedingService
+public class FeedingService : BaseService<FeedingDto>
 {
     private readonly SupabaseClientService _supabase;
 
-    public FeedingService(SupabaseClientService supabase)
+    public FeedingService(SupabaseClientService supabaseClient) : base(supabaseClient)
     {
-        _supabase = supabase;
+        _supabase = supabaseClient;
     }
 
     public async Task<Feeding> GetTodayFeedingDraftAsync()

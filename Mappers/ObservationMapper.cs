@@ -20,7 +20,7 @@ namespace CrocoManager.Mappers
                 EnvironmentalData = environmentalData,
                 FeedingBehavior = dto.FeedingBehavior,
                 Notes = dto.Notes,
-                ResearcherEmail = dto.ResearcherName ?? string.Empty
+                ResearcherEmail = dto.ResearcherEmail ?? string.Empty
             };
         }
 
@@ -34,7 +34,7 @@ namespace CrocoManager.Mappers
                 EnvironmentalDataId = entity.EnvironmentalData?.Id,
                 FeedingBehavior = entity.FeedingBehavior,
                 Notes = entity.Notes,
-                ResearcherName = entity.ResearcherEmail
+                ResearcherEmail = entity.ResearcherEmail
             };
         }
     }

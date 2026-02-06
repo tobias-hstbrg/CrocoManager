@@ -15,6 +15,6 @@ namespace CrocoManager.Models
         public FeedingPlan FeedingPlan { get; init; } = null!;
         public IReadOnlyList<FeedingAnimalStatus> Animals { get; init; } = [];
 
-
+        public string DisplayName => $"{FeedingDate:dd.MM.yyyy} - {FeedingPlan?.Name ?? "Kein Plan"}";
     }
 }

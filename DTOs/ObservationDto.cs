@@ -29,7 +29,7 @@ namespace CrocoManager.DTOs
         [Column("notes")]
         public string? Notes { get; set; }
 
-        [Column("researcher_name")]
-        public string? ResearcherName { get; set; }
+        [Column("researcher_email")]
+        public string? ResearcherEmail { get; set; }
     }
 }
