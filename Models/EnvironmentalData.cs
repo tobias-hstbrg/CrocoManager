@@ -16,7 +16,7 @@ namespace CrocoManager.Models
         public decimal WaterTemperatureCelsius { get; }
         public decimal PhValue { get; }
         public decimal SalinityPpt { get; }
-        
+
         public EnvironmentalData(
             Guid id,
             DateOnly measurementDate,
@@ -27,7 +27,7 @@ namespace CrocoManager.Models
             decimal phValue,
             decimal salinityPpt)
         {
-            Id = Guid.Empty;
+            Id = id;
             MeasurementDate = measurementDate;
             MeasurementTime = measurementTime;
             AirTemperatureCelsius = airTemperatureCelsius;

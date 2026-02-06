@@ -53,7 +53,7 @@
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Fütterungen" 
+    <FlyoutItem Title="Beobachtungen" 
     Icon="observation.png"
     Route="ObservationPage">
         <ShellContent ContentTemplate="{DataTemplate views:ObservationPage}" />

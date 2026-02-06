@@ -1,4 +1,5 @@
 ﻿using CrocoManager.DTOs;
+using CrocoManager.Mappers;
 using CrocoManager.Models;
 using System;
 using System.CodeDom;
@@ -17,11 +18,13 @@ namespace CrocoManager.Services
         private readonly HttpClient _httpClient;
         private readonly string _waterDataApiUrl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=251457080395802&parameterCd=00010,00480&period=PT2H";
         private readonly string _weatherDataApiUrl = "https://api.weather.gov/stations/KHST/observations/latest";
+        private readonly SupabaseClientService _supabase;
         private static int _phCallCount = 0;
         public ObservationService(SupabaseClientService supabaseClient, HttpClient httpClient)
            : base(supabaseClient)
         {
             _httpClient = httpClient;
+            _supabase = supabaseClient;
         }
 
         public async Task<EnvironmentalData> FetchEnvironmentalDataAsync()

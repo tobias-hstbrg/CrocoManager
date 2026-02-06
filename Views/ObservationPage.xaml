@@ -8,7 +8,7 @@
     x:DataType="viewmodels:ObservationViewModel"
     BackgroundColor="{StaticResource PageBackground}"
     Title="">
-
+    
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
@@ -451,7 +451,96 @@
                    TextColor="{StaticResource TextPrimary}"
                    Margin="0,10,0,0"/>
 
-            <!-- Observations List would go here -->
+            <CollectionView ItemsSource="{Binding RecentObservations}"
+                SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Observation">
+                        <Border Style="{StaticResource SecondaryCard}"
+                    Padding="15">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                                <!-- Title: Animal Name -->
+                                <Label Grid.Row="0"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Animal.Name}"/>
+                                            <Span Text=" - "/>
+                                            <Span Text="{Binding Animal.Species}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <!-- Subtitle: Feeding info -->
+                                <Label Grid.Row="1"
+                               FontSize="12"
+                               TextColor="{StaticResource TextSecondary}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Fütterung: "/>
+                                            <Span Text="{Binding Feeding.FeedingDate, StringFormat='{0:dd.MM.yyyy}'}"/>
+                                            <Span Text=" - "/>
+                                            <Span Text="{Binding Feeding.FeedingPlan.Name}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <!-- Environmental Data Row -->
+                                <Label Grid.Row="2"
+                               FontSize="12"
+                               TextColor="{StaticResource TextSecondary}"
+                               IsVisible="{Binding HasEnvironmentalData}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="☀️ Luft: " FontAttributes="Bold"/>
+                                            <Span Text="{Binding EnvironmentalData.AirTemperatureCelsius, StringFormat='{0:F1}°C'}"/>
+                                            <Span Text=", "/>
+                                            <Span Text="{Binding EnvironmentalData.HumidityPercent, StringFormat='{0:F0}%'}"/>
+                                            <Span Text="   💧 Wasser: " FontAttributes="Bold"/>
+                                            <Span Text="{Binding EnvironmentalData.WaterTemperatureCelsius, StringFormat='{0:F1}°C'}"/>
+                                            <Span Text=", pH "/>
+                                            <Span Text="{Binding EnvironmentalData.PhValue, StringFormat='{0:F1}'}"/>
+                                            <Span Text=", "/>
+                                            <Span Text="{Binding EnvironmentalData.SalinityPpt, StringFormat='{0:F1} ppt'}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <!-- Behavior and Notes -->
+                                <Grid Grid.Row="3" RowDefinitions="Auto,Auto" RowSpacing="5">
+                                    <Label Grid.Row="0"
+                               FontSize="13"
+                               TextColor="{StaticResource TextPrimary}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Verhalten: " FontAttributes="Bold"/>
+                                                <Span Text="{Binding FeedingBehavior}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <Label Grid.Row="1"
+                               Text="{Binding Notes}"
+                               FontSize="12"
+                               TextColor="{StaticResource TextSecondary}"
+                               LineBreakMode="WordWrap"
+                               MaxLines="3"
+                               IsVisible="{Binding HasNotes}"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
         </VerticalStackLayout>
     </ScrollView>

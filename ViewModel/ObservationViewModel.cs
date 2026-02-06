@@ -100,6 +100,7 @@ namespace CrocoManager.ViewModel
                 }
 
                 await LoadFeedingsAsync();
+                await LoadObservationHistory();
             }
             catch (Exception ex)
             {
@@ -175,6 +176,97 @@ namespace CrocoManager.ViewModel
             }
         }
 
+        [RelayCommand]
+        private async Task LoadObservationHistory()
+        {
+            try
+            {
+                IsBusy = true;
+
+                // 1️⃣ Rohdaten laden
+                var observationDtos = await _observationService.GetAllAsync();
+                var animalDtos = await _animalService.GetAllAsync();
+                var feedingDtos = await _feedingService.GetAllAsync();
+
+                // 2️⃣ EnvironmentalData IDs sammeln
+                var envIds = observationDtos
+                    .Where(o => o.EnvironmentalDataId.HasValue)
+                    .Select(o => o.EnvironmentalDataId!.Value)
+                    .Distinct()
+                    .ToList();
+
+                Dictionary<Guid, EnvironmentalData> environmentalLookup = new();
+
+                if (envIds.Any())
+                {
+                    var envResponse = await _supabase.Client
+                        .From<EnvironmentalDataDto>()
+                        .Filter("id", Supabase.Postgrest.Constants.Operator.In, envIds)
+                        .Get();
+
+                    environmentalLookup = envResponse.Models
+                        .Select(e => e.ToEntity())
+                        .ToDictionary(e => e.Id);
+                }
+
+                // 3️⃣ Lookups bauen
+                var animals = animalDtos
+                    .Select(a => a.ToModel())
+                    .ToDictionary(a => a.Id);
+
+                var feedings = feedingDtos
+                    .Select(f => f.ToModel())
+                    .ToDictionary(f => f.Id);
+
+                // 4️⃣ Aggregieren
+                var observations = new List<Observation>();
+
+                foreach (var dto in observationDtos)
+                {
+                    if (!animals.TryGetValue(dto.AnimalId, out var animal))
+                        continue;
+
+                    if (!feedings.TryGetValue(dto.FeedingId, out var feeding))
+                        continue;
+
+                    EnvironmentalData? envData = null;
+
+                    if (dto.EnvironmentalDataId.HasValue)
+                    {
+                        environmentalLookup.TryGetValue(
+                            dto.EnvironmentalDataId.Value,
+                            out envData);
+                    }
+
+                    var observation = dto.ToEntity(animal, feeding, envData);
+                    observations.Add(observation);
+                }
+
+                // 5️⃣ Nur über UpdatedAt sortieren
+                var recent = observations
+                    .OrderByDescending(o => o.UpdatedAt)
+                    .Take(5)
+                    .ToList();
+
+                // 6️⃣ UI füllen
+                RecentObservations.Clear();
+                foreach (var obs in recent)
+                {
+                    RecentObservations.Add(obs);
+                }
+            }
+            catch (Exception ex)
+            {
+                await NotificationService.ShowErrorAsync(
+                    "Fehler beim Laden",
+                    ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
 
         [RelayCommand]
         private async Task SaveObservation()
@@ -215,7 +307,6 @@ namespace CrocoManager.ViewModel
 
                 var environmentalDto = new EnvironmentalDataDto
                 {
-                    Id = Guid.NewGuid(),
                     MeasurementDate = environmentalData.MeasurementDate,
                     MeasurementTime = environmentalData.MeasurementTime,
                     AirTemperatureCelsius = environmentalData.AirTemperatureCelsius,
@@ -238,7 +329,6 @@ namespace CrocoManager.ViewModel
 
                 var observation = new Observation
                 {
-                    Id = Guid.NewGuid(),
                     Animal = SelectedAnimal,
                     Feeding = SelectedFeeding,
                     EnvironmentalData = environmentalData,
