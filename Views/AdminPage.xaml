@@ -156,11 +156,11 @@
                                 <VerticalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
                                     <Label Text="Rolle:" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
                                     <Border Style="{StaticResource EntryBorder}" Padding="12,0" HeightRequest="50">
-                                        <Picker ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.Roles}"
-                                                SelectedItem="{Binding Role, Mode=TwoWay}"
-                                                TextColor="{StaticResource TextPrimary}"
-                                                BackgroundColor="Transparent"
-                                                FontSize="16"/>
+                                        <Picker ItemsSource="{Binding Roles}"
+                                            SelectedItem="{Binding Role, Mode=TwoWay}"
+                                            TextColor="{StaticResource TextPrimary}"
+                                            BackgroundColor="Transparent"
+                                            FontSize="16"/>
                                     </Border>
                                 </VerticalStackLayout>
 
