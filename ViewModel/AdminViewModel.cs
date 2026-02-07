@@ -63,7 +63,9 @@ namespace CrocoManager.ViewModel
 
             await _whitelistService.AddEmailToWhitelistAsync(Email, roleEnum);
             Email = string.Empty;
+            SelectedRole = string.Empty;
             await LoadEmails();
+
         }
 
         [RelayCommand]

@@ -131,6 +131,9 @@
 
             <!-- Existing Users List -->
             <CollectionView Grid.Row="3" ItemsSource="{Binding WhitelistedEmails}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border Style="{StaticResource SecondaryCard}" Padding="16" Margin="0,0,0,12">
