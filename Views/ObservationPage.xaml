@@ -8,7 +8,7 @@
     x:DataType="viewmodels:ObservationViewModel"
     BackgroundColor="{StaticResource PageBackground}"
     Title="">
-    
+
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
@@ -22,297 +22,276 @@
                        VerticalOptions="Center"/>
 
                 <Button Grid.Column="1"
-                Text="🚪"
-                BackgroundColor="{StaticResource Primary}"
-                TextColor="{StaticResource TextOnPrimary}"
-                BorderColor="Transparent"
-                WidthRequest="50"
-                HeightRequest="50"
-                CornerRadius="8"
-                FontSize="16"
-                Padding="10"
-                VerticalOptions="Center"
-                Command="{Binding SignOutCommand}"/>    
+                    Text="🚪"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="{StaticResource TextOnPrimary}"
+                    BorderColor="Transparent"
+                    WidthRequest="50"
+                    HeightRequest="50"
+                    CornerRadius="8"
+                    FontSize="16"
+                    Padding="10"
+                    VerticalOptions="Center"
+                    Command="{Binding SignOutCommand}"/>
             </Grid>
 
             <!-- Environmental Data Card -->
             <Border BackgroundColor="#16a085"
-        Padding="20"
-        Margin="0">
+                Padding="20"
+                Margin="0">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>
 
                 <Grid RowDefinitions="Auto,Auto" RowSpacing="15">
                     <Label Grid.Row="0"
-               Text="Aktuelle Umweltdaten (Everglades, FL)"
-               FontSize="16"
-               FontAttributes="Bold"
-               TextColor="White"/>
+                       Text="Aktuelle Umweltdaten (Everglades, FL)"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"/>
 
-                    <!-- Desktop: Horizontal Grid -->
-                    <Grid Grid.Row="1" ColumnSpacing="10">
-                        <Grid.IsVisible>
-                            <OnIdiom x:TypeArguments="x:Boolean"
-                         Phone="False"
-                         Tablet="True"
-                         Desktop="True"/>
-                        </Grid.IsVisible>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                    <!-- Responsive Grid with VisualStateManager -->
+                    <Grid Grid.Row="1" x:Name="EnvironmentGrid" ColumnSpacing="10" RowSpacing="10">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="LayoutStates">
+                                <VisualState x:Name="Wide">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="800" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Property="ColumnDefinitions" Value="*,*,*,*,*" />
+                                        <Setter Property="RowDefinitions" Value="Auto" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Narrow">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="0" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Property="ColumnDefinitions" Value="*" />
+                                        <Setter Property="RowDefinitions" Value="Auto,Auto,Auto,Auto,Auto" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
 
                         <!-- Lufttemperatur -->
-                        <Border Grid.Column="0"
-                    BackgroundColor="White"
-                    Padding="10"
-                    HeightRequest="70">
+                        <Border x:Name="LuftTempBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
                             <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
                                 <Label Grid.Row="0"
-                           Text="Lufttemperatur"
-                           FontSize="10"
-                           TextColor="#16a085"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
+                                   Text="Lufttemperatur"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
                                 <Label Grid.Row="1"
-                           Text="{Binding AirTemperature, StringFormat='{0:F1}°C'}"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
+                                   Text="{Binding AirTemperature, StringFormat='{0:F1}°C'}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
                             </Grid>
                         </Border>
 
                         <!-- Luftfeuchtigkeit -->
-                        <Border Grid.Column="1"
-                    BackgroundColor="White"
-                    Padding="10"
-                    HeightRequest="70">
+                        <Border x:Name="LuftFeuchtigkeitBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="1" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
                             <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
                                 <Label Grid.Row="0"
-                           Text="Luftfeuchtigkeit"
-                           FontSize="10"
-                           TextColor="#16a085"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
+                                   Text="Luftfeuchtigkeit"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
                                 <Label Grid.Row="1"
-                           Text="{Binding Humidity, StringFormat='{0:F0}%'}"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
+                                   Text="{Binding Humidity, StringFormat='{0:F0}%'}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
                             </Grid>
                         </Border>
 
                         <!-- Wassertemperatur -->
-                        <Border Grid.Column="2"
-                    BackgroundColor="White"
-                    Padding="10"
-                    HeightRequest="70">
+                        <Border x:Name="WasserTempBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="2" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="2" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
                             <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
                                 <Label Grid.Row="0"
-                           Text="Wassertemperatur"
-                           FontSize="10"
-                           TextColor="#16a085"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
-                                <Label Grid.Row="1"
-                           Text="{Binding WaterTemperature, StringFormat='{0:F1}°C'}"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
+                                   Text="Wassertemperatur"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Row="1"
+                                   Text="{Binding WaterTemperature, StringFormat='{0:F1}°C'}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
                             </Grid>
                         </Border>
 
                         <!-- pH-Wert -->
-                        <Border Grid.Column="3"
-                    BackgroundColor="White"
-                    Padding="10"
-                    HeightRequest="70">
+                        <Border x:Name="PhWertBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="3" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="3" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
                             <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
                                 <Label Grid.Row="0"
-                           Text="pH-Wert"
-                           FontSize="10"
-                           TextColor="#16a085"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
-                                <Label Grid.Row="1"
-                           Text="{Binding PhValue, StringFormat='{0:F1}'}"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
+                                   Text="pH-Wert"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Row="1"
+                                   Text="{Binding PhValue, StringFormat='{0:F1}'}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
                             </Grid>
                         </Border>
 
                         <!-- Salzgehalt -->
-                        <Border Grid.Column="4"
-                    BackgroundColor="White"
-                    Padding="10"
-                    HeightRequest="70">
+                        <Border x:Name="SalzgehaltBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="4" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="4" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
                             <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
                                 <Label Grid.Row="0"
-                           Text="Salzgehalt"
-                           FontSize="10"
-                           TextColor="#16a085"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
+                                   Text="Salzgehalt"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
                                 <Label Grid.Row="1"
-                           Text="{Binding Salinity, StringFormat='{0:F1} ppt'}"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center"/>
-                            </Grid>
-                        </Border>
-                    </Grid>
-
-                    <!-- Mobile: Vertical Grid -->
-                    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
-                        <Grid.IsVisible>
-                            <OnIdiom x:TypeArguments="x:Boolean"
-                         Phone="True"
-                         Tablet="False"
-                         Desktop="False"/>
-                        </Grid.IsVisible>
-
-                        <!-- Lufttemperatur -->
-                        <Border Grid.Row="0"
-                    BackgroundColor="White"
-                    Padding="15"
-                    HeightRequest="60">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                <Label Grid.Column="0"
-                           Text="Lufttemperatur"
-                           FontSize="12"
-                           TextColor="#16a085"
-                           VerticalTextAlignment="Center"/>
-                                <Label Grid.Column="1"
-                           Text="{Binding AirTemperature, StringFormat='{0:F1}°C'}"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           VerticalTextAlignment="Center"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- Luftfeuchtigkeit -->
-                        <Border Grid.Row="1"
-                    BackgroundColor="White"
-                    Padding="15"
-                    HeightRequest="60">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                <Label Grid.Column="0"
-                           Text="Luftfeuchtigkeit"
-                           FontSize="12"
-                           TextColor="#16a085"
-                           VerticalTextAlignment="Center"/>
-                                <Label Grid.Column="1"
-                           Text="{Binding Humidity, StringFormat='{0:F0}%'}"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           VerticalTextAlignment="Center"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- Wassertemperatur -->
-                        <Border Grid.Row="2"
-                    BackgroundColor="White"
-                    Padding="15"
-                    HeightRequest="60">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                <Label Grid.Column="0"
-                           Text="Wassertemperatur"
-                           FontSize="12"
-                           TextColor="#16a085"
-                           VerticalTextAlignment="Center"/>
-                                <Label Grid.Column="1"
-                           Text="{Binding WaterTemperature, StringFormat='{0:F1}°C'}"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           VerticalTextAlignment="Center"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- pH-Wert -->
-                        <Border Grid.Row="3"
-                    BackgroundColor="White"
-                    Padding="15"
-                    HeightRequest="60">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                <Label Grid.Column="0"
-                           Text="pH-Wert"
-                           FontSize="12"
-                           TextColor="#16a085"
-                           VerticalTextAlignment="Center"/>
-                                <Label Grid.Column="1"
-                           Text="{Binding PhValue, StringFormat='{0:F1}'}"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           VerticalTextAlignment="Center"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- Salzgehalt -->
-                        <Border Grid.Row="4"
-                    BackgroundColor="White"
-                    Padding="15"
-                    HeightRequest="60">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                <Label Grid.Column="0"
-                           Text="Salzgehalt"
-                           FontSize="12"
-                           TextColor="#16a085"
-                           VerticalTextAlignment="Center"/>
-                                <Label Grid.Column="1"
-                           Text="{Binding Salinity, StringFormat='{0:F1} ppt'}"
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource TextPrimary}"
-                           VerticalTextAlignment="Center"/>
+                                   Text="{Binding Salinity, StringFormat='{0:F1} ppt'}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
                             </Grid>
                         </Border>
                     </Grid>
@@ -419,32 +398,91 @@
                     </VerticalStackLayout>
 
                     <!-- Action Buttons -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
-                        <Button Grid.Column="0"
-                                Text="Beobachtung speichern"
-                                BackgroundColor="#16a085"
-                                TextColor="White"
-                                HeightRequest="50"
-                                CornerRadius="8"
-                                FontSize="16"
-                                FontAttributes="Bold"
-                                Command="{Binding SaveObservationCommand}"/>
+                    <Grid x:Name="ButtonGrid" ColumnSpacing="15" RowSpacing="10" Margin="0,10,0,0">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="LayoutStates">
+                                <VisualState x:Name="Wide">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="600" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Property="ColumnDefinitions" Value="*,*" />
+                                        <Setter Property="RowDefinitions" Value="Auto" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Narrow">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="0" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Property="ColumnDefinitions" Value="*" />
+                                        <Setter Property="RowDefinitions" Value="Auto,Auto" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
 
-                        <Button Grid.Column="1"
+                        <Button x:Name="SaveButton" 
+                                Text="Beobachtung speichern"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SaveObservationCommand}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="ButtonPositionStates">
+                                    <VisualState x:Name="WideButton">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="600" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowButton">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Button>
+
+                        <Button x:Name="CancelButton"
                                 Text="Abbrechen"
-                                BackgroundColor="Transparent"
-                                TextColor="{StaticResource TextSecondary}"
-                                BorderColor="{StaticResource BorderColor}"
-                                BorderWidth="1"
-                                HeightRequest="50"
-                                CornerRadius="8"
-                                FontSize="16"
-                                Command="{Binding CancelCommand}"/>
+                                Command="{Binding CancelCommand}"
+                                Style="{StaticResource SecondaryButton}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="ButtonPositionStates">
+                                    <VisualState x:Name="WideButton">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="600" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="1" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowButton">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Button>
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Recent Observations Section (Optional) -->
             <Label Text="Letzte Beobachtungen"
                    FontSize="20"
                    FontAttributes="Bold"
@@ -460,7 +498,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Observation">
                         <Border Style="{StaticResource SecondaryCard}"
-                    Padding="15">
+                            Padding="15">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="12"/>
                             </Border.StrokeShape>
@@ -518,8 +556,8 @@
                                 <!-- Behavior and Notes -->
                                 <Grid Grid.Row="3" RowDefinitions="Auto,Auto" RowSpacing="5">
                                     <Label Grid.Row="0"
-                               FontSize="13"
-                               TextColor="{StaticResource TextPrimary}">
+                                       FontSize="13"
+                                       TextColor="{StaticResource TextPrimary}">
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span Text="Verhalten: " FontAttributes="Bold"/>
@@ -529,12 +567,12 @@
                                     </Label>
 
                                     <Label Grid.Row="1"
-                               Text="{Binding Notes}"
-                               FontSize="12"
-                               TextColor="{StaticResource TextSecondary}"
-                               LineBreakMode="WordWrap"
-                               MaxLines="3"
-                               IsVisible="{Binding HasNotes}"/>
+                                       Text="{Binding Notes}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource TextSecondary}"
+                                       LineBreakMode="WordWrap"
+                                       MaxLines="3"
+                                       IsVisible="{Binding HasNotes}"/>
                                 </Grid>
                             </Grid>
                         </Border>
