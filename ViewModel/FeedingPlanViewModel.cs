@@ -134,6 +134,12 @@ namespace CrocoManager.ViewModel
         {
             if (plan == null) return;
 
+            if(plan.IsActive)
+            {
+                await NotificationService.ShowWarningAsync("Warnung", "Aktive Futterpläne können nicht gelöscht werden. Bitte zuerst einen anderen Plan aktivieren.");
+                return;
+            }
+
             bool confirm = await NotificationService.ShowConfirmationAsync(
                 "Löschen bestätigen",
                 $"Möchten Sie '{plan.Name}' wirklich löschen?",
