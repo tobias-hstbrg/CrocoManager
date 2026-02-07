@@ -127,7 +127,6 @@ namespace CrocoManager.ViewModel
                     .Filter("id", Operator.In, planIds)
                     .Get()).Models;
 
-                // Mapper für Pläne
                 var plans = planDtos.ToDictionary(p => p.Id, p => new FeedingPlan
                 {
                     Id = p.Id,
@@ -145,7 +144,6 @@ namespace CrocoManager.ViewModel
                     .Filter("feeding_id", Operator.In, feedingIds)
                     .Get()).Models;
 
-                // Optional: Tiere mappen (falls AnimalDto enthalten ist, sonst extra Query)
                 var animalsDict = feedingAnimalDtos
                     .GroupBy(fa => fa.FeedingId)
                     .ToDictionary(
@@ -183,12 +181,10 @@ namespace CrocoManager.ViewModel
             {
                 IsBusy = true;
 
-                // 1️⃣ Rohdaten laden
                 var observationDtos = await _observationService.GetAllAsync();
                 var animalDtos = await _animalService.GetAllAsync();
                 var feedingDtos = await _feedingService.GetAllAsync();
 
-                // 2️⃣ EnvironmentalData IDs sammeln
                 var envIds = observationDtos
                     .Where(o => o.EnvironmentalDataId.HasValue)
                     .Select(o => o.EnvironmentalDataId!.Value)
@@ -242,13 +238,11 @@ namespace CrocoManager.ViewModel
                     observations.Add(observation);
                 }
 
-                // 5️⃣ Nur über UpdatedAt sortieren
                 var recent = observations
                     .OrderByDescending(o => o.UpdatedAt)
                     .Take(5)
                     .ToList();
 
-                // 6️⃣ UI füllen
                 RecentObservations.Clear();
                 foreach (var obs in recent)
                 {
