@@ -3,6 +3,7 @@ using CrocoManager.Services;
 using CrocoManager.ViewModel;
 using CrocoManager.Views;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CrocoManager
 {
@@ -42,6 +43,7 @@ namespace CrocoManager
             builder.Services.AddTransient<AnimalViewModel>();
             builder.Services.AddTransient<FeedingPlanViewModel>();
             builder.Services.AddTransient<FeedingViewModel>();
+            builder.Services.AddTransient<ObservationViewModel>();
 
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<RegisterPage>();
@@ -51,6 +53,7 @@ namespace CrocoManager
             builder.Services.AddTransient<AnimalPage>();
             builder.Services.AddTransient<FeedingPlanPage>();
             builder.Services.AddTransient<FeedingPage>();
+            builder.Services.AddTransient<ObservationPage>();
 
             // Shell
             builder.Services.AddSingleton<AppShell>();
@@ -61,6 +64,7 @@ namespace CrocoManager
             builder.Services.AddSingleton<INotificationService, NotificationService>();
             builder.Services.AddSingleton<AnimalService>();
             builder.Services.AddSingleton<FeedingPlanService>();
+            builder.Services.AddHttpClient<ObservationService>();
             builder.Services.AddSingleton<FeedingService>();
 
             var app = builder.Build();

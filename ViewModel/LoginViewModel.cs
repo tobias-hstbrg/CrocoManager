@@ -77,7 +77,8 @@ namespace CrocoManager.ViewModel
         async Task TestConnectionAsync()
         {
             //bool ok = await SupabaseService.Instance.TestConnectionAsync();
-            
+            ObservationService obsService = ServiceProvider.GetRequiredService<ObservationService>();
+            await obsService.FetchEnvironmentalDataAsync();
             var ok = await AuthService.TestConnectionAsync();
             await NotificationService.ShowInfoAsync("Connection Test", ok ? "Connected" : "Failed");
         }

@@ -53,6 +53,12 @@
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Beobachtungen" 
+    Icon="observation.png"
+    Route="ObservationPage">
+        <ShellContent ContentTemplate="{DataTemplate views:ObservationPage}" />
+    </FlyoutItem>
+
 
 
     <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
@@ -80,5 +86,11 @@
         Icon="feeding.png"
         Route="FeedingPage"
         ContentTemplate="{DataTemplate views:FeedingPage}" />
+
+        <ShellContent 
+        Title="Beobachtungen"
+        Icon="observation.png"
+        Route="ObservationPage"
+        ContentTemplate="{DataTemplate views:ObservationPage}" />
     </TabBar>
 </Shell>

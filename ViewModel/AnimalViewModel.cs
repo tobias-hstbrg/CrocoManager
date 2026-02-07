@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CrocoManager.DTOs;
+using CrocoManager.Models;
 using CrocoManager.Interfaces;
 using CrocoManager.Services;
 using CrocoManager.Views;
@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CrocoManager.Mappers;
 
 namespace CrocoManager.ViewModel
 {
@@ -19,10 +20,10 @@ namespace CrocoManager.ViewModel
         private readonly AnimalService _animalService;
 
         [ObservableProperty]
-        private ObservableCollection<AnimalDto> animals;
+        private ObservableCollection<Animal> animals;
 
         [ObservableProperty]
-        private AnimalDto selectedAnimal;
+        private Animal? selectedAnimal;
 
         [ObservableProperty]
         private bool isEditing;
@@ -57,7 +58,7 @@ namespace CrocoManager.ViewModel
         {
             _animalService = animalService;
 
-            Animals = new ObservableCollection<AnimalDto>();
+            Animals = new ObservableCollection<Animal>();
 
             GenderOptions = new ObservableCollection<string>()
             {
@@ -89,12 +90,12 @@ namespace CrocoManager.ViewModel
             try
             {
                 IsBusy = true;
-                var animals = await _animalService.GetAllAsync();
+                var dtos = await _animalService.GetAllAsync();
 
                 Animals.Clear();
-                foreach (var animal in animals)
+                foreach (var dto in dtos)
                 {
-                    Animals.Add(animal);
+                    Animals.Add(dto.ToModel());
                 }
             }
             catch (Exception ex)
@@ -115,7 +116,7 @@ namespace CrocoManager.ViewModel
         }
 
         [RelayCommand]
-        private void EditAnimal(AnimalDto animal)
+        private void EditAnimal(Animal animal)
         {
             if (animal == null) return;
 
@@ -124,14 +125,14 @@ namespace CrocoManager.ViewModel
 
             Name = animal.Name;
             Gender = animal.Gender;
-            Age = animal.Age.Value;
+            Age = animal.AgeYears;
             Species = animal.Species;
             Enclosure = animal.Enclosure;
             Description = animal.Description;
         }
 
         [RelayCommand]
-        private async Task DeleteAnimal(AnimalDto animal)
+        private async Task DeleteAnimal(Animal animal)
         {
             if (animal == null) return;
 
@@ -172,43 +173,56 @@ namespace CrocoManager.ViewModel
 
                 if (IsEditing && SelectedAnimal != null)
                 {
-                    // Update existing animal
-                    SelectedAnimal.Name = Name;
-                    SelectedAnimal.Gender = Gender;
-                    SelectedAnimal.Age = Age;
-                    SelectedAnimal.Species = Species;
-                    SelectedAnimal.Enclosure = Enclosure;
-                    SelectedAnimal.Description = Description;
-
-                    var updatedAnimal = await _animalService.UpdateAsync(SelectedAnimal);
-
-                    if (updatedAnimal != null)
+                    var updatedAnimal = new Animal
                     {
-                        await NotificationService.ShowSuccessAsync("Tier aktualisiert", $"'{Name}' wurde erfolgreich aktualisiert.");
-                    }
-                    else
-                    {
-                        await NotificationService.ShowErrorAsync("Fehler", "Das Tier konnte nicht aktualisiert werden.");
-                    }
-                }
-                else
-                {
-                    // Add new animal
-                    var newAnimal = new AnimalDto
-                    {
+                        Id = SelectedAnimal.Id,
                         Name = Name,
                         Gender = Gender,
-                        Age = Age,
+                        AgeYears = Age,
                         Species = Species,
                         Enclosure = Enclosure,
                         Description = Description
                     };
 
-                    var createdAnimal = await _animalService.AddAsync(newAnimal);
+                    var updatedDto = await _animalService.UpdateAsync(updatedAnimal.ToDto());
 
-                    if (createdAnimal != null)
+                    if(updatedDto != null)
                     {
-                        Animals.Add(createdAnimal);
+                        var index = Animals.IndexOf(SelectedAnimal);
+                        if (index >= 0)
+                        {
+                            Animals[index] = updatedAnimal;
+                        }
+
+                        await NotificationService.ShowSuccessAsync(
+                            "Tier aktualisiert",
+                            $"'{Name}' wurde erfolgreich aktualisiert.");
+                    }
+                    else
+                    {
+                        await NotificationService.ShowErrorAsync(
+                            "Fehler",
+                            "Das Tier konnte nicht aktualisiert werden.");
+                    }
+                }
+                else
+                {
+                    // Add new animal
+                    var newAnimal = new Animal
+                    {
+                        Name = Name,
+                        Gender = Gender,
+                        AgeYears = Age,
+                        Species = Species,
+                        Enclosure = Enclosure,
+                        Description = Description
+                    };
+
+                    var createdDto = await _animalService.AddAsync(newAnimal.ToDto());
+
+                    if (createdDto != null)
+                    {
+                        Animals.Add(createdDto.ToModel());
                         await NotificationService.ShowSuccessAsync("Tier hinzugefügt", $"'{Name}' wurde erfolgreich hinzugefügt.");
                     }
                     else
