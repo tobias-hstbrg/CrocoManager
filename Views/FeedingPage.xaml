@@ -94,7 +94,7 @@
             <!-- Animals List -->
             <Border Grid.Row="3"
                     Style="{StaticResource SecondaryCard}"
-                    HeightRequest="330"
+                    HeightRequest="{OnIdiom Desktop=370, Phone=300}"
                     Padding="0"
                     Margin="0">
                 <Border.StrokeShape>
