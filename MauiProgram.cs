@@ -1,9 +1,14 @@
 ﻿using CrocoManager.Interfaces;
+
 using CrocoManager.Services;
 using CrocoManager.ViewModel;
 using CrocoManager.Views;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls.Platform.Compatibility;
+#if ANDROID
+using CrocoManager.Platforms.Android;
+#endif
 
 namespace CrocoManager
 {
@@ -32,6 +37,13 @@ namespace CrocoManager
 
 #if DEBUG
             builder.Logging.AddDebug();
+#endif
+
+#if ANDROID
+    builder.ConfigureMauiHandlers(handlers =>
+    {
+        handlers.AddHandler<Shell, CustomShellRenderer>();
+    });
 #endif
 
             // Pages & ViewModels

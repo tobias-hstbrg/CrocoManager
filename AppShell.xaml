@@ -61,36 +61,32 @@
 
 
 
-    <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
+    <TabBar
+        IsVisible="{OnIdiom Phone=True, Default=False}">
 
-        <ShellContent 
-            Title="Tierverwaltung"
+        <ShellContent
             Icon="animal_icon.png"
             Route="AnimalPage"
             ContentTemplate="{DataTemplate views:AnimalPage}" />
 
-        <ShellContent 
-            Title="Dashboard"
+        <ShellContent
+            Icon="feeding.png"
+            Route="FeedingPage"
+            ContentTemplate="{DataTemplate views:FeedingPage}" />
+
+        <ShellContent
             Icon="home.png"
             Route="HomePage"
             ContentTemplate="{DataTemplate views:HomePage}" />
 
-        <ShellContent 
-            Title="Futterplanverwaltung"
+        <ShellContent
             Icon="calendar.png"
             Route="FeedingPlanPage"
             ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
 
-        <ShellContent 
-        Title="Fütterungen"
-        Icon="feeding.png"
-        Route="FeedingPage"
-        ContentTemplate="{DataTemplate views:FeedingPage}" />
-
-        <ShellContent 
-        Title="Beobachtungen"
-        Icon="observation.png"
-        Route="ObservationPage"
-        ContentTemplate="{DataTemplate views:ObservationPage}" />
+        <ShellContent
+            Icon="observation.png"
+            Route="ObservationPage"
+            ContentTemplate="{DataTemplate views:ObservationPage}" />
     </TabBar>
 </Shell>
