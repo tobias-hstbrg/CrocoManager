@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:CrocoManager.ViewModel"
@@ -6,281 +6,188 @@
              Title="Admin Center"
              BackgroundColor="{StaticResource PageBackground}">
 
-    <Grid x:Name="MainGrid">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="AdaptiveStates">
-                <!-- Mobile Layout (width < 768) -->
-                <VisualState x:Name="Mobile">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter TargetName="ContentScroll" Property="ScrollView.Padding" Value="16"/>
-                        <Setter TargetName="ContentGrid" Property="Grid.MaximumWidthRequest" Value="600"/>
-                        <Setter TargetName="PageTitle" Property="Label.FontSize" Value="24"/>
-                        <Setter TargetName="PageSubtitle" Property="Label.FontSize" Value="14"/>
-                        <Setter TargetName="AddUserCard" Property="Border.Padding" Value="16"/>
-                        <Setter TargetName="AddUserTitle" Property="Label.FontSize" Value="16"/>
-                        <Setter TargetName="EmailEntry" Property="Entry.FontSize" Value="15"/>
-                        <Setter TargetName="EmailBorder" Property="Border.HeightRequest" Value="48"/>
-                        <Setter TargetName="RolePicker" Property="Picker.FontSize" Value="15"/>
-                        <Setter TargetName="RolePickerBorder" Property="Border.HeightRequest" Value="48"/>
-                        <Setter TargetName="AddEmailButton" Property="Button.HeightRequest" Value="48"/>
-                        <Setter TargetName="AddEmailButton" Property="Button.FontSize" Value="15"/>
-                        <Setter TargetName="ExistingUsersTitle" Property="Label.FontSize" Value="16"/>
-                        <Setter TargetName="LogoutButton" Property="Button.WidthRequest" Value="40"/>
-                        <Setter TargetName="LogoutButton" Property="Button.HeightRequest" Value="40"/>
-                        <Setter TargetName="LogoutButton" Property="Button.FontSize" Value="16"/>
-                        <Setter TargetName="LogoutButton" Property="Button.Margin" Value="0,16,16,0"/>
-                    </VisualState.Setters>
-                </VisualState>
+    <ScrollView>
+        <Grid Padding="20" RowSpacing="20" ColumnSpacing="0" MaximumWidthRequest="1000">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                <!-- Desktop Layout (width >= 768) -->
-                <VisualState x:Name="Desktop">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="768" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter TargetName="ContentScroll" Property="ScrollView.Padding" Value="40"/>
-                        <Setter TargetName="ContentGrid" Property="Grid.MaximumWidthRequest" Value="1000"/>
-                        <Setter TargetName="PageTitle" Property="Label.FontSize" Value="32"/>
-                        <Setter TargetName="PageSubtitle" Property="Label.FontSize" Value="16"/>
-                        <Setter TargetName="AddUserCard" Property="Border.Padding" Value="32"/>
-                        <Setter TargetName="AddUserTitle" Property="Label.FontSize" Value="20"/>
-                        <Setter TargetName="EmailEntry" Property="Entry.FontSize" Value="16"/>
-                        <Setter TargetName="EmailBorder" Property="Border.HeightRequest" Value="56"/>
-                        <Setter TargetName="RolePicker" Property="Picker.FontSize" Value="16"/>
-                        <Setter TargetName="RolePickerBorder" Property="Border.HeightRequest" Value="56"/>
-                        <Setter TargetName="AddEmailButton" Property="Button.HeightRequest" Value="56"/>
-                        <Setter TargetName="AddEmailButton" Property="Button.FontSize" Value="16"/>
-                        <Setter TargetName="ExistingUsersTitle" Property="Label.FontSize" Value="20"/>
-                        <Setter TargetName="LogoutButton" Property="Button.WidthRequest" Value="48"/>
-                        <Setter TargetName="LogoutButton" Property="Button.HeightRequest" Value="48"/>
-                        <Setter TargetName="LogoutButton" Property="Button.FontSize" Value="18"/>
-                        <Setter TargetName="LogoutButton" Property="Button.Margin" Value="0,24,24,0"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-
-        <ScrollView x:Name="ContentScroll" Padding="16">
-            <Grid x:Name="ContentGrid" 
-                  RowSpacing="20"
-                  MaximumWidthRequest="600"
-                  HorizontalOptions="Center">
+            <!-- Header Section -->
+            <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                <!-- Header Section with Logout Button -->
-                <Grid Grid.Row="0" RowSpacing="4" ColumnSpacing="12">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0"
+                       Text="Benutzerverwaltung"
+                       FontAttributes="Bold"
+                       FontSize="28"
+                       TextColor="{StaticResource TextPrimary}"/>
 
-                    <Label 
-                        x:Name="PageTitle"
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Text="Manage User Access"
-                        FontAttributes="Bold"
-                        FontSize="24"
-                        TextColor="{StaticResource TextPrimary}"
-                        VerticalOptions="Center"/>
-
-                    <!-- Logout Button -->
-                    <Button 
-                        x:Name="LogoutButton"
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Grid.RowSpan="2"
+                <!-- Logout Button -->
+                <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                         Text="🚪"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="{StaticResource TextOnPrimary}"
                         BorderColor="Transparent"
-                        WidthRequest="40"
-                        HeightRequest="40"
+                        WidthRequest="48"
+                        HeightRequest="48"
                         CornerRadius="8"
-                        FontSize="16"
+                        FontSize="18"
                         Padding="8"
-                        VerticalOptions="Center"
                         Command="{Binding SignOutCommand}"/>
 
-                    <Label 
-                        x:Name="PageSubtitle"
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Text="Add, update, or remove user permissions"
-                        FontSize="14"
-                        TextColor="{StaticResource TextSecondary}"/>
-                </Grid>
+                <Label Grid.Row="1" Grid.Column="0"
+                       Text="Benutzer hinzufügen, aktualisieren oder entfernen"
+                       FontSize="16"
+                       TextColor="{StaticResource TextSecondary}"/>
+            </Grid>
 
-                <!-- Add New User Card -->
-                <Border 
-                    x:Name="AddUserCard"
-                    Grid.Row="1"
+            <!-- Add New User Card -->
+            <Border Grid.Row="1"
                     Style="{StaticResource SecondaryCard}"
-                    Padding="16">
+                    Padding="24">
+                <Grid RowSpacing="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <!-- Title -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Email label + entry -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Role label + picker -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Add button -->
+                    </Grid.RowDefinitions>
 
-                    <Grid RowSpacing="12">
+                    <!-- Title -->
+                    <Label Grid.Row="0"
+                           Text="Neuen Benutzer hinzufügen"
+                           FontAttributes="Bold"
+                           FontSize="20"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <!-- Email -->
+                    <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
+                            <!-- Label -->
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
+                            <!-- Entry -->
                         </Grid.RowDefinitions>
-
-                        <Label 
-                            x:Name="AddUserTitle"
-                            Grid.Row="0"
-                            Text="Add New User"
-                            FontAttributes="Bold"
-                            FontSize="16"
-                            TextColor="{StaticResource TextPrimary}"/>
-
-                        <Border
-                            x:Name="EmailBorder"
-                            Grid.Row="1"
-                            Style="{StaticResource EntryBorder}"
-                            Padding="12,0"
-                            HeightRequest="48">
-                            <Entry 
-                                x:Name="EmailEntry"
-                                Placeholder="Enter email" 
-                                Text="{Binding Email}"
-                                Keyboard="Email"
-                                TextColor="{StaticResource TextPrimary}"
-                                PlaceholderColor="{StaticResource PlaceholderText}"
-                                BackgroundColor="Transparent"
-                                FontSize="15"
-                                VerticalOptions="Center"
-                                HorizontalOptions="FillAndExpand"/>
+                        <Label Grid.Row="0" Text="E-Mail:" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                        <Border Grid.Row="1" Style="{StaticResource EntryBorder}" Padding="12,0" HeightRequest="50">
+                            <Entry Text="{Binding Email}"
+                                   Placeholder="z.B. max@beispiel.de"
+                                   Keyboard="Email"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   PlaceholderColor="{StaticResource PlaceholderText}"
+                                   BackgroundColor="Transparent"
+                                   FontSize="16"/>
                         </Border>
+                    </Grid>
 
-                        <Border
-                            x:Name="RolePickerBorder"
-                            Grid.Row="2"
-                            Style="{StaticResource EntryBorder}"
-                            Padding="12,0"
-                            HeightRequest="48">
-                            <Picker 
-                                x:Name="RolePicker"
-                                Title="Select Role"
-                                ItemsSource="{Binding Roles}"
-                                SelectedItem="{Binding SelectedRole}"
-                                TextColor="{StaticResource TextPrimary}"
-                                BackgroundColor="Transparent"
-                                FontSize="15"
-                                VerticalOptions="Center"
-                                HorizontalOptions="FillAndExpand"/>
+                    <!-- Role -->
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <!-- Label -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Picker -->
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Text="Rolle:" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                        <Border Grid.Row="1" Style="{StaticResource EntryBorder}" Padding="12,0" HeightRequest="50">
+                            <Picker ItemsSource="{Binding Roles}"
+                                    SelectedItem="{Binding SelectedRole}"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    BackgroundColor="Transparent"
+                                    FontSize="16"/>
                         </Border>
+                    </Grid>
 
-                        <Button 
-                            x:Name="AddEmailButton"
-                            Grid.Row="3"
-                            Text="Add Email" 
+                    <!-- Add Button -->
+                    <Button Grid.Row="3"
+                            Text="Hinzufügen"
                             Command="{Binding AddEmailCommand}"
                             Style="{StaticResource PrimaryButton}"
-                            HeightRequest="48"
-                            FontSize="15"
-                            HorizontalOptions="FillAndExpand"/>
-                    </Grid>
-                </Border>
+                            HeightRequest="50"
+                            FontSize="16"/>
+                </Grid>
+            </Border>
 
-                <Label 
-                    x:Name="ExistingUsersTitle"
-                    Grid.Row="2"
-                    Text="Existing Users"
-                    FontAttributes="Bold"
-                    FontSize="16"
-                    TextColor="{StaticResource TextPrimary}"/>
+            <!-- Existing Users Label -->
+            <Label Grid.Row="2"
+                   Text="Vorhandene Benutzer"
+                   FontAttributes="Bold"
+                   FontSize="20"
+                   TextColor="{StaticResource TextPrimary}"/>
 
-                <CollectionView 
-                    Grid.Row="3"
-                    ItemsSource="{Binding WhitelistedEmails}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Border 
-                                Style="{StaticResource SecondaryCard}"
-                                Padding="16"
-                                Margin="0,0,0,12">
+            <!-- Existing Users List -->
+            <CollectionView Grid.Row="3" ItemsSource="{Binding WhitelistedEmails}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource SecondaryCard}" Padding="16" Margin="0,0,0,12">
+                            <Grid RowSpacing="12" ColumnSpacing="12">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-                                <Grid RowSpacing="12" ColumnSpacing="12">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                                <!-- Email -->
+                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                       Text="{Binding Email}" 
+                                       FontSize="16"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       LineBreakMode="WordWrap"/>
 
-                                    <!-- Email Label -->
-                                    <Label 
-                                        Grid.Row="0"
-                                        Grid.Column="0"
-                                        Grid.ColumnSpan="2"
-                                        Text="{Binding Email}" 
-                                        VerticalOptions="Center"
-                                        LineBreakMode="WordWrap"
-                                        TextColor="{StaticResource TextPrimary}"
-                                        FontSize="14"/>
-
-                                    <Border
-                                        Grid.Row="1"
-                                        Grid.Column="0"
-                                        Grid.ColumnSpan="2"
-                                        Style="{StaticResource EntryBorder}"
-                                        Padding="12,0"
-                                        HeightRequest="44">
-                                        <Picker 
-                                            x:Name="UserRolePicker"
-                                            Title="Select Role"
-                                            ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.Roles}"
-                                            SelectedItem="{Binding Role, Mode=TwoWay}"
-                                            ItemDisplayBinding="{Binding .}"
-                                            TextColor="{StaticResource TextPrimary}"
-                                            BackgroundColor="Transparent"
-                                            FontSize="14"
-                                            VerticalOptions="Center"/>
+                                <!-- Role Picker -->
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
+                                    <Label Text="Rolle:" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                                    <Border Style="{StaticResource EntryBorder}" Padding="12,0" HeightRequest="50">
+                                        <Picker ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.Roles}"
+                                                SelectedItem="{Binding Role, Mode=TwoWay}"
+                                                TextColor="{StaticResource TextPrimary}"
+                                                BackgroundColor="Transparent"
+                                                FontSize="16"/>
                                     </Border>
+                                </VerticalStackLayout>
 
-                                    <Button 
-                                        Grid.Row="2"
-                                        Grid.Column="0"
-                                        Text="Update"
+                                <!-- Update Button -->
+                                <Button Grid.Row="2" Grid.Column="0"
+                                        Text="Aktualisieren"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.UpdateRoleCommand}"
                                         CommandParameter="{Binding .}"
                                         Style="{StaticResource PrimaryButton}"
-                                        HeightRequest="44"
-                                        FontSize="14"
-                                        HorizontalOptions="FillAndExpand"/>
+                                        HeightRequest="50"
+                                        FontSize="16"/>
 
-                                    <Button 
-                                        Grid.Row="2"
-                                        Grid.Column="1"
-                                        Text="Delete"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteEmailCommand}"
-                                        CommandParameter="{Binding .}"
-                                        Style="{StaticResource SecondaryButton}"
-                                        HeightRequest="44"
-                                        FontSize="14"
-                                        HorizontalOptions="FillAndExpand"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Grid>
-        </ScrollView>
-    </Grid>
+                                <!-- Delete Button -->
+                                <ImageButton Grid.Row="2" Grid.Column="1"
+                                             Source="trash_can.png"
+                                             Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteEmailCommand}"
+                                             CommandParameter="{Binding .}"
+                                             Style="{StaticResource SecondaryImageButton}"
+                                             CornerRadius="8"
+                                             HeightRequest="50"
+                                             WidthRequest="50"
+                                             Padding="10"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ScrollView>
 </ContentPage>
