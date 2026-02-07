@@ -17,10 +17,10 @@ namespace CrocoManager.ViewModel
         private readonly SupabaseClientService _supabase;
 
         [ObservableProperty]
-        private decimal airTemperature;
+        private decimal? airTemperature;
 
         [ObservableProperty]
-        private decimal humidity;
+        private decimal? humidity;
 
         [ObservableProperty]
         private decimal waterTemperature;
@@ -57,6 +57,13 @@ namespace CrocoManager.ViewModel
 
         [ObservableProperty]
         private ObservableCollection<Observation> recentObservations;
+
+        public bool CanSave =>
+        SelectedAnimal != null &&
+        SelectedFeeding != null &&
+        !string.IsNullOrWhiteSpace(FeedingBehavior) &&
+        AirTemperature.HasValue &&
+        Humidity.HasValue;
 
         public ObservationViewModel(IServiceProvider serviceProvider,SupabaseClientService supabase, ObservationService observationService, AnimalService animalService, FeedingService feedingService)
             : base(serviceProvider)
@@ -248,6 +255,14 @@ namespace CrocoManager.ViewModel
                 {
                     RecentObservations.Add(obs);
                 }
+
+                if (!AirTemperature.HasValue || !Humidity.HasValue)
+                {
+                    await NotificationService.ShowErrorAsync(
+                        "Unvollständige Umweltdaten",
+                        "Nicht alle benötigten Umweltdaten konnten geladen werden. Eine Speicherung ist derzeit nicht möglich."
+                    );
+                }
             }
             catch (Exception ex)
             {
@@ -262,7 +277,7 @@ namespace CrocoManager.ViewModel
         }
 
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanSave))]
         private async Task SaveObservation()
         {
             if (SelectedAnimal == null)
@@ -299,12 +314,22 @@ namespace CrocoManager.ViewModel
                     salinityPpt: Salinity
                 );
 
+
+                if (!AirTemperature.HasValue || !Humidity.HasValue)
+                {
+                    await NotificationService.ShowErrorAsync(
+                        "Speichern nicht möglich",
+                        "Nicht alle erforderlichen Umweltdaten sind vorhanden."
+                    );
+                    return;
+                }
+
                 var environmentalDto = new EnvironmentalDataDto
                 {
                     MeasurementDate = environmentalData.MeasurementDate,
                     MeasurementTime = environmentalData.MeasurementTime,
-                    AirTemperatureCelsius = environmentalData.AirTemperatureCelsius,
-                    HumidityPercent = environmentalData.HumidityPercent,
+                    AirTemperatureCelsius = environmentalData.AirTemperatureCelsius.Value,
+                    HumidityPercent = environmentalData.HumidityPercent.Value,
                     WaterTemperatureCelsius = environmentalData.WaterTemperatureCelsius,
                     PhValue = environmentalData.PhValue,
                     SalinityPpt = environmentalData.SalinityPpt
