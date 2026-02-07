@@ -73,6 +73,11 @@ namespace CrocoManager.ViewModel
         {
             if (emailVM == null) return;
 
+            var continueDeletion = await NotificationService.ShowConfirmationAsync("Bestätigung", $"'{emailVM.Email}' entfernen? Hinweis: Bereits registrierte Benutzer werden komplett gelöscht.");
+
+            if (!continueDeletion)
+                return;
+
             bool success = await _whitelistService.DeleteEmailFromWhitelistAsync(emailVM.Id, emailVM.Email);
             await LoadEmails();
         }
