@@ -27,7 +27,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0"
-                       Text="Benutzerverwaltung"
+                       Text="Admin Center"
                        FontAttributes="Bold"
                        FontSize="28"
                        TextColor="{StaticResource TextPrimary}"/>
@@ -46,7 +46,7 @@
                         Command="{Binding SignOutCommand}"/>
 
                 <Label Grid.Row="1" Grid.Column="0"
-                       Text="Benutzer hinzufügen, aktualisieren oder entfernen"
+                       Text="Benutzer whitelisten, aktualisieren oder entfernen"
                        FontSize="16"
                        TextColor="{StaticResource TextSecondary}"/>
             </Grid>
