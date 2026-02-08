@@ -72,7 +72,7 @@ namespace CrocoManager.ViewModel
                 {
                     ActivePlanName = activeFeedingPlan.Name;
                     ActivePlanFood = activeFeedingPlan.FoodType;
-                    ActivePlanFrequency = activeFeedingPlan.FrequencyPerWeek.ToString();
+                    ActivePlanFrequency =  activeFeedingPlan.FrequencyPerWeek + "x pro Woche (" + activeFeedingPlan.WeekdaysFormatted + ")";
                     ActivePlanDescription = activeFeedingPlan.Description;
                 }
 
