@@ -17,9 +17,11 @@ namespace CrocoManager.ViewModel
         private readonly SupabaseClientService _supabase;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
         private decimal? airTemperature;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
         private decimal? humidity;
 
         [ObservableProperty]
@@ -35,6 +37,7 @@ namespace CrocoManager.ViewModel
         private ObservableCollection<Animal> animals;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
         private Animal? selectedAnimal;
 
         [ObservableProperty]
@@ -44,12 +47,14 @@ namespace CrocoManager.ViewModel
         private ObservableCollection<string> feedingsDisplayNames = new();
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
         private Feeding? selectedFeeding;
 
         [ObservableProperty]
         private ObservableCollection<string> feedingBehaviors;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
         private string? feedingBehavior;
 
         [ObservableProperty]
