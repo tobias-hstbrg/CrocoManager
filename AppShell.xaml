@@ -41,21 +41,21 @@
         <ShellContent ContentTemplate="{DataTemplate views:AnimalPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Futterplanverwaltung" 
-    Icon="calendar.png"
-    Route="FeedingPlanPage">
-        <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
-    </FlyoutItem>
-
     <FlyoutItem Title="Fütterungen" 
-    Icon="feeding.png"
-    Route="FeedingPage">
+        Icon="feeding.png"
+        Route="FeedingPage">
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Futterplanverwaltung" 
+        Icon="calendar.png"
+        Route="FeedingPlanPage">
+        <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
+    </FlyoutItem>
+
     <FlyoutItem Title="Beobachtungen" 
-    Icon="observation.png"
-    Route="ObservationPage">
+        Icon="observation.png"
+        Route="ObservationPage">
         <ShellContent ContentTemplate="{DataTemplate views:ObservationPage}" />
     </FlyoutItem>
 
