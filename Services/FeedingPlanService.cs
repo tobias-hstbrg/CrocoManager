@@ -14,6 +14,12 @@ namespace CrocoManager.Services
         {
         }
 
+        public async Task<int> GetTotalCount()
+        {
+            List<FeedingPlanDto> allPlans = await GetAllAsync();
+            return allPlans.Count;
+        }
+
         public async Task<bool> ToggleActiveAsync(Guid id)
         {
             FeedingPlanDto? plan = await GetByIdAsync(id);
@@ -25,7 +31,7 @@ namespace CrocoManager.Services
 
         public async Task<FeedingPlanDto> GetActivePlanAsync()
         {
-            List<FeedingPlanDto> plans = await FilterByAsync("is_active", true);
+            List<FeedingPlanDto> plans = await FilterByAsync("is_active", "true");
             if (plans.Count == 0)
                 throw new InvalidOperationException("No active feeding plan found.");
             if(plans.Count > 1)

@@ -11,8 +11,8 @@ namespace CrocoManager.Models
         public Guid Id { get; init; }
         public DateOnly MeasurementDate { get; }
         public TimeSpan MeasurementTime { get; }
-        public decimal AirTemperatureCelsius { get; }
-        public decimal HumidityPercent { get; }
+        public decimal? AirTemperatureCelsius { get; }
+        public decimal? HumidityPercent { get; }
         public decimal WaterTemperatureCelsius { get; }
         public decimal PhValue { get; }
         public decimal SalinityPpt { get; }
@@ -21,8 +21,8 @@ namespace CrocoManager.Models
             Guid id,
             DateOnly measurementDate,
             TimeSpan measurementTime,
-            decimal airTemperatureCelsius,
-            decimal humidityPercent,
+            decimal? airTemperatureCelsius,
+            decimal? humidityPercent,
             decimal waterTemperatureCelsius,
             decimal phValue,
             decimal salinityPpt)
@@ -40,8 +40,8 @@ namespace CrocoManager.Models
         public EnvironmentalData(
         DateOnly measurementDate,
         TimeSpan measurementTime,
-        decimal airTemperatureCelsius,
-        decimal humidityPercent,
+        decimal? airTemperatureCelsius,
+        decimal? humidityPercent,
         decimal waterTemperatureCelsius,
         decimal phValue,
         decimal salinityPpt)

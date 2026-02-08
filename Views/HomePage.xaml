@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CrocoManager.Views.HomePage"
@@ -108,7 +108,7 @@
                     <!-- Card 1: Tiere gesamt -->
                     <Border x:Name="Card1" Style="{StaticResource CardFrame}">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="24" Style="{StaticResource LargeNumber}"/>
+                            <Label Text="{Binding TotalAnimals}" Style="{StaticResource LargeNumber}"/>
                             <Label Text="Tiere gesamt" Style="{StaticResource CardLabel}"/>
                         </VerticalStackLayout>
                     </Border>
@@ -116,7 +116,7 @@
                     <!-- Card 2: Futterpläne gesamt -->
                     <Border x:Name="Card2" Style="{StaticResource CardFrame}">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="3" Style="{StaticResource LargeNumber}"/>
+                            <Label Text="{Binding TotalFeedingPlans}" Style="{StaticResource LargeNumber}"/>
                             <Label Text="Futterpläne gesamt" Style="{StaticResource CardLabel}"/>
                         </VerticalStackLayout>
                     </Border>
@@ -124,7 +124,7 @@
                     <!-- Card 3: Fütterungen diese Woche -->
                     <Border x:Name="Card3" Style="{StaticResource CardFrame}">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="12" Style="{StaticResource LargeNumber}"/>
+                            <Label Text="{Binding FeedingsThisWeek}" Style="{StaticResource LargeNumber}"/>
                             <Label Text="Fütterungen diese Woche" Style="{StaticResource CardLabel}"/>
                         </VerticalStackLayout>
                     </Border>
@@ -142,22 +142,22 @@
 
                             <HorizontalStackLayout Spacing="5">
                                 <Label Text="Plan:" Style="{StaticResource InfoLabel}"/>
-                                <Label Text="Sommer-Standard-Plan" Style="{StaticResource InfoValue}"/>
+                                <Label Text="{Binding ActivePlanName}" Style="{StaticResource InfoValue}"/>
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout Spacing="5">
                                 <Label Text="Futter:" Style="{StaticResource InfoLabel}"/>
-                                <Label Text="Hühnchen, 2kg pro Tier" Style="{StaticResource InfoValue}"/>
+                                <Label Text="{Binding ActivePlanFood}" Style="{StaticResource InfoValue}"/>
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout Spacing="5">
                                 <Label Text="Frequenz:" Style="{StaticResource InfoLabel}"/>
-                                <Label Text="2x pro Woche (Mittwoch, Sonntag)" Style="{StaticResource InfoValue}"/>
+                                <Label Text="{Binding ActivePlanFrequency}" Style="{StaticResource InfoValue}"/>
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout Spacing="5">
-                                <Label Text="Gültig seit:" Style="{StaticResource InfoLabel}"/>
-                                <Label Text="01.06.2025" Style="{StaticResource InfoValue}"/>
+                                <Label Text="Beschreibung:" Style="{StaticResource InfoLabel}"/>
+                                <Label Text="{Binding ActivePlanDescription}" Style="{StaticResource InfoValue}" LineBreakMode="WordWrap"/>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </Border>
@@ -169,17 +169,17 @@
 
                             <HorizontalStackLayout Spacing="5">
                                 <Label Text="Datum:" Style="{StaticResource InfoLabel}"/>
-                                <Label Text="06.11.2025" Style="{StaticResource InfoValue}"/>
+                                <Label Text="{Binding LastFeedingDate, StringFormat='{0:dd.MM.yyyy}'}" Style="{StaticResource InfoValue}"/>
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout Spacing="5">
                                 <Label Text="Plan:" Style="{StaticResource InfoLabel}"/>
-                                <Label Text="Sommer-Standard-Plan" Style="{StaticResource InfoValue}"/>
+                                <Label Text="{Binding LastFeedingPlanName}" Style="{StaticResource InfoValue}"/>
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout Spacing="5">
                                 <Label Text="Status:" Style="{StaticResource InfoLabel}"/>
-                                <Label Text="durchgeführt" 
+                                <Label Text="{Binding LastFeedingStatus}"
                                        Style="{StaticResource InfoValueSuccess}"/>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>

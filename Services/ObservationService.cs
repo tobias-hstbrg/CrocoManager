@@ -31,7 +31,18 @@ namespace CrocoManager.Services
         {
             var (waterTemp, salinity) = await FetchWaterData();
 
-            var (airTemp, humidity) = await FetchWeatherData();
+            decimal? airTemp = null;
+            decimal? humidity = null;
+
+            try
+            {
+                (airTemp, humidity) = await FetchWeatherData();
+            }
+            catch (Exception ex)
+            {
+                // Even if value cannot be fetched, log and proceed.
+                Console.WriteLine($"Error fetching weather data: {ex.Message}");
+            }
 
             decimal phValue = ((decimal)GeneratePhValues());
 
@@ -46,7 +57,7 @@ namespace CrocoManager.Services
             );
         }
 
-        private async Task<(decimal, decimal)> FetchWeatherData()
+        private async Task<(decimal? airTemp, decimal? humidity)> FetchWeatherData()
         {
             _httpClient.DefaultRequestHeaders.Clear();
 
@@ -66,12 +77,16 @@ namespace CrocoManager.Services
             using var jsonStream = await response.Content.ReadAsStreamAsync();
             using var jsonDoc = await JsonDocument.ParseAsync(jsonStream);
 
-            var root = jsonDoc.RootElement;
+            var properties = jsonDoc.RootElement.GetProperty("properties");
 
-            var properties = root.GetProperty("properties");
+            decimal? airTemperature = null;
+            decimal? relativeHumidity = null;
 
-            decimal airTemperature = properties.GetProperty("temperature").GetProperty("value").GetDecimal();
-            decimal relativeHumidity = properties.GetProperty("relativeHumidity").GetProperty("value").GetDecimal();
+            if (properties.TryGetProperty("temperature", out var tempProp) && tempProp.TryGetProperty("value", out var tempValue) && tempValue.ValueKind == JsonValueKind.Number)
+                airTemperature = tempValue.GetDecimal();
+
+            if (properties.TryGetProperty("relativeHumidity", out var humProp) && humProp.TryGetProperty("value", out var humValue) && humValue.ValueKind == JsonValueKind.Number)
+                relativeHumidity = humValue.GetDecimal();
 
             return (airTemperature, relativeHumidity);
         }
