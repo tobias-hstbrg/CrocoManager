@@ -41,21 +41,21 @@
         <ShellContent ContentTemplate="{DataTemplate views:AnimalPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Futterplanverwaltung" 
-    Icon="calendar.png"
-    Route="FeedingPlanPage">
-        <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
-    </FlyoutItem>
-
     <FlyoutItem Title="Fütterungen" 
-    Icon="feeding.png"
-    Route="FeedingPage">
+        Icon="feeding.png"
+        Route="FeedingPage">
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Futterplanverwaltung" 
+        Icon="calendar.png"
+        Route="FeedingPlanPage">
+        <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
+    </FlyoutItem>
+
     <FlyoutItem Title="Beobachtungen" 
-    Icon="observation.png"
-    Route="ObservationPage">
+        Icon="observation.png"
+        Route="ObservationPage">
         <ShellContent ContentTemplate="{DataTemplate views:ObservationPage}" />
     </FlyoutItem>
 
@@ -70,22 +70,22 @@
             ContentTemplate="{DataTemplate views:AnimalPage}" />
 
         <ShellContent 
-            Title="Dashboard"
-            Icon="home.png"
-            Route="HomePage"
-            ContentTemplate="{DataTemplate views:HomePage}" />
-
-        <ShellContent 
-            Title="Futterplanverwaltung"
-            Icon="calendar.png"
-            Route="FeedingPlanPage"
-            ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
-
-        <ShellContent 
         Title="Fütterungen"
         Icon="feeding.png"
         Route="FeedingPage"
         ContentTemplate="{DataTemplate views:FeedingPage}" />
+
+        <ShellContent 
+        Title="Dashboard"
+        Icon="home.png"
+        Route="HomePage"
+        ContentTemplate="{DataTemplate views:HomePage}" />
+
+        <ShellContent 
+        Title="Futterplanverwaltung"
+        Icon="calendar.png"
+        Route="FeedingPlanPage"
+        ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
 
         <ShellContent 
         Title="Beobachtungen"
