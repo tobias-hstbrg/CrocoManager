@@ -20,18 +20,10 @@
                        TextColor="{StaticResource TextPrimary}"
                        VerticalOptions="Center"/>
 
-                <Button Grid.Column="1"
-                        Text="🚪"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="{StaticResource TextOnPrimary}"
-                        BorderColor="Transparent"
-                        WidthRequest="50"
-                        HeightRequest="50"
-                        CornerRadius="8"
-                        FontSize="16"
-                        Padding="10"
-                        VerticalOptions="Center"
-                        Command="{Binding SignOutCommand}"/>
+                <ImageButton Grid.Column="1"
+                Source="sign_out.png"
+                Style="{StaticResource PrimaryImageButton}"
+                Command="{Binding SignOutCommand}"/>
             </Grid>
 
             <!-- Heutige Fütterung Card -->
