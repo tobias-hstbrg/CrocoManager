@@ -23,7 +23,10 @@ namespace CrocoManager
 
 #if WINDOWS
             window.MinimumWidth = 400;
-            window.MinimumHeight = 1000;
+            window.MinimumHeight = 500;
+
+            window.Width = 1500;
+            window.Height = 1000;
 #endif
             return window;
         }
