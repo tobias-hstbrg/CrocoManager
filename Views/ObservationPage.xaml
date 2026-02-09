@@ -21,17 +21,9 @@
                        TextColor="{StaticResource TextPrimary}"
                        VerticalOptions="Center"/>
 
-                <Button Grid.Column="1"
-                    Text="🚪"
-                    BackgroundColor="{StaticResource Primary}"
-                    TextColor="{StaticResource TextOnPrimary}"
-                    BorderColor="Transparent"
-                    WidthRequest="50"
-                    HeightRequest="50"
-                    CornerRadius="8"
-                    FontSize="16"
-                    Padding="10"
-                    VerticalOptions="Center"
+                <ImageButton Grid.Column="1"
+                    Source="sign_out.png"
+                    Style="{StaticResource PrimaryImageButton}"
                     Command="{Binding SignOutCommand}"/>
             </Grid>
 
@@ -520,8 +512,8 @@
 
                                 <!-- Subtitle: Feeding info -->
                                 <Label Grid.Row="1"
-                               FontSize="12"
-                               TextColor="{StaticResource TextSecondary}">
+                                FontSize="12"
+                                TextColor="{StaticResource TextSecondary}">
                                     <Label.FormattedText>
                                         <FormattedString>
                                             <Span Text="Fütterung: "/>
@@ -533,27 +525,48 @@
                                 </Label>
 
                                 <!-- Environmental Data Row -->
-                                <Label Grid.Row="2"
-                               FontSize="12"
-                               TextColor="{StaticResource TextSecondary}"
-                               IsVisible="{Binding HasEnvironmentalData}">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="☀️ Luft: " FontAttributes="Bold"/>
-                                            <Span Text="{Binding EnvironmentalData.AirTemperatureCelsius, StringFormat='{0:F1}°C'}"/>
-                                            <Span Text=", "/>
-                                            <Span Text="{Binding EnvironmentalData.HumidityPercent, StringFormat='{0:F0}%'}"/>
-                                            <Span Text="   💧 Wasser: " FontAttributes="Bold"/>
-                                            <Span Text="{Binding EnvironmentalData.WaterTemperatureCelsius, StringFormat='{0:F1}°C'}"/>
-                                            <Span Text=", pH "/>
-                                            <Span Text="{Binding EnvironmentalData.PhValue, StringFormat='{0:F1}'}"/>
-                                            <Span Text=", "/>
-                                            <Span Text="{Binding EnvironmentalData.SalinityPpt, StringFormat='{0:F1} ppt'}"/>
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
+                                <HorizontalStackLayout Grid.Row="2"
+                                Spacing="6"
+                                IsVisible="{Binding HasEnvironmentalData}">
 
-                                <!-- Behavior and Notes -->
+                                    <Image Source="sun.png"
+                                       WidthRequest="14"
+                                       HeightRequest="14"
+                                       VerticalOptions="Center" />
+
+                                    <Label FontSize="12"
+                                       TextColor="{StaticResource TextSecondary}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Luft: " FontAttributes="Bold"/>
+                                                <Span Text="{Binding EnvironmentalData.AirTemperatureCelsius, StringFormat='{0:F1}°C'}"/>
+                                                <Span Text=", "/>
+                                                <Span Text="{Binding EnvironmentalData.HumidityPercent, StringFormat='{0:F0}%'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <Image Source="humidity.png"
+                                    WidthRequest="14"
+                                    HeightRequest="14"
+                                    VerticalOptions="Center" />
+
+                                    <Label FontSize="12"
+                                    TextColor="{StaticResource TextSecondary}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Wasser: " FontAttributes="Bold"/>
+                                                <Span Text="{Binding EnvironmentalData.WaterTemperatureCelsius, StringFormat='{0:F1}°C'}"/>
+                                                <Span Text=", pH "/>
+                                                <Span Text="{Binding EnvironmentalData.PhValue, StringFormat='{0:F1}'}"/>
+                                                <Span Text=", "/>
+                                                <Span Text="{Binding EnvironmentalData.SalinityPpt, StringFormat='{0:F1} ppt'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                </HorizontalStackLayout>
+
                                 <Grid Grid.Row="3" RowDefinitions="Auto,Auto" RowSpacing="5">
                                     <Label Grid.Row="0"
                                        FontSize="13"

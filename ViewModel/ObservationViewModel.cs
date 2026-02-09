@@ -14,6 +14,7 @@ namespace CrocoManager.ViewModel
         private readonly ObservationService _observationService;
         private readonly AnimalService _animalService;
         private readonly FeedingService _feedingService;
+        private readonly FeedingPlanService _feedingPlanService;
         private readonly SupabaseClientService _supabase;
 
         [ObservableProperty]
@@ -70,12 +71,13 @@ namespace CrocoManager.ViewModel
         AirTemperature.HasValue &&
         Humidity.HasValue;
 
-        public ObservationViewModel(IServiceProvider serviceProvider,SupabaseClientService supabase, ObservationService observationService, AnimalService animalService, FeedingService feedingService)
+        public ObservationViewModel(IServiceProvider serviceProvider,SupabaseClientService supabase, ObservationService observationService, AnimalService animalService, FeedingService feedingService, FeedingPlanService feedingPlanService)
             : base(serviceProvider)
         {
             _observationService = observationService;
             _animalService = animalService;
             _feedingService = feedingService;
+            _feedingPlanService = feedingPlanService;
             _supabase = supabase;
 
             Animals = new();
@@ -88,8 +90,8 @@ namespace CrocoManager.ViewModel
                 "Aggressiv gefressen",
                 "Futter verweigert"
             };
-
             _ = LoadAsync();
+            
         }
 
         [RelayCommand]
@@ -196,7 +198,9 @@ namespace CrocoManager.ViewModel
                 var observationDtos = await _observationService.GetAllAsync();
                 var animalDtos = await _animalService.GetAllAsync();
                 var feedingDtos = await _feedingService.GetAllAsync();
+                var feedingPlanDtos = await _feedingPlanService.GetAllAsync();
 
+                // 1️⃣ EnvironmentalData IDs sammeln
                 var envIds = observationDtos
                     .Where(o => o.EnvironmentalDataId.HasValue)
                     .Select(o => o.EnvironmentalDataId!.Value)
@@ -217,16 +221,26 @@ namespace CrocoManager.ViewModel
                         .ToDictionary(e => e.Id);
                 }
 
-                // 3️⃣ Lookups bauen
+                // 2️⃣ Animal Lookup
                 var animals = animalDtos
                     .Select(a => a.ToModel())
                     .ToDictionary(a => a.Id);
 
-                var feedings = feedingDtos
-                    .Select(f => f.ToModel())
-                    .ToDictionary(f => f.Id);
+                // 3️⃣ FeedingPlan Lookup
+                var feedingPlans = feedingPlanDtos
+                    .Select(p => p.ToModel())
+                    .ToDictionary(p => p.Id);
 
-                // 4️⃣ Aggregieren
+                // 4️⃣ Feeding Lookup (mit Plan)
+                var feedings = feedingDtos
+                .Select(f =>
+                {
+                    var plan = feedingPlans[f.FeedingPlanId];
+                    return f.ToModel(plan: plan);
+                })
+                .ToDictionary(f => f.Id);
+
+                // 5️⃣ Aggregation
                 var observations = new List<Observation>();
 
                 foreach (var dto in observationDtos)
@@ -256,6 +270,7 @@ namespace CrocoManager.ViewModel
                     .ToList();
 
                 RecentObservations.Clear();
+
                 foreach (var obs in recent)
                 {
                     RecentObservations.Add(obs);

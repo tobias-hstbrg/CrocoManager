@@ -10,7 +10,7 @@ namespace CrocoManager.Mappers
 {
     public static class PlanMapper
     {
-        public static FeedingPlan ToModel(this FeedingPlan plan)
+        public static FeedingPlan ToModel(this FeedingPlanDto plan)
         {
             return new FeedingPlan
             {

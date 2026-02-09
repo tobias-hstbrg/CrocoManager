@@ -20,19 +20,11 @@
                        TextColor="{StaticResource TextPrimary}"
                        VerticalOptions="Center"/>
 
-                <Button Grid.Row="0" Grid.Column="1"
-                        Text="🚪"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="{StaticResource TextOnPrimary}"
-                        BorderColor="Transparent"
-                        WidthRequest="50"
-                        HeightRequest="50"
-                        CornerRadius="8"
-                        FontSize="16"
-                        Padding="10"
+                <ImageButton Grid.Row="0" Grid.Column="1"
+                        Source="sign_out.png"
+                        Style="{StaticResource PrimaryImageButton}"
                         VerticalOptions="Start"
                         HorizontalOptions="End"
-                        Margin="0,0,0,0"
                         Command="{Binding SignOutCommand}"/>
 
                 <!-- Row 1: Create Plan button below SignOut, aligned right -->
