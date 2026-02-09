@@ -18,5 +18,6 @@ namespace CrocoManager.Models
         public int FrequencyPerWeek { get; init; }
         public IReadOnlyList<Weekday> Weekdays { get; init; } = [];
         public bool IsActive { get; init; }
+        public string Description { get; init; } = string.Empty;
     }
 }

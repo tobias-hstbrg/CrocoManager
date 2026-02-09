@@ -41,44 +41,51 @@
         <ShellContent ContentTemplate="{DataTemplate views:AnimalPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Fütterungen" 
+        Icon="feeding.png"
+        Route="FeedingPage">
+        <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
+    </FlyoutItem>
+
     <FlyoutItem Title="Futterplanverwaltung" 
-    Icon="calendar.png"
-    Route="FeedingPlanPage">
+        Icon="calendar.png"
+        Route="FeedingPlanPage">
         <ShellContent ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Fütterungen" 
-    Icon="feeding.png"
-    Route="FeedingPage">
-        <ShellContent ContentTemplate="{DataTemplate views:FeedingPage}" />
+    <FlyoutItem Title="Beobachtungen" 
+        Icon="observation.png"
+        Route="ObservationPage">
+        <ShellContent ContentTemplate="{DataTemplate views:ObservationPage}" />
     </FlyoutItem>
 
 
 
     <TabBar IsVisible="{OnIdiom Phone=True, Default=False}">
 
-        <ShellContent 
-            Title="Tierverwaltung"
-            Icon="animal_icon.png"
-            Route="AnimalPage"
-            ContentTemplate="{DataTemplate views:AnimalPage}" />
+        <ShellContent
+        Icon="animal_icon.png"
+        Route="AnimalPage"
+        ContentTemplate="{DataTemplate views:AnimalPage}" />
 
-        <ShellContent 
-            Title="Dashboard"
-            Icon="home.png"
-            Route="HomePage"
-            ContentTemplate="{DataTemplate views:HomePage}" />
-
-        <ShellContent 
-            Title="Futterplanverwaltung"
-            Icon="calendar.png"
-            Route="FeedingPlanPage"
-            ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
-
-        <ShellContent 
-        Title="Fütterungen"
+        <ShellContent
         Icon="feeding.png"
         Route="FeedingPage"
         ContentTemplate="{DataTemplate views:FeedingPage}" />
+
+        <ShellContent
+        Icon="home.png"
+        Route="HomePage"
+        ContentTemplate="{DataTemplate views:HomePage}" />
+
+        <ShellContent
+        Icon="calendar.png"
+        Route="FeedingPlanPage"
+        ContentTemplate="{DataTemplate views:FeedingPlanPage}" />
+
+        <ShellContent
+        Icon="observation.png"
+        Route="ObservationPage"
+        ContentTemplate="{DataTemplate views:ObservationPage}" />
     </TabBar>
 </Shell>

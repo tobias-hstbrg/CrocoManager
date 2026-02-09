@@ -5,13 +5,13 @@ using static Supabase.Postgrest.Constants;
 
 namespace CrocoManager.Services;
 
-public class FeedingService
+public class FeedingService : BaseService<FeedingDto>
 {
     private readonly SupabaseClientService _supabase;
 
-    public FeedingService(SupabaseClientService supabase)
+    public FeedingService(SupabaseClientService supabaseClient) : base(supabaseClient)
     {
-        _supabase = supabase;
+        _supabase = supabaseClient;
     }
 
     public async Task<Feeding> GetTodayFeedingDraftAsync()
@@ -79,7 +79,7 @@ public class FeedingService
 
     public async Task<List<FeedingHistoryEntry>> GetHistoryAsync()
     {
-        var feedings = (await _supabase.Client.From<FeedingDto>().Get()).Models;
+        var feedings = (await _supabase.Client.From<FeedingDto>().Order( "feeding_date", Ordering.Descending ).Get()).Models;
         if (feedings.Count == 0)
             return [];
 
@@ -110,6 +110,30 @@ public class FeedingService
             };
         }).ToList();
     }
+
+    public async Task<int> GetCurrentWeekCount()
+    {
+        try
+        {
+            var startOfWeek = DateTime.UtcNow.Date.AddDays(-(int)DateTime.UtcNow.DayOfWeek);
+            var endOfWeek = startOfWeek.AddDays(7);
+
+            var feedingsThisWeek = (await _supabase.Client
+                .From<FeedingDto>()
+                .Filter("feeding_date", Operator.GreaterThanOrEqual, startOfWeek.ToString("o"))
+                .Filter("feeding_date", Operator.LessThan, endOfWeek.ToString("o"))
+                .Get()).Models;
+
+            return feedingsThisWeek.Count;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Abrufen der Fütterungen dieser Woche: {ex.Message}");
+            return 0;
+        }
+
+    }
+
     private static FeedingPlan Map(FeedingPlanDto dto) => new()
     {
         Id = dto.Id,

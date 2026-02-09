@@ -76,8 +76,6 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         async Task TestConnectionAsync()
         {
-            //bool ok = await SupabaseService.Instance.TestConnectionAsync();
-            
             var ok = await AuthService.TestConnectionAsync();
             await NotificationService.ShowInfoAsync("Connection Test", ok ? "Connected" : "Failed");
         }

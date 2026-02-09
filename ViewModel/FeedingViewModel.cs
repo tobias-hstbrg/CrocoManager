@@ -45,17 +45,23 @@ public partial class FeedingViewModel : BaseViewModel
             CurrentFeeding = await _feedingService.GetTodayFeedingDraftAsync();
             HasCurrentFeeding = CurrentFeeding != null;
 
-            Animals.Clear();
-
-            if (CurrentFeeding != null)
-            {
-                foreach (var animal in CurrentFeeding.Animals)
-                    Animals.Add(animal);
-            }
+            LoadAnimals();
         }
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private void LoadAnimals()
+    {
+        Animals.Clear();
+
+        if (CurrentFeeding == null) return;
+
+        foreach (var animal in CurrentFeeding.Animals)
+        {
+            Animals.Add(animal);
         }
     }
 
@@ -69,16 +75,12 @@ public partial class FeedingViewModel : BaseViewModel
         {
             var userEmail = await AuthService.GetUserEmail();
 
-            await _feedingService.SaveFeedingAsync(
-                CurrentFeeding,
-                userEmail);
+            await _feedingService.SaveFeedingAsync(CurrentFeeding, userEmail);
 
-            await NotificationService.ShowSuccessAsync(
-                "Erfolgreich",
-                "Fütterung gespeichert");
+            await NotificationService.ShowSuccessAsync("Erfolgreich", "Fütterung gespeichert");
 
             await LoadHistoryAsync();
-            await ClearSelection();
+            ClearSelection();
         }
         finally
         {
@@ -89,12 +91,14 @@ public partial class FeedingViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadHistoryAsync()
     {
+        if (IsBusy) return;
+
+        IsBusy = true;
         try
         {
             var history = await _feedingService.GetHistoryAsync();
             FeedingHistory.Clear();
 
-            // Sort by date descending (newest first) and take last 10
             foreach (var entry in history.OrderByDescending(h => h.FeedingDate).Take(10))
             {
                 FeedingHistory.Add(entry);
@@ -104,27 +108,25 @@ public partial class FeedingViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await NotificationService.ShowErrorAsync(
-                "Fehler beim Laden des Verlaufs",
-                ex.Message);
+            await NotificationService.ShowErrorAsync("Fehler beim Laden des Verlaufs", ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
     [RelayCommand]
-    public async Task Cancel()
+    public void Cancel()
     {
-        await ClearSelection();
+        ClearSelection();
     }
 
-    private async Task ClearSelection()
+    private void ClearSelection()
     {
-        // Uncheck all animals
         foreach (var animal in Animals)
         {
             animal.WasFed = false;
         }
-
-        // Reload current feeding to reset state
-        await LoadAsync();
     }
 }

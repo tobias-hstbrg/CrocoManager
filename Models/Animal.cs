@@ -19,5 +19,8 @@ namespace CrocoManager.Models
         // UI-friendly, domain-owned
         public string DisplayName =>
             $"{Name} • {Species} • {Enclosure} • {AgeYears} Jahre";
+
+        public string PickerName =>
+            $"{Name} - {Species}";
     }
 }
