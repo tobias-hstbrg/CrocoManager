@@ -82,21 +82,10 @@
                            Style="{StaticResource PageTitle}"
                            HorizontalOptions="FillAndExpand"/>
 
-                    <Button 
+                    <ImageButton 
                         x:Name="LogoutButton"
-                        Text="🚪"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="{StaticResource TextOnPrimary}"
-                        BorderColor="Transparent"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        CornerRadius="8"
-                        FontSize="16"
-                        Margin="0,16,16,0"
-                        HorizontalOptions="End"
-                        VerticalOptions="Start"
-                        Padding="8"
-                        ZIndex="1000"
+                        Source="sign_out.png"
+                        Style="{StaticResource PrimaryImageButton}"
                         Command="{Binding SignOutCommand}"/>
                 </StackLayout>
 

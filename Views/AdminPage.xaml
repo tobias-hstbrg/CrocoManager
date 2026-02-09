@@ -33,15 +33,13 @@
                        TextColor="{StaticResource TextPrimary}"/>
 
                 <!-- Logout Button -->
-                <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
-                        Text="🚪"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="{StaticResource TextOnPrimary}"
+                <ImageButton Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                        Source="sign_out.png"
+                        Style="{StaticResource PrimaryImageButton}"
                         BorderColor="Transparent"
                         WidthRequest="48"
                         HeightRequest="48"
                         CornerRadius="8"
-                        FontSize="18"
                         Padding="8"
                         Command="{Binding SignOutCommand}"/>
 

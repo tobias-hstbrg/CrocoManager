@@ -25,17 +25,9 @@
                         Style="{StaticResource PrimaryButton}"
                         CornerRadius="8"
                         Padding="20,10"/>
-                <Button Grid.Column="2"
-                        Text="🚪"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="{StaticResource TextOnPrimary}"
-                        BorderColor="Transparent"
-                        WidthRequest="50"
-                        HeightRequest="50"
-                        CornerRadius="8"
-                        FontSize="16"
-                        Padding="10"
-                        VerticalOptions="Center"
+                <ImageButton Grid.Column="2"
+                        Source="sign_out.png"
+                        Style="{StaticResource PrimaryImageButton}"
                         Command="{Binding SignOutCommand}"/>
             </Grid>
 
