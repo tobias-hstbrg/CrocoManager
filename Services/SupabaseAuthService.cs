@@ -250,7 +250,16 @@ namespace CrocoManager.Services
                 return false;
             }
         }
+
+        public async Task<UserRole> GetUserRoleAsync()
+        {
+            var session = await _supabase.Client.Auth.RetrieveSessionAsync();
+            var userMetaData = session?.User?.UserMetadata;
+            object? roleStr = userMetaData?.TryGetValue("role", out _);
+            return ParseUserRole(roleStr?.ToString());
+        }
     }
+
     public class ResetPasswordResult
     {
         [JsonPropertyName("success")]
