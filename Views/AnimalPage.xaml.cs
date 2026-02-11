@@ -1,25 +1,29 @@
-using CrocoManager.Models;
+﻿using CrocoManager.Models;
 using CrocoManager.ViewModel;
+using System.Threading.Tasks;
 
 namespace CrocoManager.Views;
 
 public partial class AnimalPage : ContentPage
 {
+    private readonly AnimalViewModel _viewModel;
 
     public AnimalPage(AnimalViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = viewModel;
+        _viewModel = viewModel;
+        BindingContext = _viewModel;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        if (BindingContext is AnimalViewModel vm &&
-            vm.LoadAnimalsCommand.CanExecute(null))
+        await _viewModel.InitializeAsync();
+
+        if (_viewModel.LoadAnimalsCommand.CanExecute(null))
         {
-            vm.LoadAnimalsCommand.Execute(null);
+            await _viewModel.LoadAnimalsCommand.ExecuteAsync(null);
         }
     }
 

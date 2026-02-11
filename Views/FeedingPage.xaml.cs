@@ -1,4 +1,4 @@
-using CrocoManager.ViewModel;
+﻿using CrocoManager.ViewModel;
 
 namespace CrocoManager.Views;
 
@@ -15,6 +15,7 @@ public partial class FeedingPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        await _viewModel.InitializeAsync();
         await _viewModel.LoadAsync();
         await _viewModel.LoadHistoryAsync();
     }

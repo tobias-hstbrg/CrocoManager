@@ -8,7 +8,7 @@
     Title=""
     BackgroundColor="{StaticResource PageBackground}">
     <ScrollView>
-        <Grid RowDefinitions="Auto,Auto,400,Auto" Padding="20" RowSpacing="20" MinimumHeightRequest="1000">
+        <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="20" RowSpacing="20" MinimumHeightRequest="1000">
 
             <!-- Header Section -->
             <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" ColumnSpacing="10">
@@ -38,7 +38,8 @@
                         Padding="10"
                         VerticalOptions="Start"
                         HorizontalOptions="End"
-                        Margin="0,8,0,0"/>
+                        Margin="0,8,0,0"
+                        IsEnabled="{Binding CanCreate}"/>
             </Grid>
 
             <!-- Active Plan Card -->
@@ -109,7 +110,16 @@
             <Border Grid.Row="2"
                     Style="{StaticResource SecondaryCard}"
                     Padding="0"
-                    Margin="0,10">
+                    Margin="0,0">
+                
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border"
+                     Binding="{Binding CanViewItem}"
+                     Value="True">
+                        <Setter Property="MaximumHeightRequest" Value="300"/>
+                    </DataTrigger>
+                </Border.Triggers>
+                
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>
@@ -211,7 +221,9 @@
                                                                  Aspect="AspectFit"
                                                                  Command="{Binding BindingContext.ToggleActivePlanCommand,
                                                                            Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                                 CommandParameter="{Binding .}">
+                                                                 CommandParameter="{Binding .}"
+                                                                 IsEnabled="{Binding BindingContext.CanEdit,
+                                                                 Source={RelativeSource AncestorType={x:Type ContentPage}}}">
                                                         <ImageButton.Source>
                                                             <FileImageSource File="inactive_plan.png"/>
                                                         </ImageButton.Source>
@@ -245,7 +257,9 @@
                                                                  Aspect="AspectFit"
                                                                  Command="{Binding BindingContext.EditPlanCommand,
                                                                            Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                                 CommandParameter="{Binding .}"/>
+                                                                 CommandParameter="{Binding .}"
+                                                                 IsEnabled="{Binding BindingContext.CanEdit,
+                                                                 Source={RelativeSource AncestorType={x:Type ContentPage}}}"/>
                                                 </Border>
 
                                                 <!-- DELETE -->
@@ -267,7 +281,9 @@
                                                                  Aspect="AspectFit"
                                                                  Command="{Binding BindingContext.DeletePlanCommand,
                                                                            Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                                 CommandParameter="{Binding .}"/>
+                                                                 CommandParameter="{Binding .}"
+                                                                 IsEnabled="{Binding BindingContext.CanDelete,
+                                                                 Source={RelativeSource AncestorType={x:Type ContentPage}}}"/>
                                                 </Border>
                                             </HorizontalStackLayout>
                                         </Grid>
@@ -284,7 +300,9 @@
             <!-- Plan Form Card -->
             <Border Grid.Row="3"
                     Style="{StaticResource SecondaryCard}" 
-                    Padding="20">
+                    Padding="20"
+                    IsVisible="{Binding BindingContext.CanViewItem,
+                    Source={RelativeSource AncestorType={x:Type ContentPage}}}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>
