@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Interfaces;
+using CrocoManager.Models;
 using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,24 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private bool isBusy;
 
+        public UserRole CurrentUserRole { get; protected set; }
+
+        // Permission Properties
+        [ObservableProperty]
+        private bool canEdit;
+
+        [ObservableProperty]
+        private bool canCreate;
+
+        [ObservableProperty]
+        private bool canDelete;
+
+        [ObservableProperty]
+        private bool isReadOnly;
+
+        [ObservableProperty]
+        private bool isAdminView;
+
         protected BaseViewModel(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
@@ -26,6 +45,29 @@ namespace CrocoManager.ViewModel
             NotificationService = serviceProvider.GetRequiredService<INotificationService>();
             AuthService = serviceProvider.GetRequiredService<IAuthService>();
         }
+
+        /// <summary>
+        /// Initializes the viewmodel andf loads the UserRole
+        /// </summary>
+        public async Task InitializeAsync()
+        {
+            IsBusy = true;
+            try
+            {
+                CurrentUserRole = await AuthService.GetUserRoleAsync();
+                SetPermissions();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        /// <summary>
+        /// ViewModel has to implement this to set permissions based on what a specific UserRole is allowed to do on the Page of the ViewModel
+        /// </summary>
+        protected abstract void SetPermissions();
+
 
         [RelayCommand]
         protected virtual async Task SignOutAsync()
