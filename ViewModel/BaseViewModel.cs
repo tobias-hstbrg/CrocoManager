@@ -35,9 +35,6 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private bool isReadOnly;
 
-        [ObservableProperty]
-        private bool isAdminView;
-
         protected BaseViewModel(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
@@ -66,7 +63,10 @@ namespace CrocoManager.ViewModel
         /// <summary>
         /// ViewModel has to implement this to set permissions based on what a specific UserRole is allowed to do on the Page of the ViewModel
         /// </summary>
-        protected abstract void SetPermissions();
+        protected virtual void SetPermissions()
+        {
+
+        }
 
 
         [RelayCommand]

@@ -77,6 +77,49 @@ namespace CrocoManager.ViewModel
             ClearForm();
         }
 
+        /// <summary>
+        /// Defines the permissions a user has for this viewmodel
+        /// </summary>
+        protected override void SetPermissions()
+        {
+            // NotAssigned: Kein Zugriff
+            // Ranger: Create, Read, Update, Delete
+            // Scientist: Read
+            // Admin: Create, Read, Update, Delete
+
+            switch(CurrentUserRole)
+            {
+                case UserRole.Scientist:
+                    CanCreate = false;
+                    CanEdit = false;
+                    CanDelete = false;
+                    IsReadOnly = true;
+                    break;
+
+                case UserRole.Ranger:
+                    CanCreate = true;
+                    CanEdit = true;
+                    CanDelete = true;
+                    IsReadOnly = false;
+                    break;
+
+                case UserRole.Admin:
+                    CanCreate = true;
+                    CanEdit = true;
+                    CanDelete = true;
+                    IsReadOnly = false;
+                    break;
+
+                case UserRole.NotAssigned:
+                default:
+                    CanCreate = false;
+                    CanEdit = false;
+                    CanDelete = false;
+                    IsReadOnly = true;
+                    break;
+            }
+        }
+
         partial void OnIsEditingChanged(bool value)
         {
             OnPropertyChanged(nameof(PageTitle));
@@ -111,6 +154,8 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private void AddNewAnimal()
         {
+            if (!CanCreate) return;
+
             IsEditing = true;
             ClearForm();
         }
@@ -118,7 +163,8 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private void EditAnimal(Animal animal)
         {
-            if (animal == null) return;
+            // Prüfung direkt in der Methode
+            if (!CanEdit || animal == null) return;
 
             IsEditing = true;
             SelectedAnimal = animal;
@@ -134,7 +180,7 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private async Task DeleteAnimal(Animal animal)
         {
-            if (animal == null) return;
+            if (!CanDelete || animal == null) return;
 
             bool confirm = await NotificationService.ShowConfirmationAsync("Löschen bestätigen", $"Möchten Sie '{animal.Name}' wirklich löschen?", "Ja", "Nein");
 
@@ -159,9 +205,20 @@ namespace CrocoManager.ViewModel
             }
         }
 
+        private bool CanSaveAnimal()
+        {
+            if (IsBusy) return false;
+
+            // Beim Bearbeiten: CanEdit erforderlich
+            // Beim Erstellen: CanCreate erforderlich
+            return IsEditing ? CanEdit : CanCreate;
+        }
+
         [RelayCommand]
         private async Task SaveAnimal()
         {
+            if(!CanSaveAnimal()) return;
+
             if (!await ValidateForm())
             {
                 return;

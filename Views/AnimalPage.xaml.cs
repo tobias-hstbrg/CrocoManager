@@ -1,25 +1,42 @@
 using CrocoManager.Models;
 using CrocoManager.ViewModel;
+using System.Threading.Tasks;
 
 namespace CrocoManager.Views;
 
 public partial class AnimalPage : ContentPage
 {
+    private readonly AnimalViewModel _viewModel;
 
     public AnimalPage(AnimalViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = viewModel;
+        _viewModel = viewModel;
+        BindingContext = _viewModel;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        if (BindingContext is AnimalViewModel vm &&
-            vm.LoadAnimalsCommand.CanExecute(null))
+        _viewModel.CanEdit = true;
+        _viewModel.CanDelete = true;
+        _viewModel.CanCreate = true;
+
+        System.Diagnostics.Debug.WriteLine("=== OnAppearing START ===");
+
+        await _viewModel.InitializeAsync();
+
+        // Debug: Ausgabe nach InitializeAsync
+        System.Diagnostics.Debug.WriteLine($"CurrentUserRole: {_viewModel.CurrentUserRole}");
+        System.Diagnostics.Debug.WriteLine($"CanEdit: {_viewModel.CanEdit}");
+        System.Diagnostics.Debug.WriteLine($"CanDelete: {_viewModel.CanDelete}");
+        System.Diagnostics.Debug.WriteLine($"CanCreate: {_viewModel.CanCreate}");
+        System.Diagnostics.Debug.WriteLine("=== OnAppearing END ===");
+
+        if (_viewModel.LoadAnimalsCommand.CanExecute(null))
         {
-            vm.LoadAnimalsCommand.Execute(null);
+            await _viewModel.LoadAnimalsCommand.ExecuteAsync(null);
         }
     }
 
