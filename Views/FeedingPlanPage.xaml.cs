@@ -1,23 +1,27 @@
-using CrocoManager.Models;
+﻿using CrocoManager.Models;
 using CrocoManager.ViewModel;
 
 namespace CrocoManager.Views;
 
 public partial class FeedingPlanPage : ContentPage
 {
+    private readonly FeedingPlanViewModel _viewModel;
     public FeedingPlanPage(FeedingPlanViewModel viewModel)
     {
         InitializeComponent();
+        _viewModel = viewModel;
         BindingContext = viewModel;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        if (BindingContext is FeedingPlanViewModel vm &&
-            vm.LoadPlansCommand?.CanExecute(null) == true)
+
+        await _viewModel.InitializeAsync();
+
+        if(_viewModel.LoadPlansCommand.CanExecute(null))
         {
-            vm.LoadPlansCommand.Execute(null);
+            await _viewModel.LoadPlansCommand.ExecuteAsync(null);
         }
     }
 
