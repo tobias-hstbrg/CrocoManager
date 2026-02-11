@@ -19,5 +19,6 @@ namespace CrocoManager.Interfaces
         Task<bool> SignOutAsync();
         Task<bool> ResetPasswordAsync(string email, string password);
         Task<string?> GetUserEmail();
+        Task<UserRole> GetUserRoleAsync();
     }
 }

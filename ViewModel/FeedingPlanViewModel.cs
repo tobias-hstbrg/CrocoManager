@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.DTOs;
 using CrocoManager.Interfaces;
+using CrocoManager.Models;
 using CrocoManager.Services;
 using CrocoManager.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,6 +63,55 @@ namespace CrocoManager.ViewModel
             _feedingPlanService = feedingPlanService;
             FeedingPlans = new ObservableCollection<FeedingPlanDto>();
             ClearForm();
+        }
+
+        /// <summary>
+        /// Defines the permissions a user has for the feeding plan page
+        /// </summary>
+        protected override void SetPermissions()
+        {
+            // Ranger: Create, Read, Update, Delete
+            // Scientist: Read
+
+            // Not really necessary since these two groups should never be able to see this page by design
+            // NotAssigned: Readonly
+            // Admin: Create, Read, Update, Delete
+
+            switch (CurrentUserRole)
+            {
+                case UserRole.Scientist:
+                    CanCreate = false;
+                    CanEdit = false;
+                    CanDelete = false;
+                    IsReadOnly = true;
+                    CanViewItem = false;
+                    break;
+
+                case UserRole.Ranger:
+                    CanCreate = true;
+                    CanEdit = true;
+                    CanDelete = true;
+                    IsReadOnly = false;
+                    CanViewItem = true;
+                    break;
+
+                case UserRole.Admin:
+                    CanCreate = true;
+                    CanEdit = true;
+                    CanDelete = true;
+                    IsReadOnly = false;
+                    CanViewItem = true;
+                    break;
+
+                case UserRole.NotAssigned:
+                default:
+                    CanCreate = false;
+                    CanEdit = false;
+                    CanDelete = false;
+                    IsReadOnly = true;
+                    CanViewItem = false;
+                    break;
+            }
         }
 
         partial void OnIsEditingChanged(bool value)

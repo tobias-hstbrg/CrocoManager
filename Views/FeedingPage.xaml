@@ -9,10 +9,10 @@
     BackgroundColor="{StaticResource PageBackground}"
     Title="">
     <ScrollView>
-        <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" Padding="20" RowSpacing="20">
+        <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- Header Section -->
-            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                 <Label Grid.Column="0"
                        Text="Fütterungen"
                        FontSize="28"
@@ -21,14 +21,13 @@
                        VerticalOptions="Center"/>
 
                 <ImageButton Grid.Column="1"
-                Source="sign_out.png"
-                Style="{StaticResource PrimaryImageButton}"
-                Command="{Binding SignOutCommand}"/>
+                             Source="sign_out.png"
+                             Style="{StaticResource PrimaryImageButton}"
+                             Command="{Binding SignOutCommand}"/>
             </Grid>
 
             <!-- Heutige Fütterung Card -->
-            <Border Grid.Row="1"
-                    BackgroundColor="#16a085"
+            <Border BackgroundColor="#16a085"
                     Padding="20"
                     Margin="0"
                     IsVisible="{Binding HasCurrentFeeding}">
@@ -77,18 +76,20 @@
             </Border>
 
             <!-- Section Header -->
-            <Label Grid.Row="2"
-                   Text="Tiere als gefüttert markieren"
+            <Label Text="Tiere als gefüttert markieren"
                    FontSize="14"
                    TextColor="{StaticResource TextSecondary}"
-                   Margin="0,5,0,0"/>
+                   Margin="0,5,0,0"
+                   IsVisible="{Binding BindingContext.CanViewItem,
+                   Source={RelativeSource AncestorType={x:Type ContentPage}}}"/>
 
             <!-- Animals List -->
-            <Border Grid.Row="3"
-                    Style="{StaticResource SecondaryCard}"
+            <Border Style="{StaticResource SecondaryCard}"
                     HeightRequest="{OnIdiom Desktop=370, Phone=300}"
                     Padding="0"
-                    Margin="0">
+                    Margin="0"
+                    IsVisible="{Binding BindingContext.CanViewItem,
+                    Source={RelativeSource AncestorType={x:Type ContentPage}}}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>
@@ -140,103 +141,104 @@
                 </CollectionView>
             </Border>
 
-            <Grid Grid.Row="4" 
-                  ColumnDefinitions="*,*" 
+            <!-- Buttons -->
+            <Grid ColumnDefinitions="*,*" 
                   ColumnSpacing="15" 
-                  Margin="0,10,0,0">
+                  Margin="0,10,0,0"
+                  IsVisible="{Binding BindingContext.CanViewItem,
+                   Source={RelativeSource AncestorType={x:Type ContentPage}}}">
                 <Button Grid.Column="0"
-                Text="Fütterung abschließen"
-                BackgroundColor="{StaticResource Primary}"
-                TextColor="White"
-                Style="{StaticResource PrimaryButton}"
-                Command="{Binding SaveCommand}"/>
+                        Text="Fütterung abschließen"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding SaveCommand}"/>
 
                 <Button Grid.Column="1"
-                Text="Abbrechen"
-                Command="{Binding CancelCommand}"
-                Style="{StaticResource SecondaryButton}"/>
+                        Text="Abbrechen"
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource SecondaryButton}"/>
             </Grid>
 
             <!-- Feeding History Table -->
-            <Border Grid.Row="5"
-                Style="{StaticResource SecondaryCard}"
-                Padding="0"
-                Margin="0,10,0,0"
-                IsVisible="{Binding HasHistory}">
+            <Border Style="{StaticResource SecondaryCard}"
+                    Padding="0"
+                    Margin="0,10,0,0"
+                    IsVisible="{Binding HasHistory}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>
                 <Grid RowDefinitions="Auto,*">
                     <!-- Header Row -->
                     <Grid Grid.Row="0"
-                     ColumnDefinitions="2*,3*,2*,3*"
-                      Padding="15"
-                      MinimumHeightRequest="50"
-                      ColumnSpacing="15"
-                      BackgroundColor="{StaticResource CardBackground}">
+                          ColumnDefinitions="2*,3*,2*,3*"
+                          Padding="15"
+                          MinimumHeightRequest="50"
+                          ColumnSpacing="15"
+                          BackgroundColor="{StaticResource CardBackground}">
                         <Label Grid.Column="0" 
-                           Text="Datum" 
-                           FontAttributes="Bold" 
-                           VerticalOptions="Center"
-                           LineBreakMode="WordWrap"
-                           TextColor="{StaticResource TextPrimary}"/>
+                               Text="Datum" 
+                               FontAttributes="Bold" 
+                               VerticalOptions="Center"
+                               LineBreakMode="WordWrap"
+                               TextColor="{StaticResource TextPrimary}"/>
                         <Label Grid.Column="1" 
-                           Text="Plan" 
-                           FontAttributes="Bold" 
-                           VerticalOptions="Center"
-                           LineBreakMode="WordWrap"
-                           TextColor="{StaticResource TextPrimary}"/>
+                               Text="Plan" 
+                               FontAttributes="Bold" 
+                               VerticalOptions="Center"
+                               LineBreakMode="WordWrap"
+                               TextColor="{StaticResource TextPrimary}"/>
                         <Label Grid.Column="2" 
-                           Text="Tiere gefüttert" 
-                           FontAttributes="Bold" 
-                           VerticalOptions="Center"
-                           LineBreakMode="WordWrap"
-                           TextColor="{StaticResource TextPrimary}"/>
+                               Text="Tiere gefüttert" 
+                               FontAttributes="Bold" 
+                               VerticalOptions="Center"
+                               LineBreakMode="WordWrap"
+                               TextColor="{StaticResource TextPrimary}"/>
                         <Label Grid.Column="3" 
-                           Text="Durchgeführt von" 
-                           FontAttributes="Bold" 
-                           VerticalOptions="Center"
-                           LineBreakMode="WordWrap"
-                           TextColor="{StaticResource TextPrimary}"/>
+                               Text="Durchgeführt von" 
+                               FontAttributes="Bold" 
+                               VerticalOptions="Center"
+                               LineBreakMode="WordWrap"
+                               TextColor="{StaticResource TextPrimary}"/>
                     </Grid>
 
                     <!-- Content Rows -->
                     <ScrollView Grid.Row="1"
-                    Orientation="Vertical">
+                                Orientation="Vertical">
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding FeedingHistory}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="viewmodels:FeedingHistoryEntry">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid ColumnDefinitions="2*,3*,2*,3*"
-                                  Padding="15,12"
-                                  MinimumHeightRequest="60"
-                                  ColumnSpacing="15"
-                                  BackgroundColor="{StaticResource CardBackground}">
+                                              Padding="15,12"
+                                              MinimumHeightRequest="60"
+                                              ColumnSpacing="15"
+                                              BackgroundColor="{StaticResource CardBackground}">
                                             <Label Grid.Column="0" 
-                                       Text="{Binding FeedingDate, StringFormat='{0:dd.MM.yyyy}'}" 
-                                       VerticalOptions="Center"
-                                       LineBreakMode="NoWrap"
-                                       TextColor="{StaticResource TextPrimary}"/>
+                                                   Text="{Binding FeedingDate, StringFormat='{0:dd.MM.yyyy}'}" 
+                                                   VerticalOptions="Center"
+                                                   LineBreakMode="NoWrap"
+                                                   TextColor="{StaticResource TextPrimary}"/>
                                             <Label Grid.Column="1" 
-                                       Text="{Binding FeedingPlanName}" 
-                                       VerticalOptions="Center"
-                                       LineBreakMode="WordWrap"
-                                       MaxLines="2"
-                                       TextColor="{StaticResource TextPrimary}"/>
+                                                   Text="{Binding FeedingPlanName}" 
+                                                   VerticalOptions="Center"
+                                                   LineBreakMode="WordWrap"
+                                                   MaxLines="2"
+                                                   TextColor="{StaticResource TextPrimary}"/>
                                             <Label Grid.Column="2" 
-                                       Text="{Binding FedRatio}" 
-                                       VerticalOptions="Center"
-                                       LineBreakMode="NoWrap"
-                                       TextColor="{StaticResource TextPrimary}"/>
+                                                   Text="{Binding FedRatio}" 
+                                                   VerticalOptions="Center"
+                                                   LineBreakMode="NoWrap"
+                                                   TextColor="{StaticResource TextPrimary}"/>
                                             <Label Grid.Column="3" 
-                                       Text="{Binding PerformedByEmail}" 
-                                       VerticalOptions="Center"
-                                       LineBreakMode="WordWrap"
-                                       MaxLines="2"
-                                       TextColor="{StaticResource TextPrimary}"/>
+                                                   Text="{Binding PerformedByEmail}" 
+                                                   VerticalOptions="Center"
+                                                   LineBreakMode="WordWrap"
+                                                   MaxLines="2"
+                                                   TextColor="{StaticResource TextPrimary}"/>
                                         </Grid>
                                         <BoxView HeightRequest="1" 
-                                     Color="{StaticResource BorderColor}"/>
+                                                 Color="{StaticResource BorderColor}"/>
                                     </VerticalStackLayout>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
@@ -244,6 +246,6 @@
                     </ScrollView>
                 </Grid>
             </Border>
-        </Grid>
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -292,7 +292,9 @@
 
             <!-- Observation Form Card -->
             <Border Style="{StaticResource SecondaryCard}"
-                    Padding="20">
+                    Padding="20"
+                    IsVisible="{Binding BindingContext.CanViewItem,
+                    Source={RelativeSource AncestorType={x:Type ContentPage}}}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>

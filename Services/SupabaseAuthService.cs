@@ -250,7 +250,37 @@ namespace CrocoManager.Services
                 return false;
             }
         }
+
+        public async Task<UserRole> GetUserRoleAsync()
+        {
+            try
+            {
+                var session = await _supabase.Client.Auth.RetrieveSessionAsync();
+
+                if (session?.User?.UserMetadata == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No user metadata found");
+                    return UserRole.NotAssigned;
+                }
+
+                if (session.User.UserMetadata.TryGetValue("role", out var roleValue))
+                {
+                    var roleStr = roleValue?.ToString();
+                    System.Diagnostics.Debug.WriteLine($"Role from metadata: {roleStr}");
+                    return ParseUserRole(roleStr);
+                }
+
+                System.Diagnostics.Debug.WriteLine("Role key not found in metadata");
+                return UserRole.NotAssigned;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error getting role: {ex.Message}");
+                return UserRole.NotAssigned;
+            }
+        }
     }
+
     public class ResetPasswordResult
     {
         [JsonPropertyName("success")]
