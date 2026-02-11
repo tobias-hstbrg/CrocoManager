@@ -35,6 +35,9 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private bool isReadOnly;
 
+        [ObservableProperty]
+        private bool canViewItem;
+
         protected BaseViewModel(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;

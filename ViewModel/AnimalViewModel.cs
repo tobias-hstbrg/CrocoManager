@@ -82,18 +82,21 @@ namespace CrocoManager.ViewModel
         /// </summary>
         protected override void SetPermissions()
         {
-            // NotAssigned: Kein Zugriff
             // Ranger: Create, Read, Update, Delete
             // Scientist: Read
+
+            // Not really necessary since these two groups should never be able to see this page by design
+            // NotAssigned: Readonly
             // Admin: Create, Read, Update, Delete
 
-            switch(CurrentUserRole)
+            switch (CurrentUserRole)
             {
                 case UserRole.Scientist:
                     CanCreate = false;
                     CanEdit = false;
                     CanDelete = false;
                     IsReadOnly = true;
+                    CanViewItem = false;
                     break;
 
                 case UserRole.Ranger:
@@ -101,6 +104,7 @@ namespace CrocoManager.ViewModel
                     CanEdit = true;
                     CanDelete = true;
                     IsReadOnly = false;
+                    CanViewItem = true;
                     break;
 
                 case UserRole.Admin:
@@ -108,6 +112,7 @@ namespace CrocoManager.ViewModel
                     CanEdit = true;
                     CanDelete = true;
                     IsReadOnly = false;
+                    CanViewItem = true;
                     break;
 
                 case UserRole.NotAssigned:
@@ -116,6 +121,7 @@ namespace CrocoManager.ViewModel
                     CanEdit = false;
                     CanDelete = false;
                     IsReadOnly = true;
+                    CanViewItem = false;
                     break;
             }
         }
