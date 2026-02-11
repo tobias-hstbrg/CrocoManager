@@ -94,6 +94,55 @@ namespace CrocoManager.ViewModel
             
         }
 
+        /// <summary>
+        /// Defines the permissions a user has for the observation page
+        /// </summary>
+        protected override void SetPermissions()
+        {
+            // Ranger: Read
+            // Scientist: Create, Read, Update, Delete
+
+            // Not really necessary since these two groups should never be able to see this page by design
+            // NotAssigned: Readonly
+            // Admin: Create, Read, Update, Delete
+
+            switch (CurrentUserRole)
+            {
+                case UserRole.Scientist:
+                    CanCreate = true;
+                    CanEdit = true;
+                    CanDelete = true;
+                    IsReadOnly = false;
+                    CanViewItem = true;
+                    break;
+
+                case UserRole.Ranger:
+                    CanCreate = false;
+                    CanEdit = false;
+                    CanDelete = false;
+                    IsReadOnly = true;
+                    CanViewItem = false;
+                    break;
+
+                case UserRole.Admin:
+                    CanCreate = true;
+                    CanEdit = true;
+                    CanDelete = true;
+                    IsReadOnly = false;
+                    CanViewItem = true;
+                    break;
+
+                case UserRole.NotAssigned:
+                default:
+                    CanCreate = false;
+                    CanEdit = false;
+                    CanDelete = false;
+                    IsReadOnly = true;
+                    CanViewItem = false;
+                    break;
+            }
+        }
+
         [RelayCommand]
         private async Task LoadAsync()
         {

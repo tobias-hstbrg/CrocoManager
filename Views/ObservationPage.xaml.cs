@@ -4,9 +4,17 @@ namespace CrocoManager.Views;
 
 public partial class ObservationPage : ContentPage
 {
-	public ObservationPage(ObservationViewModel viewModel)
+	private readonly ObservationViewModel _viewModel;
+    public ObservationPage(ObservationViewModel viewModel)
 	{
 		InitializeComponent();
+        _viewModel = viewModel;
         BindingContext = viewModel;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _viewModel.InitializeAsync();
     }
 }
