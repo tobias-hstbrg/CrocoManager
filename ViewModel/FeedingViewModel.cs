@@ -34,6 +34,55 @@ public partial class FeedingViewModel : BaseViewModel
 
     public ObservableCollection<FeedingHistoryEntry> FeedingHistory { get; } = new();
 
+    /// <summary>
+    /// Defines the permissions a user has for the feeding page
+    /// </summary>
+    protected override void SetPermissions()
+    {
+        // Ranger: Create, Read, Update, Delete
+        // Scientist: Read (only see todays feeding and history)
+
+        // Not really necessary since these two groups should never be able to see this page by design
+        // NotAssigned: Readonly
+        // Admin: Create, Read, Update, Delete
+
+        switch(CurrentUserRole)
+        {
+            case UserRole.Scientist:
+                CanCreate = false;
+                CanEdit = false;
+                CanDelete = false;
+                IsReadOnly = true;
+                CanViewItem = false;
+                break;
+
+            case UserRole.Ranger:
+                CanCreate = true;
+                CanEdit = true;
+                CanDelete = true;
+                IsReadOnly = false;
+                CanViewItem = true;
+                break;
+
+            case UserRole.Admin:
+                CanCreate = true;
+                CanEdit = true;
+                CanDelete = true;
+                IsReadOnly = false;
+                CanViewItem = true;
+                break;
+
+            case UserRole.NotAssigned:
+            default:
+                CanCreate = false;
+                CanEdit = false;
+                CanDelete = false;
+                IsReadOnly = true;
+                CanViewItem = false;
+                break;
+        }
+    }
+
     [RelayCommand]
     public async Task LoadAsync()
     {

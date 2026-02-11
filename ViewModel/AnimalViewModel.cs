@@ -78,7 +78,7 @@ namespace CrocoManager.ViewModel
         }
 
         /// <summary>
-        /// Defines the permissions a user has for this viewmodel
+        /// Defines the permissions a user has for the animal page
         /// </summary>
         protected override void SetPermissions()
         {
