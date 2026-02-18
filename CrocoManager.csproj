@@ -118,6 +118,10 @@
 	  <None Include=".github\workflows\maui-ci.yml" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\CrocoManager.Core\CrocoManager.Core.csproj" />
+	</ItemGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
     <RunAOTCompilation>false</RunAOTCompilation>
   </PropertyGroup>

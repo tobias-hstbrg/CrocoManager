@@ -1,4 +1,4 @@
-﻿using CrocoManager.Models;
+﻿using CrocoManager.Core.Models;
 using CrocoManager.ViewModel;
 using System.Threading.Tasks;
 

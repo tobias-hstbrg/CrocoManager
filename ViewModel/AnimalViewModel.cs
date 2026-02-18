@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CrocoManager.Models;
-using CrocoManager.Interfaces;
+using CrocoManager.Core.Models;
+using CrocoManager.Core.Interfaces;
 using CrocoManager.Views;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CrocoManager.Mappers;
+using CrocoManager.Core.Mappers;
 using CrocoManager.Services;
 
 namespace CrocoManager.ViewModel

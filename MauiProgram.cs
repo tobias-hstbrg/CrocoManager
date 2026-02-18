@@ -1,4 +1,4 @@
-﻿using CrocoManager.Interfaces;
+﻿using CrocoManager.Core.Interfaces;
 
 using CrocoManager.Services;
 using CrocoManager.ViewModel;
@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Platform.Compatibility;
+using CrocoManager.Core.Services;
+
 #if ANDROID
 using CrocoManager.Platforms.Android;
 #endif
@@ -72,6 +74,8 @@ namespace CrocoManager
             builder.Services.AddSingleton<AppShell>();
 
             builder.Configuration.AddJsonFile("appsettings.json");
+            builder.Services.AddSingleton<ISecureStorageService, MauiSecureStorageService>();
+            builder.Services.AddSingleton<SupabaseAuthService>();
             builder.Services.AddSingleton<ISupabaseClientService, SupabaseClientService>();
             builder.Services.AddSingleton<IAuthService, SupabaseAuthService>();
             builder.Services.AddSingleton<IWhitelistService, WhitelistService>();

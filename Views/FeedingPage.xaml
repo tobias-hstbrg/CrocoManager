@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewmodels="clr-namespace:CrocoManager.ViewModel"
-    xmlns:models="clr-namespace:CrocoManager.Models"
+    xmlns:models="clr-namespace:CrocoManager.Core.Models;assembly=CrocoManager.Core"
     x:Class="CrocoManager.Views.FeedingPage"
     x:DataType="viewmodels:FeedingViewModel"
     BackgroundColor="{StaticResource PageBackground}"
@@ -207,7 +207,7 @@
                                 Orientation="Vertical">
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding FeedingHistory}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="viewmodels:FeedingHistoryEntry">
+                                <DataTemplate x:DataType="models:FeedingHistoryEntry">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid ColumnDefinitions="2*,3*,2*,3*"
                                               Padding="15,12"

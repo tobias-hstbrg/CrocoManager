@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CrocoManager.DTOs;
-using CrocoManager.Interfaces;
-using CrocoManager.Mappers;
-using CrocoManager.Models;
+using CrocoManager.Core.DTOs;
+using CrocoManager.Core.Interfaces;
+using CrocoManager.Core.Mappers;
+using CrocoManager.Core.Models;
 using CrocoManager.Services;
 using System.Collections.ObjectModel;
 using static Supabase.Postgrest.Constants;

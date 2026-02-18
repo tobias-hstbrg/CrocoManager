@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CrocoManager.Interfaces;
+using CrocoManager.Core.Interfaces;
 using CrocoManager.Services;
+using CrocoManager.Core.Models;
 using CrocoManager.Views;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -48,13 +49,13 @@ namespace CrocoManager.ViewModel
             }
 
             // User hasn't been assigned a role yet
-            if (session.User.UserMetadata.Role == Models.UserRole.NotAssigned)
+            if (session.User.UserMetadata.Role == Core.Models.UserRole.NotAssigned)
             {
                 await NotificationService.ShowInfoAsync("Account in Bearbeitung", "Ihr Account ist noch keiner Rolle zugewiesen worden. Bitte kontaktieren Sie ihren Administrator.");
                 return;
             }
 
-            if (session.User.UserMetadata.Role == Models.UserRole.Admin)
+            if (session.User.UserMetadata.Role == Core.Models.UserRole.Admin)
             {
                 var adminPage = ServiceProvider.GetRequiredService<AdminPage>();
                 if (Application.Current?.Windows?.FirstOrDefault() is Window window)

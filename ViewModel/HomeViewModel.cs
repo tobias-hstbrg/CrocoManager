@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CrocoManager.Interfaces;
-using CrocoManager.Services;
+using CrocoManager.Core.Interfaces;
+using CrocoManager.Core.Services;
 using CrocoManager.Views;
 using System;
 using System.Collections.Generic;

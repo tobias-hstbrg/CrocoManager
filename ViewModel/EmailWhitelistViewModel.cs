@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CrocoManager.DTOs;
-using CrocoManager.Models;
+using CrocoManager.Core.DTOs;
+using CrocoManager.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
