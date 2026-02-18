@@ -1,17 +1,19 @@
-﻿using Supabase;
+﻿using CrocoManager.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Supabase;
 using System;
 using System.Threading.Tasks;
 
 namespace CrocoManager.Services
 {
-    public class SupabaseClientService
+    public class SupabaseClientService : ISupabaseClientService
     {
         private readonly Client _client;
 
-        public SupabaseClientService()
+        public SupabaseClientService(IConfiguration configuration)
         {
-            var url = ConfigLoader.Configuration["Supabase:Url"];
-            var key = ConfigLoader.Configuration["Supabase:AnonKey"];
+            var url = configuration["Supabase:Url"];
+            var key = configuration["Supabase:AnonKey"];
 
             if(string.IsNullOrEmpty(url) || string.IsNullOrEmpty(key))
                 throw new InvalidOperationException("Supabase URL or Anon Key is not configured properly.");

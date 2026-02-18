@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CrocoManager.Interfaces;
 using CrocoManager.Models;
 using CrocoManager.Services;
 using System.Collections.ObjectModel;
@@ -8,10 +9,10 @@ namespace CrocoManager.ViewModel;
 
 public partial class FeedingViewModel : BaseViewModel
 {
-    private readonly FeedingService _feedingService;
+    private readonly IFeedingService _feedingService;
 
     public FeedingViewModel(
-        FeedingService feedingService,
+        IFeedingService feedingService,
         IServiceProvider serviceProvider)
         : base(serviceProvider)
     {

@@ -1,15 +1,16 @@
 ﻿using CrocoManager.DTOs;
+using CrocoManager.Interfaces;
 using CrocoManager.Models;
 using CrocoManager.ViewModel;
 using static Supabase.Postgrest.Constants;
 
 namespace CrocoManager.Services;
 
-public class FeedingService : BaseService<FeedingDto>
+public class FeedingService : BaseService<FeedingDto>, IFeedingService
 {
-    private readonly SupabaseClientService _supabase;
+    private readonly ISupabaseClientService _supabase;
 
-    public FeedingService(SupabaseClientService supabaseClient) : base(supabaseClient)
+    public FeedingService(ISupabaseClientService supabaseClient) : base(supabaseClient)
     {
         _supabase = supabaseClient;
     }

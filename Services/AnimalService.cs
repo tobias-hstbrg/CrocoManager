@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CrocoManager.DTOs;
+using CrocoManager.Interfaces;
 using CrocoManager.Services;
 
 namespace CrocoManager.Services
 {
-    public class AnimalService : BaseService<AnimalDto>
+    public class AnimalService : BaseService<AnimalDto>, IAnimalService
     {
-        public AnimalService(SupabaseClientService supabaseClient)
+        public AnimalService(ISupabaseClientService supabaseClient)
            : base(supabaseClient)
         {
         }

@@ -13,9 +13,9 @@ namespace CrocoManager.ViewModel
 {
     public partial class HomeViewModel : BaseViewModel
     {
-        private readonly AnimalService _animalService;
-        private readonly FeedingPlanService _feedingPlanService;
-        private readonly FeedingService _feedingService;
+        private readonly IAnimalService _animalService;
+        private readonly IFeedingPlanService _feedingPlanService;
+        private readonly IFeedingService _feedingService;
 
         [ObservableProperty]
         private int totalAnimals;
@@ -47,7 +47,7 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private string lastFeedingStatus = "-";
 
-        public HomeViewModel(IServiceProvider serviceProvider, AnimalService animalService, FeedingPlanService feedingPlanService, FeedingService feedingService) : base(serviceProvider)
+        public HomeViewModel(IServiceProvider serviceProvider, IAnimalService animalService, IFeedingPlanService feedingPlanService, IFeedingService feedingService) : base(serviceProvider)
         {
             _animalService = animalService;
             _feedingService = feedingService;

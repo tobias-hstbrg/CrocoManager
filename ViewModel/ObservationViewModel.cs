@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.DTOs;
+using CrocoManager.Interfaces;
 using CrocoManager.Mappers;
 using CrocoManager.Models;
 using CrocoManager.Services;
@@ -11,11 +12,11 @@ namespace CrocoManager.ViewModel
 {
     public partial class ObservationViewModel : BaseViewModel
     {
-        private readonly ObservationService _observationService;
-        private readonly AnimalService _animalService;
-        private readonly FeedingService _feedingService;
-        private readonly FeedingPlanService _feedingPlanService;
-        private readonly SupabaseClientService _supabase;
+        private readonly IObservationService _observationService;
+        private readonly IAnimalService _animalService;
+        private readonly IFeedingService _feedingService;
+        private readonly IFeedingPlanService _feedingPlanService;
+        private readonly ISupabaseClientService _supabase;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
@@ -71,7 +72,7 @@ namespace CrocoManager.ViewModel
         AirTemperature.HasValue &&
         Humidity.HasValue;
 
-        public ObservationViewModel(IServiceProvider serviceProvider,SupabaseClientService supabase, ObservationService observationService, AnimalService animalService, FeedingService feedingService, FeedingPlanService feedingPlanService)
+        public ObservationViewModel(IServiceProvider serviceProvider, ISupabaseClientService supabase, IObservationService observationService, IAnimalService animalService, IFeedingService feedingService, IFeedingPlanService feedingPlanService)
             : base(serviceProvider)
         {
             _observationService = observationService;

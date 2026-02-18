@@ -3,6 +3,7 @@
 using CrocoManager.Services;
 using CrocoManager.ViewModel;
 using CrocoManager.Views;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Platform.Compatibility;
@@ -70,14 +71,15 @@ namespace CrocoManager
             // Shell
             builder.Services.AddSingleton<AppShell>();
 
-            builder.Services.AddSingleton<SupabaseClientService>();
+            builder.Configuration.AddJsonFile("appsettings.json");
+            builder.Services.AddSingleton<ISupabaseClientService, SupabaseClientService>();
             builder.Services.AddSingleton<IAuthService, SupabaseAuthService>();
             builder.Services.AddSingleton<IWhitelistService, WhitelistService>();
             builder.Services.AddSingleton<INotificationService, NotificationService>();
-            builder.Services.AddSingleton<AnimalService>();
-            builder.Services.AddSingleton<FeedingPlanService>();
-            builder.Services.AddHttpClient<ObservationService>();
-            builder.Services.AddSingleton<FeedingService>();
+            builder.Services.AddSingleton<IAnimalService, AnimalService>();
+            builder.Services.AddSingleton<IFeedingPlanService, FeedingPlanService>();
+            builder.Services.AddHttpClient<IObservationService, ObservationService>();
+            builder.Services.AddSingleton<IFeedingService ,FeedingService>();
 
             var app = builder.Build();
             _serviceProvider = app.Services;

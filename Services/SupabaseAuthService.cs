@@ -19,9 +19,9 @@ namespace CrocoManager.Services
 {
     public sealed class SupabaseAuthService : IAuthService
     {
-        private readonly SupabaseClientService _supabase;
+        private readonly ISupabaseClientService _supabase;
 
-        public SupabaseAuthService(SupabaseClientService supabase)
+        public SupabaseAuthService(ISupabaseClientService supabase)
         {
             _supabase = supabase;
         }

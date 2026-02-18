@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Models;
 using CrocoManager.Interfaces;
-using CrocoManager.Services;
 using CrocoManager.Views;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,12 +11,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CrocoManager.Mappers;
+using CrocoManager.Services;
 
 namespace CrocoManager.ViewModel
 {
     public partial class AnimalViewModel : BaseViewModel
     {
-        private readonly AnimalService _animalService;
+        private readonly IAnimalService _animalService;
 
         [ObservableProperty]
         private ObservableCollection<Animal> animals;
@@ -54,7 +54,7 @@ namespace CrocoManager.ViewModel
 
         public string PageTitle => IsEditing ? "Tier bearbeiten" : "Neues Tier erstellen";
 
-        public AnimalViewModel(IServiceProvider serviceProvider, AnimalService animalService) : base(serviceProvider)
+        public AnimalViewModel(IServiceProvider serviceProvider, IAnimalService animalService) : base(serviceProvider)
         {
             _animalService = animalService;
 

@@ -14,9 +14,9 @@ namespace CrocoManager.Services
 {
     public sealed class WhitelistService : IWhitelistService
     {
-        SupabaseClientService _supabase;
+        ISupabaseClientService _supabase;
 
-        public WhitelistService(SupabaseClientService supabase)
+        public WhitelistService(ISupabaseClientService supabase)
         {
             _supabase = supabase;
         }

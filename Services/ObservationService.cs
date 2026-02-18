@@ -1,4 +1,5 @@
 ﻿using CrocoManager.DTOs;
+using CrocoManager.Interfaces;
 using CrocoManager.Mappers;
 using CrocoManager.Models;
 using System;
@@ -13,14 +14,14 @@ using System.Threading.Tasks;
 
 namespace CrocoManager.Services
 {
-    public class ObservationService : BaseService<ObservationDto>
+    public class ObservationService : BaseService<ObservationDto>, IObservationService
     {
         private readonly HttpClient _httpClient;
         private readonly string _waterDataApiUrl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=251457080395802&parameterCd=00010,00480&period=PT2H";
         private readonly string _weatherDataApiUrl = "https://api.weather.gov/stations/KHST/observations/latest";
-        private readonly SupabaseClientService _supabase;
+        private readonly ISupabaseClientService _supabase;
         private static int _phCallCount = 0;
-        public ObservationService(SupabaseClientService supabaseClient, HttpClient httpClient)
+        public ObservationService(ISupabaseClientService supabaseClient, HttpClient httpClient)
            : base(supabaseClient)
         {
             _httpClient = httpClient;

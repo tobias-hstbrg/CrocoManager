@@ -1,4 +1,5 @@
 ﻿using CrocoManager.DTOs;
+using CrocoManager.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace CrocoManager.Services
 {
-    public class FeedingPlanService : BaseService<FeedingPlanDto>
+    public class FeedingPlanService : BaseService<FeedingPlanDto>, IFeedingPlanService
     {
-        public FeedingPlanService(SupabaseClientService supabaseClient)
+        public FeedingPlanService(ISupabaseClientService supabaseClient)
            : base(supabaseClient)
         {
         }

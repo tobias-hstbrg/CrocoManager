@@ -18,7 +18,7 @@ namespace CrocoManager.ViewModel
 {
     public partial class FeedingPlanViewModel : BaseViewModel
     {
-        private readonly FeedingPlanService _feedingPlanService;
+        private readonly IFeedingPlanService _feedingPlanService;
 
         [ObservableProperty]
         private ObservableCollection<FeedingPlanDto> feedingPlans;
@@ -58,7 +58,7 @@ namespace CrocoManager.ViewModel
 
         public string PageTitle => IsEditing ? "Plan bearbeiten" : "Neuen Plan erstellen";
 
-        public FeedingPlanViewModel(FeedingPlanService feedingPlanService, IServiceProvider serviceProvider) : base(serviceProvider)
+        public FeedingPlanViewModel(IFeedingPlanService feedingPlanService, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             _feedingPlanService = feedingPlanService;
             FeedingPlans = new ObservableCollection<FeedingPlanDto>();

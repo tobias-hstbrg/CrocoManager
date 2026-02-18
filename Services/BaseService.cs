@@ -4,17 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CrocoManager.Interfaces;
 
 namespace CrocoManager.Services
 {
-    public abstract class BaseService<T> where T : BaseModel, new()
+    public abstract class BaseService<T> : IBaseService<T> where T : BaseModel, new()
     {
-        protected readonly SupabaseClientService _supabaseClient;
+        protected readonly ISupabaseClientService _supabaseClient;
 
-        public BaseService(SupabaseClientService supabaseClient )
-        {
-            _supabaseClient = supabaseClient;
-        }
+        public BaseService(ISupabaseClientService supabaseClient)
+         {
+              _supabaseClient = supabaseClient;
+           }
 
         public virtual async Task<List<T>> GetAllAsync()
         {
