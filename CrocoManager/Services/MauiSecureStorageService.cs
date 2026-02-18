@@ -18,10 +18,11 @@ namespace CrocoManager.Services
         {
             return SecureStorage.Default.GetAsync(key);
         }
-
-        public void Remove(string key)
+        public Task Remove(string key)
         {
-            SecureStorage.Default.Remove(key);
+            // Correct return type: Task, not void
+            SecureStorage.Remove(key);
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,0 +1,44 @@
+﻿using CrocoManager.Core.DTOs;
+using CrocoManager.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CrocoManager.Core.Mappers
+{
+    public static class PlanMapper
+    {
+        public static FeedingPlan ToModel(this FeedingPlanDto plan)
+        {
+            return new FeedingPlan
+            {
+                Id = plan.Id,
+                AmountKg = (decimal)plan.AmountKg,
+                FoodType = plan.FoodType,
+                FrequencyPerWeek = plan.FrequencyPerWeek,
+                IsActive = plan.IsActive,
+                Name = plan.Name,
+                Weekdays = plan.Weekdays,
+                Description = plan.Description ?? string.Empty,
+            };
+        }
+
+        public static FeedingPlanDto ToDto(this FeedingPlan plan)
+        {
+            return new FeedingPlanDto
+            {
+                Id = plan.Id,
+                Description = plan.Description,
+                FoodType = plan.FoodType,
+                FrequencyPerWeek = plan.FrequencyPerWeek,
+                IsActive = plan.IsActive,
+                Name = plan.Name,
+                AmountKg = (double)plan.AmountKg,
+                Weekdays = [.. plan.Weekdays],
+
+            };
+        }
+    }
+}
