@@ -82,7 +82,9 @@ namespace CrocoManager
             builder.Services.AddSingleton<INotificationService, NotificationService>();
             builder.Services.AddSingleton<IAnimalService, AnimalService>();
             builder.Services.AddSingleton<IFeedingPlanService, FeedingPlanService>();
-            builder.Services.AddHttpClient<IObservationService, ObservationService>();
+            builder.Services.AddHttpClient<IObservationService, ObservationService>( client => {
+                client.Timeout = TimeSpan.FromSeconds(10);
+            });
             builder.Services.AddSingleton<IFeedingService ,FeedingService>();
 
             var app = builder.Build();
