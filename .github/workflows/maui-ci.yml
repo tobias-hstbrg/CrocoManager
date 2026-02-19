@@ -1,4 +1,4 @@
-﻿name: .NET MAUI CI/CD
+name: .NET MAUI CI/CD
 
 on:
   push:
@@ -8,7 +8,27 @@ on:
   workflow_dispatch:
 
 jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Install .NET MAUI workload
+      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
+
+    - name: Restore dependencies
+      run: dotnet restore CrocoManager/CrocoManager.sln
+
+    - name: Run Tests
+      run: dotnet test CrocoManager.Core.Tests/CrocoManager.Core.Tests.csproj --no-restore --configuration Release --verbosity normal
+
   build-android:
+    needs: test
     runs-on: windows-latest
     
     steps:
@@ -31,14 +51,14 @@ jobs:
             AnonKey = "${{ secrets.SUPABASE_ANON_KEY }}"
           }
         } | ConvertTo-Json -Depth 3
-        $settings | Out-File -FilePath "appsettings.json" -Encoding UTF8
+        $settings | Out-File -FilePath "CrocoManager/appsettings.json" -Encoding UTF8
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore CrocoManager/CrocoManager.sln
     
     - name: Build Android APK
       run: |
-        dotnet publish `
+        dotnet publish CrocoManager/CrocoManager.csproj `
           -f net9.0-android `
           -c Release `
           -p:AndroidPackageFormat=apk `
@@ -53,6 +73,7 @@ jobs:
         retention-days: 7
 
   build-windows:
+    needs: test
     runs-on: windows-latest
     
     steps:
@@ -75,14 +96,14 @@ jobs:
             AnonKey = "${{ secrets.SUPABASE_ANON_KEY }}"
           }
         } | ConvertTo-Json -Depth 3
-        $settings | Out-File -FilePath "appsettings.json" -Encoding UTF8
+        $settings | Out-File -FilePath "CrocoManager/appsettings.json" -Encoding UTF8
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore CrocoManager/CrocoManager.sln
     
     - name: Build Windows MSIX
       run: |
-        dotnet publish `
+        dotnet publish CrocoManager/CrocoManager.csproj `
           -f net9.0-windows10.0.19041.0 `
           -c Release `
           -p:RuntimeIdentifierOverride=win10-x64 `

@@ -1,0 +1,24 @@
+﻿using CrocoManager.Core.DTOs;
+using CrocoManager.Core.Models;
+using Supabase;
+using Supabase.Gotrue;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CrocoManager.Core.Interfaces
+{
+    public interface IAuthService
+    {
+        Task<bool> TestConnectionAsync();
+        Task<SupabaseSession?> RegisterAsync(string email, string password);
+        Task<SupabaseSession?> LoginAsync(string email, string password);
+        Task<bool> SignOutAsync();
+        Task<bool> ResetPasswordAsync(string email, string password);
+        Task<string?> GetUserEmail();
+        Task<UserRole> GetUserRoleAsync();
+    }
+}
