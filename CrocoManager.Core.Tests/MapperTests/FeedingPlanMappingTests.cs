@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrocoManager.Core.Tests
+namespace CrocoManager.Core.Tests.MapperTests
 {
     public class FeedingPlanMappingTests
     {

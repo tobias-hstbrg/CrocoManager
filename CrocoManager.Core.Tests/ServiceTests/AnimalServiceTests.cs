@@ -10,7 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrocoManager.Core.Tests
+namespace CrocoManager.Core.Tests.ServiceTests
 {
     public class AnimalServiceTests
     {
