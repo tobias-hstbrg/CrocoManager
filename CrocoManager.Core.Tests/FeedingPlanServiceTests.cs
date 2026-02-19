@@ -61,5 +61,37 @@ namespace CrocoManager.Core.Tests
             await act.Should().ThrowAsync<InvalidOperationException>()
                      .WithMessage("Multiple active feeding plans found.");
         }
+
+        [Fact]
+        public async Task ToggleActiveAsync_Should_FlipState_When_PlanExists()
+        {
+            // inactive plan
+            var planId = Guid.NewGuid();
+            var existingPlan = new FeedingPlanDto { Id = planId, IsActive = false };
+
+            // mock fetching the plan
+            _mockService.Setup(s => s.GetByIdAsync(planId)).ReturnsAsync(existingPlan);
+
+            // updateAsync returns updated plan
+            _mockService.Setup(s => s.UpdateAsync(It.IsAny<FeedingPlanDto>())).ReturnsAsync((FeedingPlanDto p) => p);
+
+            //Act
+            var result = await _mockService.Object.ToggleActiveAsync(planId);
+
+            result.Should().BeTrue();
+            _mockService.Verify(s => s.UpdateAsync(It.Is<FeedingPlanDto>(p => p.IsActive == true)), Times.Once);
+        }
+
+        [Fact]
+        public async Task ToggleActiveAsync_Should_ThrowException_When_IdNotFound()
+        {
+            var planId = Guid.NewGuid();
+            _mockService.Setup(s => s.GetByIdAsync(planId)).ReturnsAsync((FeedingPlanDto?)null);
+
+            var act = () => _mockService.Object.ToggleActiveAsync(planId);
+
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                     .WithMessage($"Feeding plan with ID {planId} not found.");
+        }
     }
 }

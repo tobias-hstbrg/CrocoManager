@@ -24,7 +24,8 @@ namespace CrocoManager.Core.Services
         public async Task<bool> ToggleActiveAsync(Guid id)
         {
             FeedingPlanDto? plan = await GetByIdAsync(id);
-            if (plan == null) throw new NullReferenceException();
+            if (plan == null)
+                throw new InvalidOperationException($"Feeding plan with ID {id} not found.");
             plan.IsActive = !plan.IsActive;
             await UpdateAsync(plan);
             return plan.IsActive;
