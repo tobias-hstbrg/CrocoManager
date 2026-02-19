@@ -73,7 +73,16 @@ namespace CrocoManager
             // Shell
             builder.Services.AddSingleton<AppShell>();
 
-            builder.Configuration.AddJsonFile("appsettings.json");
+            var assembly = typeof(MauiProgram).Assembly;
+            var resourceName = "CrocoManager.appsettings.json";
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream != null)
+                {
+                    builder.Configuration.AddJsonStream(stream);
+                }
+            }
+
             builder.Services.AddSingleton<ISecureStorageService, MauiSecureStorageService>();
             builder.Services.AddSingleton<SupabaseAuthService>();
             builder.Services.AddSingleton<ISupabaseClientService, SupabaseClientService>();
