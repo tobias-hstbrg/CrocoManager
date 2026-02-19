@@ -1,0 +1,600 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:CrocoManager.ViewModel"
+    xmlns:models="clr-namespace:CrocoManager.Core.Models;assembly=CrocoManager.Core"
+    x:Class="CrocoManager.Views.ObservationPage"
+    x:DataType="viewmodels:ObservationViewModel"
+    BackgroundColor="{StaticResource PageBackground}"
+    Title="">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Header Section -->
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <Label Grid.Column="0"
+                       Text="Forschung"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       VerticalOptions="Center"/>
+
+                <ImageButton Grid.Column="1"
+                    Source="sign_out.png"
+                    Style="{StaticResource PrimaryImageButton}"
+                    Command="{Binding SignOutCommand}"/>
+            </Grid>
+
+            <!-- Environmental Data Card -->
+            <Border BackgroundColor="#16a085"
+                Padding="20"
+                Margin="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+
+                <Grid RowDefinitions="Auto,Auto" RowSpacing="15">
+                    <Label Grid.Row="0"
+                       Text="Aktuelle Umweltdaten (Everglades, FL)"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"/>
+
+                    <!-- Responsive Grid with VisualStateManager -->
+                    <Grid Grid.Row="1" x:Name="EnvironmentGrid" ColumnSpacing="10" RowSpacing="10">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="LayoutStates">
+                                <VisualState x:Name="Wide">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="800" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Property="ColumnDefinitions" Value="*,*,*,*,*" />
+                                        <Setter Property="RowDefinitions" Value="Auto" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Narrow">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="0" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Property="ColumnDefinitions" Value="*" />
+                                        <Setter Property="RowDefinitions" Value="Auto,Auto,Auto,Auto,Auto" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <!-- Lufttemperatur -->
+                        <Border x:Name="LuftTempBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                                   Text="Lufttemperatur"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
+                                <Label Grid.Row="1"
+                                   Text="{Binding AirTemperature, StringFormat='{0:F1}°C'}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Luftfeuchtigkeit -->
+                        <Border x:Name="LuftFeuchtigkeitBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="1" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                                   Text="Luftfeuchtigkeit"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
+                                <Label Grid.Row="1"
+                                   Text="{Binding Humidity, StringFormat='{0:F0}%'}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Wassertemperatur -->
+                        <Border x:Name="WasserTempBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="2" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="2" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                                   Text="Wassertemperatur"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Row="1"
+                                   Text="{Binding WaterTemperature, StringFormat='{0:F1}°C'}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- pH-Wert -->
+                        <Border x:Name="PhWertBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="3" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="3" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                                   Text="pH-Wert"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Row="1"
+                                   Text="{Binding PhValue, StringFormat='{0:F1}'}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Salzgehalt -->
+                        <Border x:Name="SalzgehaltBorder" BackgroundColor="White"
+                            Padding="15"
+                            HeightRequest="70">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PositionStates">
+                                    <VisualState x:Name="WidePosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="4" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowPosition">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="4" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                                   Text="Salzgehalt"
+                                   FontSize="10"
+                                   TextColor="#16a085"
+                                   HorizontalTextAlignment="Center"/>
+                                <Label Grid.Row="1"
+                                   Text="{Binding Salinity, StringFormat='{0:F1} ppt'}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- Observation Form Card -->
+            <Border Style="{StaticResource SecondaryCard}"
+                    Padding="20"
+                    IsVisible="{Binding BindingContext.CanViewItem,
+                    Source={RelativeSource AncestorType={x:Type ContentPage}}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="20">
+                    <Label Text="Neue Beobachtung dokumentieren"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <!-- Tier auswählen -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Tier auswählen "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Picker ItemsSource="{Binding Animals}"
+                                    ItemDisplayBinding="{Binding PickerName}"
+                                    SelectedItem="{Binding SelectedAnimal}"
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Tier Fütterung auswählen -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Tier Fütterung auswählen "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Picker ItemsSource="{Binding Feedings}"
+                                    SelectedItem="{Binding SelectedFeeding}"
+                                    ItemDisplayBinding="{Binding DisplayName}"
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Fressverhalten -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Fressverhalten "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Picker ItemsSource="{Binding FeedingBehaviors}"
+                                    SelectedItem="{Binding FeedingBehavior}"
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Beobachtungen / Notizen -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Beobachtungen / Notizen"
+                               FontSize="14"
+                               TextColor="{StaticResource TextSecondary}"/>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12"
+                                HeightRequest="120">
+                            <Editor Text="{Binding Notes}"
+                                    Placeholder="Beschreiben Sie besonderes Verhalten des Tieres..."
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    PlaceholderColor="{StaticResource PlaceholderText}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Fill"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Action Buttons -->
+                    <Grid x:Name="ButtonGrid" ColumnSpacing="15" RowSpacing="10" Margin="0,10,0,0">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="LayoutStates">
+                                <VisualState x:Name="Wide">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="600" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Property="ColumnDefinitions" Value="*,*" />
+                                        <Setter Property="RowDefinitions" Value="Auto" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Narrow">
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="0" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Property="ColumnDefinitions" Value="*" />
+                                        <Setter Property="RowDefinitions" Value="Auto,Auto" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Button x:Name="SaveButton" 
+                                Text="Beobachtung speichern"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SaveObservationCommand}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="ButtonPositionStates">
+                                    <VisualState x:Name="WideButton">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="600" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowButton">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Button>
+
+                        <Button x:Name="CancelButton"
+                                Text="Abbrechen"
+                                Command="{Binding CancelCommand}"
+                                Style="{StaticResource SecondaryButton}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="ButtonPositionStates">
+                                    <VisualState x:Name="WideButton">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="600" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="1" />
+                                            <Setter Property="Grid.Row" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NarrowButton">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.Row" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Button>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Letzte Beobachtungen"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   Margin="0,10,0,0"/>
+
+            <CollectionView ItemsSource="{Binding RecentObservations}"
+                SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Observation">
+                        <Border Style="{StaticResource SecondaryCard}"
+                            Padding="15">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                                <!-- Title: Animal Name -->
+                                <Label Grid.Row="0"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Animal.Name}"/>
+                                            <Span Text=" - "/>
+                                            <Span Text="{Binding Animal.Species}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <!-- Subtitle: Feeding info -->
+                                <Label Grid.Row="1"
+                                FontSize="12"
+                                TextColor="{StaticResource TextSecondary}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Fütterung: "/>
+                                            <Span Text="{Binding Feeding.FeedingDate, StringFormat='{0:dd.MM.yyyy}'}"/>
+                                            <Span Text=" - "/>
+                                            <Span Text="{Binding Feeding.FeedingPlan.Name}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <!-- Environmental Data Row -->
+                                <HorizontalStackLayout Grid.Row="2"
+                                Spacing="6"
+                                IsVisible="{Binding HasEnvironmentalData}">
+
+                                    <Image Source="sun.png"
+                                       WidthRequest="14"
+                                       HeightRequest="14"
+                                       VerticalOptions="Center" />
+
+                                    <Label FontSize="12"
+                                       TextColor="{StaticResource TextSecondary}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Luft: " FontAttributes="Bold"/>
+                                                <Span Text="{Binding EnvironmentalData.AirTemperatureCelsius, StringFormat='{0:F1}°C'}"/>
+                                                <Span Text=", "/>
+                                                <Span Text="{Binding EnvironmentalData.HumidityPercent, StringFormat='{0:F0}%'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <Image Source="humidity.png"
+                                    WidthRequest="14"
+                                    HeightRequest="14"
+                                    VerticalOptions="Center" />
+
+                                    <Label FontSize="12"
+                                    TextColor="{StaticResource TextSecondary}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Wasser: " FontAttributes="Bold"/>
+                                                <Span Text="{Binding EnvironmentalData.WaterTemperatureCelsius, StringFormat='{0:F1}°C'}"/>
+                                                <Span Text=", pH "/>
+                                                <Span Text="{Binding EnvironmentalData.PhValue, StringFormat='{0:F1}'}"/>
+                                                <Span Text=", "/>
+                                                <Span Text="{Binding EnvironmentalData.SalinityPpt, StringFormat='{0:F1} ppt'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                </HorizontalStackLayout>
+
+                                <Grid Grid.Row="3" RowDefinitions="Auto,Auto" RowSpacing="5">
+                                    <Label Grid.Row="0"
+                                       FontSize="13"
+                                       TextColor="{StaticResource TextPrimary}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Verhalten: " FontAttributes="Bold"/>
+                                                <Span Text="{Binding FeedingBehavior}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <Label Grid.Row="1"
+                                       Text="{Binding Notes}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource TextSecondary}"
+                                       LineBreakMode="WordWrap"
+                                       MaxLines="3"
+                                       IsVisible="{Binding HasNotes}"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

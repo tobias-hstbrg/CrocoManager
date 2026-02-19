@@ -1,0 +1,465 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:CrocoManager.ViewModel"
+    xmlns:models="clr-namespace:CrocoManager.Core.DTOs;assembly=CrocoManager.Core"
+    x:Class="CrocoManager.Views.FeedingPlanPage"
+    Title=""
+    BackgroundColor="{StaticResource PageBackground}">
+    <ScrollView>
+        <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="20" RowSpacing="20" MinimumHeightRequest="1000">
+
+            <!-- Header Section -->
+            <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <!-- Row 0: Label + SignOut button (aligned with end of row 1 button) -->
+                <Label Grid.Row="0" Grid.Column="0"
+                       Text="Futterpläne"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       VerticalOptions="Center"/>
+
+                <ImageButton Grid.Row="0" Grid.Column="1"
+                        Source="sign_out.png"
+                        Style="{StaticResource PrimaryImageButton}"
+                        VerticalOptions="Start"
+                        HorizontalOptions="End"
+                        Command="{Binding SignOutCommand}"/>
+
+                <!-- Row 1: Create Plan button below SignOut, aligned right -->
+                <Button Grid.Row="1" Grid.Column="1"
+                        Text="➕ Plan erstellen"
+                        Command="{Binding AddNewPlanCommand}"
+                        Style="{StaticResource PrimaryButton}"
+                        WidthRequest="150"
+                        HeightRequest="50"
+                        CornerRadius="8"
+                        Padding="10"
+                        VerticalOptions="Start"
+                        HorizontalOptions="End"
+                        Margin="0,8,0,0"
+                        IsEnabled="{Binding CanCreate}"/>
+            </Grid>
+
+            <!-- Active Plan Card -->
+            <Border Grid.Row="1"
+                    Style="{StaticResource SecondaryCard}" 
+                    Padding="20"
+                    IsVisible="{Binding HasActivePlan}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="15">
+                    <HorizontalStackLayout Spacing="10">
+                        <Image Source="active_plan.png"
+                               Aspect="AspectFit"
+                               WidthRequest="24"
+                               HeightRequest="24"
+                               VerticalOptions="Center"/>
+                        <Label Text="Aktiver Plan" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" 
+                          ColumnSpacing="15" RowSpacing="8">
+                        <Label Grid.Row="0" Grid.Column="0" 
+                               Text="Name:" 
+                               FontSize="14" 
+                               TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="0" Grid.Column="1" 
+                               Text="{Binding ActivePlan.Name}" 
+                               FontSize="14" 
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" 
+                               Text="Futter:" 
+                               FontSize="14" 
+                               TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="1" Grid.Column="1" 
+                               Text="{Binding ActivePlan.FoodType}" 
+                               FontSize="14" 
+                               TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" 
+                               Text="Fütterungstage:" 
+                               FontSize="14" 
+                               TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="2" Grid.Column="1" 
+                               Text="{Binding ActivePlan.WeekdaysFormatted}" 
+                               FontSize="14" 
+                               TextColor="{StaticResource TextPrimary}"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" 
+                               Text="Menge:" 
+                               FontSize="14" 
+                               TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Row="3" Grid.Column="1" 
+                               Text="{Binding ActivePlan.AmountKg, StringFormat='{0} kg pro Tier'}" 
+                               FontSize="14" 
+                               TextColor="{StaticResource TextPrimary}"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Plans Grid Card -->
+            <Border Grid.Row="2"
+                    Style="{StaticResource SecondaryCard}"
+                    Padding="0"
+                    Margin="0,0">
+                
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border"
+                     Binding="{Binding CanViewItem}"
+                     Value="True">
+                        <Setter Property="MaximumHeightRequest" Value="300"/>
+                    </DataTrigger>
+                </Border.Triggers>
+                
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+
+                <Grid RowDefinitions="50,*" ColumnDefinitions="*,180">
+
+                    <!-- Header - Scrollable Part -->
+                    <ScrollView x:Name="headerScroll"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never"
+                                Scrolled="OnHeaderScrolled">
+                        <Grid ColumnDefinitions="200,150,100,450,150"
+                              Padding="15"
+                              HeightRequest="50"
+                              ColumnSpacing="15"
+                              BackgroundColor="{StaticResource CardBackground}">
+                            <Label Grid.Column="0" Text="Name" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="Futterart" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="2" Text="Menge" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="3" Text="Wochentage" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="4" Text="Frequenz" FontAttributes="Bold" VerticalOptions="Center"/>
+                        </Grid>
+                    </ScrollView>
+
+                    <!-- Header - Actions (Fixed) -->
+                    <Grid Grid.Row="0"
+                          Grid.Column="1"
+                          BackgroundColor="{StaticResource CardBackground}"
+                          Padding="15">
+                        <Label Text="Aktion" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Grid>
+
+                    <!-- Content - Scrollable Part -->
+                    <ScrollView x:Name="contentScroll"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Orientation="Both"
+                                Scrolled="OnContentScrolled">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding FeedingPlans}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:FeedingPlanDto">
+                                    <VerticalStackLayout Spacing="0">
+                                        <Grid ColumnDefinitions="200,150,100,450,150"
+                                              Padding="15"
+                                              HeightRequest="60"
+                                              ColumnSpacing="15"
+                                              BackgroundColor="{StaticResource CardBackground}">
+                                            <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center"/>
+                                            <Label Grid.Column="1" Text="{Binding FoodType}" VerticalOptions="Center"/>
+                                            <Label Grid.Column="2" Text="{Binding AmountKg, StringFormat='{0} kg'}" VerticalOptions="Center"/>
+                                            <Label Grid.Column="3" Text="{Binding WeekdaysFormatted}" VerticalOptions="Center"/>
+                                            <Label Grid.Column="4" Text="{Binding FrequencyPerWeek, StringFormat='{0}x/Woche'}" VerticalOptions="Center"/>
+                                        </Grid>
+                                        <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- Actions - Fixed Column -->
+                    <ScrollView x:Name="actionsScroll"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Orientation="Vertical"
+                                VerticalScrollBarVisibility="Never"
+                                Scrolled="OnActionsScrolled"
+                                BackgroundColor="{StaticResource CardBackground}">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding FeedingPlans}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:FeedingPlanDto">
+                                    <VerticalStackLayout Spacing="0">
+                                        <Grid Padding="10"
+                                              HeightRequest="60"
+                                              BackgroundColor="{StaticResource CardBackground}">
+                                            <HorizontalStackLayout Spacing="10"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center">
+                                                <!-- ACTIVE TOGGLE -->
+                                                <Border BackgroundColor="Transparent"
+                                                        StrokeThickness="0">
+                                                    <Border.WidthRequest>
+                                                        <OnIdiom x:TypeArguments="x:Double"
+                                                                 Phone="28"
+                                                                 Desktop="40"/>
+                                                    </Border.WidthRequest>
+                                                    <Border.HeightRequest>
+                                                        <OnIdiom x:TypeArguments="x:Double"
+                                                                 Phone="28"
+                                                                 Desktop="40"/>
+                                                    </Border.HeightRequest>
+
+                                                    <ImageButton BackgroundColor="Transparent"
+                                                                 Aspect="AspectFit"
+                                                                 Command="{Binding BindingContext.ToggleActivePlanCommand,
+                                                                           Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                                 CommandParameter="{Binding .}"
+                                                                 IsEnabled="{Binding BindingContext.CanEdit,
+                                                                 Source={RelativeSource AncestorType={x:Type ContentPage}}}">
+                                                        <ImageButton.Source>
+                                                            <FileImageSource File="inactive_plan.png"/>
+                                                        </ImageButton.Source>
+                                                        <ImageButton.Triggers>
+                                                            <DataTrigger TargetType="ImageButton"
+                                                                         Binding="{Binding IsActive}"
+                                                                         Value="True">
+                                                                <Setter Property="Source"
+                                                                        Value="active_plan.png"/>
+                                                            </DataTrigger>
+                                                        </ImageButton.Triggers>
+                                                    </ImageButton>
+                                                </Border>
+
+                                                <!-- EDIT -->
+                                                <Border BackgroundColor="Transparent"
+                                                        StrokeThickness="0">
+                                                    <Border.WidthRequest>
+                                                        <OnIdiom x:TypeArguments="x:Double"
+                                                                 Phone="28"
+                                                                 Desktop="40"/>
+                                                    </Border.WidthRequest>
+                                                    <Border.HeightRequest>
+                                                        <OnIdiom x:TypeArguments="x:Double"
+                                                                 Phone="28"
+                                                                 Desktop="40"/>
+                                                    </Border.HeightRequest>
+
+                                                    <ImageButton Source="edit.png"
+                                                                 BackgroundColor="Transparent"
+                                                                 Aspect="AspectFit"
+                                                                 Command="{Binding BindingContext.EditPlanCommand,
+                                                                           Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                                 CommandParameter="{Binding .}"
+                                                                 IsEnabled="{Binding BindingContext.CanEdit,
+                                                                 Source={RelativeSource AncestorType={x:Type ContentPage}}}"/>
+                                                </Border>
+
+                                                <!-- DELETE -->
+                                                <Border BackgroundColor="Transparent"
+                                                        StrokeThickness="0">
+                                                    <Border.WidthRequest>
+                                                        <OnIdiom x:TypeArguments="x:Double"
+                                                                 Phone="28"
+                                                                 Desktop="45"/>
+                                                    </Border.WidthRequest>
+                                                    <Border.HeightRequest>
+                                                        <OnIdiom x:TypeArguments="x:Double"
+                                                                 Phone="28"
+                                                                 Desktop="45"/>
+                                                    </Border.HeightRequest>
+
+                                                    <ImageButton Source="trash_can.png"
+                                                                 BackgroundColor="Transparent"
+                                                                 Aspect="AspectFit"
+                                                                 Command="{Binding BindingContext.DeletePlanCommand,
+                                                                           Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                                 CommandParameter="{Binding .}"
+                                                                 IsEnabled="{Binding BindingContext.CanDelete,
+                                                                 Source={RelativeSource AncestorType={x:Type ContentPage}}}"/>
+                                                </Border>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                </Grid>
+            </Border>
+
+            <!-- Plan Form Card -->
+            <Border Grid.Row="3"
+                    Style="{StaticResource SecondaryCard}" 
+                    Padding="20"
+                    IsVisible="{Binding BindingContext.CanViewItem,
+                    Source={RelativeSource AncestorType={x:Type ContentPage}}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="20">
+                    <Label Text="{Binding PageTitle}" 
+                           FontSize="22" 
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <!-- Planname -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Planname "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Entry Text="{Binding Name}" 
+                                   Placeholder="z.B. Sommer-Standard-Plan"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   PlaceholderColor="{StaticResource PlaceholderText}"
+                                   BackgroundColor="Transparent"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Futterart -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Futterart "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Entry Text="{Binding FoodType}" 
+                                   Placeholder="z.B. Hühnchen"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   PlaceholderColor="{StaticResource PlaceholderText}"
+                                   BackgroundColor="Transparent"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Menge pro Tier (KG) -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Menge pro Tier (KG) "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Entry Text="{Binding AmountKg}" 
+                                   Placeholder="z.B. 2,8"
+                                   Keyboard="Numeric"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   PlaceholderColor="{StaticResource PlaceholderText}"
+                                   BackgroundColor="Transparent"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Fütterung pro Woche -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Fütterung pro Woche "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Entry Text="{Binding FrequencyPerWeek}" 
+                                   Placeholder="z.B. 2"
+                                   Keyboard="Numeric"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   PlaceholderColor="{StaticResource PlaceholderText}"
+                                   BackgroundColor="Transparent"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Wochentage -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Wochentage "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Entry Text="{Binding Weekdays}" 
+                                   Placeholder="z.B. Montag, Mittwoch, Freitag etc."
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   PlaceholderColor="{StaticResource PlaceholderText}"
+                                   BackgroundColor="Transparent"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Beschreibung -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Beschreibung / Besonderheiten" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12"
+                                HeightRequest="100">
+                            <Editor Text="{Binding Description}" 
+                                    Placeholder="Optionale Notizen zum Futterplan..."
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    PlaceholderColor="{StaticResource PlaceholderText}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Fill"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Text="Abbrechen"
+                                Command="{Binding CancelCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                HeightRequest="45"/>
+                        <Button Grid.Column="1"
+                                Text="Speichern"
+                                Command="{Binding SavePlanCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                HeightRequest="45"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </ScrollView>
+</ContentPage>

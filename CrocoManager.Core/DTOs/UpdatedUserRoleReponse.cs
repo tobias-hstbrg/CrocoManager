@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
+namespace CrocoManager.Core.DTOs
+{
+    public class UpdatedUserRoleReponse
+    {
+        [JsonPropertyName("success")]
+        public bool Success { get; set; }
+        [JsonPropertyName("user")]
+        public required UserDto User { get; set; }
+
+        public class UserDto
+        {
+            [JsonPropertyName("id")]
+            public Guid Id { get; set; }
+            [JsonPropertyName("email")]
+            public required string Email { get; set; }
+
+            [JsonPropertyName("role")]
+            public required string Role { get; set; }
+        }
+    }
+}
