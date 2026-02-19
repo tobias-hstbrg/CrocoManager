@@ -18,6 +18,9 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
+    - name: Install .NET MAUI workload
+      run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
+
     - name: Restore dependencies
       run: dotnet restore CrocoManager/CrocoManager.sln
 
