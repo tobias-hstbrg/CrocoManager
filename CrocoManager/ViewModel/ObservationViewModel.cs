@@ -40,6 +40,7 @@ namespace CrocoManager.ViewModel
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private Animal? selectedAnimal;
 
         [ObservableProperty]
@@ -50,6 +51,7 @@ namespace CrocoManager.ViewModel
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private Feeding? selectedFeeding;
 
         [ObservableProperty]
@@ -57,13 +59,21 @@ namespace CrocoManager.ViewModel
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string? feedingBehavior;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string? notes;
 
         [ObservableProperty]
         private ObservableCollection<Observation> recentObservations;
+
+        public bool HasFormChanges =>
+           !string.IsNullOrWhiteSpace(selectedAnimal?.DisplayName) ||
+           !string.IsNullOrWhiteSpace(selectedFeeding?.DisplayName) ||
+           !string.IsNullOrWhiteSpace(feedingBehavior) ||
+           !string.IsNullOrWhiteSpace(notes);
 
         public bool CanSave =>
         SelectedAnimal != null &&
@@ -472,6 +482,7 @@ namespace CrocoManager.ViewModel
             SelectedFeeding = null;
             FeedingBehavior = null;
             Notes = string.Empty;
+            OnPropertyChanged(nameof(HasFormChanges));
         }
     }
 }
