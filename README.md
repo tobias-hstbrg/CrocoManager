@@ -76,10 +76,18 @@ Die Messstation befindet sich in einer Übergangszone zwischen Süß- und Salzwa
 
 Die Anwendung folgt dem **MVVM-Entwurfsmuster (Model-View-ViewModel)**. Zur Reduzierung von Boilerplate-Code (wie `INotifyPropertyChanged`) wird das **CommunityToolkit.Mvvm** eingesetzt, welches durch Source Generator Attribute wie `[ObservableProperty]` und `[RelayCommand]` die Entwicklung beschleunigt.
 
+#### Quellcode Duplikation
+Sich wiederholender Quellcode ist oft ein großer Faktor für Ineffizienz in der Softwareentwicklung. Auch wenn es sich manchmal nicht vermeiden lässt oder in ausnahmefällen es sich als praktikabler herausstellt ist dies ungewollt. Dieses Projekt nutzt die Kraft von Objekt-Orientierter Programmierung in C# um duplikate auf ein Minimum zu beschränken.
+
+Dies Erreichen wir indem wir in der **Service Schicht** einen generischen **BaseService** verwenden. Dieser stellt typische CRUD funktionalitäten bereit. Fast jeder Service nutzt diesen BaseService, was es uns ermöglicht über ein interface jegliche Art von simpler CRUD Operation abzuwickeln. Diese Funktionsweise kann man auch im Klassendiagramm sehen.
+
+In den **ViewModels** ist das ganze ähnlich gelöst. Jede **View** braucht die Funktionalität zum ausloggen aus der Anwendung, sowie Eigenschaften um Autorisierung für die entsprechende View basierend auf dem eingeloggten Benutzer. Diese geteilte Funktionalität ist im **BaseViewModel**, welches jedes andere ViewModel implementiert. 
+
 #### Schichtentrennung (Core & UI)
 Um die Testbarkeit zu gewährleisten, wurde eine strikte Trennung zwischen UI-Logik und Geschäftslogik vorgenommen:
 - **CrocoManager.Core (.NET Library):** Enthält plattformunabhängigen Code, Interfaces, Modelle und Services. Da Unit-Tests für MAUI-spezifischen Code (UI-Komponenten, Plattform-APIs) äußerst komplex und oft unmöglich sind, wurde die gesamte Geschäftslogik hierhin extrahiert.
 - **CrocoManager (MAUI Project):** Enthält die Views (XAML) und ViewModels, die auf die Core-Bibliothek zugreifen.
+- **CrocoManager.Core.Tests:** Hier finden sich die Unit Tests der Anwendung wieder, welche den Plattform unabhängigen Quellcode aus der Core Library testet.
 
 ---
 
