@@ -91,7 +91,8 @@ In diesem Projekt wurde viel Wert auf eine saubere Planung gelegt. Die folgenden
 | :--- | :--- |
 | **Klassendiagramm** | ![Klassendiagramm](./Diagrams/Klassendiagramm%20CrocoManager.webp) |
 | **Datenbank (ERD)** | [Entity Relationship Diagram](./Diagrams/erd.md) |
-| **Abläufe** | [Beobachtung dokumentieren](./Diagrams/Aktivitätsdiagramm%20Beobachtung%20dokumentieren.png) \| [Whitelist Prozess](./Diagrams/Aktivitätsdiagramm%20Whitelist%20Eintrag.png) |
+| **Use Case** | [Use Case Diagram](./Diagrams/UseCase-Diagramm-CrocoManager.drawio.webp) |
+| **Abläufe** | [Beobachtung dokumentieren](./Diagrams/Aktivitätsdiagramm%20Beobachtung%20dokumentieren.webp) \| [Whitelist Prozess](./Diagrams/Aktivitätsdiagramm%20Whitelist%20Eintrag.webp) |
 
 ---
 
@@ -115,11 +116,11 @@ dotnet test CrocoManager.Core.Tests/CrocoManager.Core.Tests.csproj
 #### Vorbereitung
 1. Repository klonen:
    ```bash
-   git clone https://github.com/Tobi-Dev-01/maui.git
-   cd maui
+   git clone git@github.com:tobias-hstbrg/CrocoManager.git
+   cd CrocoManager
    ```
 2. Konfiguration erstellen:
-   Kopiere `CrocoManager/appsettings.example.json` nach `CrocoManager/appsettings.json` und trage deine Supabase-Zugangsdaten ein.
+  `CrocoManager/appsettings.example.json` umbenennen zu `CrocoManager/appsettings.json` und dann deine Supabase-Zugangsdaten eingeben.
 
 #### Build & Run
 - **Windows:**
@@ -133,7 +134,7 @@ dotnet test CrocoManager.Core.Tests/CrocoManager.Core.Tests.csproj
 
 #### GitHub Actions Artefakte
 Die aktuellsten Build-Artefakte (APK für Android, ZIP für Windows) können direkt aus den GitHub Actions bezogen werden:
-1. Gehe zum Tab [Actions](https://github.com/Tobi-Dev-01/maui/actions).
+1. Gehe zum Tab [Actions](https://github.com/tobias-hstbrg/CrocoManager/actions).
 2. Wähle den aktuellsten erfolgreichen Workflow-Lauf aus.
 3. Scrolle nach unten zum Bereich **Artifacts** und lade das gewünschte Paket herunter.
 
@@ -227,6 +228,7 @@ Great care was taken in the planning phase of this project. The following diagra
 | :--- | :--- |
 | **Class Diagram** | ![Class Diagram](./Diagrams/Klassendiagramm%20CrocoManager.webp) |
 | **Database (ERD)** | [Entity Relationship Diagram](./Diagrams/erd.md) |
+| **Use Case** | [Use Case Diagram](./Diagrams/UseCase-Diagramm-CrocoManager.drawio.webp) |
 | **Workflows** | [Document Observation](./Diagrams/Aktivitätsdiagramm%20Beobachtung%20dokumentieren.png) \| [Whitelist Process](./Diagrams/Aktivitätsdiagramm%20Whitelist%20Eintrag.png) |
 
 ---
@@ -244,11 +246,11 @@ The business logic is protected by automated unit tests in a separate test proje
 #### Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Tobi-Dev-01/maui.git
-   cd maui
+   git clone git@github.com:tobias-hstbrg/CrocoManager.git
+   cd CrocoManager
    ```
 2. Create Configuration:
-   Copy `CrocoManager/appsettings.example.json` to `CrocoManager/appsettings.json` and fill in your Supabase credentials.
+   Rename `CrocoManager/appsettings.example.json` to `CrocoManager/appsettings.json` and fill in your Supabase credentials.
 
 #### Build & Run
 - **Windows:**
@@ -262,6 +264,6 @@ The business logic is protected by automated unit tests in a separate test proje
 
 #### GitHub Actions Artifacts
 The latest build artifacts (APK for Android, ZIP for Windows) can be obtained directly from GitHub Actions:
-1. Go to the [Actions](https://github.com/Tobi-Dev-01/maui/actions) tab.
+1. Go to the [Actions](https://github.com/tobias-hstbrg/CrocoManager/actions) tab.
 2. Select the latest successful workflow run.
 3. Scroll down to the **Artifacts** section and download the desired package.
