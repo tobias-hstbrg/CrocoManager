@@ -97,7 +97,7 @@
                 <CollectionView ItemsSource="{Binding Animals}"
                                 SelectionMode="None">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:FeedingAnimalStatus">
+                        <DataTemplate x:DataType="viewmodels:FeedingAnimalStatusViewModel">
                             <Border BackgroundColor="Transparent"
                                     Padding="0">
                                 <VerticalStackLayout Spacing="0">
@@ -156,6 +156,7 @@
 
                 <Button Grid.Column="1"
                         Text="Abbrechen"
+                        IsEnabled="{Binding HasSelection}"
                         Command="{Binding CancelCommand}"
                         Style="{StaticResource SecondaryButton}"/>
             </Grid>
