@@ -34,6 +34,7 @@ public partial class FeedingViewModel : BaseViewModel
     public ObservableCollection<FeedingAnimalStatusViewModel> Animals { get; } = new();
 
     public ObservableCollection<FeedingHistoryEntry> FeedingHistory { get; } = new();
+    public bool HasSelection => Animals.Any(a => a.WasFed);
 
     /// <summary>
     /// Defines the permissions a user has for the feeding page
@@ -111,7 +112,7 @@ public partial class FeedingViewModel : BaseViewModel
 
         foreach (var animal in CurrentFeeding.Animals)
         {
-            Animals.Add(new FeedingAnimalStatusViewModel(animal));
+            Animals.Add(new FeedingAnimalStatusViewModel(animal, () => OnPropertyChanged(nameof(HasSelection))));
         }
     }
 
@@ -179,5 +180,6 @@ public partial class FeedingViewModel : BaseViewModel
     {
         foreach (var vm in Animals)
             vm.WasFed = false;
+        OnPropertyChanged(nameof(HasSelection));
     }
 }

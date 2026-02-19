@@ -156,6 +156,7 @@
 
                 <Button Grid.Column="1"
                         Text="Abbrechen"
+                        IsEnabled="{Binding HasSelection}"
                         Command="{Binding CancelCommand}"
                         Style="{StaticResource SecondaryButton}"/>
             </Grid>

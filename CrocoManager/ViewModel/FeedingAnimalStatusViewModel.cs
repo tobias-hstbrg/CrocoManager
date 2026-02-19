@@ -10,6 +10,7 @@ namespace CrocoManager.ViewModel
 {
     public partial class FeedingAnimalStatusViewModel : ObservableObject
     {
+        private readonly Action _onChanged;
         public FeedingAnimalStatus Status { get; }
 
         public Animal Animal => Status.Animal;
@@ -17,10 +18,15 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private bool wasFed;
 
-        public FeedingAnimalStatusViewModel(FeedingAnimalStatus status)
+        public FeedingAnimalStatusViewModel(FeedingAnimalStatus status, Action onChanged)
         {
             Status = status;
+            _onChanged = onChanged;
             WasFed = status.WasFed;
+        }
+        partial void OnWasFedChanged(bool value)
+        {
+            _onChanged();
         }
 
         public void ApplyToModel()
