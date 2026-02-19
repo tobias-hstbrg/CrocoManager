@@ -1,4 +1,4 @@
-﻿name: .NET MAUI CI/CD
+name: .NET MAUI CI/CD
 
 on:
   push:
@@ -31,14 +31,14 @@ jobs:
             AnonKey = "${{ secrets.SUPABASE_ANON_KEY }}"
           }
         } | ConvertTo-Json -Depth 3
-        $settings | Out-File -FilePath "appsettings.json" -Encoding UTF8
+        $settings | Out-File -FilePath "CrocoManager/appsettings.json" -Encoding UTF8
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore CrocoManager/CrocoManager.sln
     
     - name: Build Android APK
       run: |
-        dotnet publish `
+        dotnet publish CrocoManager/CrocoManager.csproj `
           -f net9.0-android `
           -c Release `
           -p:AndroidPackageFormat=apk `
@@ -75,14 +75,14 @@ jobs:
             AnonKey = "${{ secrets.SUPABASE_ANON_KEY }}"
           }
         } | ConvertTo-Json -Depth 3
-        $settings | Out-File -FilePath "appsettings.json" -Encoding UTF8
+        $settings | Out-File -FilePath "CrocoManager/appsettings.json" -Encoding UTF8
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore CrocoManager/CrocoManager.sln
     
     - name: Build Windows MSIX
       run: |
-        dotnet publish `
+        dotnet publish CrocoManager/CrocoManager.csproj `
           -f net9.0-windows10.0.19041.0 `
           -c Release `
           -p:RuntimeIdentifierOverride=win10-x64 `
