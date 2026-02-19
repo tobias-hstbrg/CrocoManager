@@ -8,7 +8,24 @@ on:
   workflow_dispatch:
 
 jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore CrocoManager/CrocoManager.sln
+
+    - name: Run Tests
+      run: dotnet test CrocoManager/CrocoManager.sln --no-restore --configuration Release --verbosity normal
+
   build-android:
+    needs: test
     runs-on: windows-latest
     
     steps:
@@ -53,6 +70,7 @@ jobs:
         retention-days: 7
 
   build-windows:
+    needs: test
     runs-on: windows-latest
     
     steps:
