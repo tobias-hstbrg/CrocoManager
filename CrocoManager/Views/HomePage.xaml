@@ -16,11 +16,7 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter TargetName="HeaderStack" Property="StackLayout.Orientation" Value="Horizontal"/>
-                        <Setter TargetName="HeaderStack" Property="StackLayout.Spacing" Value="10"/>
                         <Setter TargetName="DashboardTitle" Property="Label.FontSize" Value="28"/>
-                        <Setter TargetName="LogoutButton" Property="Button.WidthRequest" Value="50"/>
-                        <Setter TargetName="LogoutButton" Property="Button.HeightRequest" Value="50"/>
                         <Setter TargetName="StatsGrid" Property="Grid.ColumnDefinitions" Value="*"/>
                         <Setter TargetName="StatsGrid" Property="Grid.RowDefinitions" Value="Auto,Auto,Auto"/>
                         <Setter TargetName="Card1" Property="Grid.Column" Value="0"/>
@@ -44,11 +40,7 @@
                         <AdaptiveTrigger MinWindowWidth="768" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter TargetName="HeaderStack" Property="StackLayout.Orientation" Value="Horizontal"/>
-                        <Setter TargetName="HeaderStack" Property="StackLayout.Spacing" Value="20"/>
                         <Setter TargetName="DashboardTitle" Property="Label.FontSize" Value="32"/>
-                        <Setter TargetName="LogoutButton" Property="Button.WidthRequest" Value="60"/>
-                        <Setter TargetName="LogoutButton" Property="Button.HeightRequest" Value="60"/>
                         <Setter TargetName="StatsGrid" Property="Grid.ColumnDefinitions" Value="*,*,*"/>
                         <Setter TargetName="StatsGrid" Property="Grid.RowDefinitions" Value="Auto"/>
                         <Setter TargetName="Card1" Property="Grid.Column" Value="0"/>
@@ -71,23 +63,23 @@
         <ScrollView>
             <VerticalStackLayout Spacing="20">
 
-                <!-- Header -->
-                <StackLayout x:Name="HeaderStack" 
-                           Orientation="Horizontal" 
-                           HorizontalOptions="FillAndExpand"
-                           VerticalOptions="Center">
+                <Grid x:Name="HeaderStack" 
+                ColumnDefinitions="*,Auto"
+                HorizontalOptions="Fill">
 
                     <Label x:Name="DashboardTitle"
-                           Text="Dashboard"
-                           Style="{StaticResource PageTitle}"
-                           HorizontalOptions="FillAndExpand"/>
+                    Grid.Column="0"
+                    Text="Dashboard"
+                    Style="{StaticResource PageTitle}"
+                    VerticalOptions="Center"/>
 
                     <ImageButton 
-                        x:Name="LogoutButton"
-                        Source="sign_out.png"
-                        Style="{StaticResource PrimaryImageButton}"
-                        Command="{Binding SignOutCommand}"/>
-                </StackLayout>
+                    Grid.Column="1"
+                    x:Name="LogoutButton"
+                    Source="sign_out.png"
+                    Style="{StaticResource PrimaryImageButton}"
+                    Command="{Binding SignOutCommand}"/>
+                </Grid>
 
                 <!-- Statistics Cards -->
                 <Grid x:Name="StatsGrid" 

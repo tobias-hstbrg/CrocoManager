@@ -36,27 +36,41 @@ namespace CrocoManager.ViewModel
         private bool isEditing;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string name;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string foodType;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private double amountKg;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private int frequencyPerWeek;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string weekdays;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string? description;
 
         [ObservableProperty]
         private bool isBusy;
 
         public string PageTitle => IsEditing ? "Plan bearbeiten" : "Neuen Plan erstellen";
+
+        public bool HasFormChanges =>
+           !string.IsNullOrWhiteSpace(Name) ||
+           !string.IsNullOrWhiteSpace(FoodType) ||
+           !string.IsNullOrWhiteSpace(Weekdays) ||
+           !string.IsNullOrWhiteSpace(Description) ||
+           AmountKg != 0 ||
+           FrequencyPerWeek != 0;
 
         public FeedingPlanViewModel(IFeedingPlanService feedingPlanService, IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -429,6 +443,7 @@ namespace CrocoManager.ViewModel
             Description = string.Empty;
             SelectedPlan = null;
             IsEditing = false;
+            OnPropertyChanged(nameof(HasFormChanges));
         }
     }
 }

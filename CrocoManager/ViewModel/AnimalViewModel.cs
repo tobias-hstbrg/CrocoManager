@@ -29,21 +29,27 @@ namespace CrocoManager.ViewModel
         private bool isEditing;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string name;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string gender;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private int age;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string species;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string enclosure;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private string description;
 
         [ObservableProperty]
@@ -53,6 +59,14 @@ namespace CrocoManager.ViewModel
         public ObservableCollection<string> SpeciesOptions { get; }
 
         public string PageTitle => IsEditing ? "Tier bearbeiten" : "Neues Tier erstellen";
+
+        public bool HasFormChanges =>
+        !string.IsNullOrWhiteSpace(Name) ||
+        !string.IsNullOrWhiteSpace(Species) ||
+        !string.IsNullOrWhiteSpace(Enclosure) ||
+        !string.IsNullOrWhiteSpace(Description) ||
+        Age != 0 ||
+        Gender != "Männlich";
 
         public AnimalViewModel(IServiceProvider serviceProvider, IAnimalService animalService) : base(serviceProvider)
         {
@@ -351,6 +365,8 @@ namespace CrocoManager.ViewModel
             Description = string.Empty;
             SelectedAnimal = null;
             IsEditing = false;
+
+            OnPropertyChanged(nameof(HasFormChanges));
         }
     }
 }

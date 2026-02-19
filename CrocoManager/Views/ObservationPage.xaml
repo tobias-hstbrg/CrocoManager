@@ -448,6 +448,7 @@
 
                         <Button x:Name="CancelButton"
                                 Text="Abbrechen"
+                                IsEnabled="{Binding HasFormChanges}"
                                 Command="{Binding CancelCommand}"
                                 Style="{StaticResource SecondaryButton}">
                             <VisualStateManager.VisualStateGroups>
