@@ -110,13 +110,13 @@ namespace CrocoManager.Core.Tests.ViewModelTests
         }
 
         [Fact]
-        public void SetPermissions_Scientist_ShouldRestrictActions()
+        public async Task SetPermissions_Scientist_ShouldRestrictActions()
         {
             // Arrange
             _mockAuth.Setup(a => a.GetUserRoleAsync()).ReturnsAsync(UserRole.Scientist);
 
             // Act
-            _viewModel.InitializeAsync().Wait();
+            await _viewModel.InitializeAsync();
 
             // Assert
             _viewModel.CanCreate.Should().BeFalse();

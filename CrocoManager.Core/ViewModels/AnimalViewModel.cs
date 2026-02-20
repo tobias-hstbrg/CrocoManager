@@ -188,7 +188,7 @@ namespace CrocoManager.Core.ViewModels
             Age = animal.AgeYears;
             Species = animal.Species;
             Enclosure = animal.Enclosure;
-            Description = animal.Description;
+            Description = animal.Description ?? string.Empty;
         }
 
         [RelayCommand]
