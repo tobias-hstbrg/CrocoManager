@@ -115,6 +115,12 @@ public partial class FeedingViewModel : BaseViewModel
     {
         if (CurrentFeeding == null) return;
 
+        if (!HasSelection)
+        {
+            await NotificationService.ShowErrorAsync("Fehler", "Bitte wählen Sie mindestens ein Tier aus.");
+            return;
+        }
+
         IsBusy = true;
         try
         {
