@@ -305,29 +305,6 @@
                            FontAttributes="Bold"
                            TextColor="{StaticResource TextPrimary}"/>
 
-                    <!-- Tier auswählen -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Tier auswählen "/>
-                                    <Span Text="*" TextColor="Red"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        <Border Style="{StaticResource EntryBorder}"
-                                Padding="12,0"
-                                HeightRequest="48">
-                            <Picker ItemsSource="{Binding Animals}"
-                                    ItemDisplayBinding="{Binding PickerName}"
-                                    SelectedItem="{Binding SelectedAnimal}"
-                                    FontSize="16"
-                                    TextColor="{StaticResource TextPrimary}"
-                                    BackgroundColor="Transparent"
-                                    VerticalOptions="Center"/>
-                        </Border>
-                    </VerticalStackLayout>
-
                     <!-- Tier Fütterung auswählen -->
                     <VerticalStackLayout Spacing="5">
                         <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
@@ -344,6 +321,29 @@
                             <Picker ItemsSource="{Binding Feedings}"
                                     SelectedItem="{Binding SelectedFeeding}"
                                     ItemDisplayBinding="{Binding DisplayName}"
+                                    FontSize="16"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Center"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Tier auswählen -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label FontSize="14" TextColor="{StaticResource TextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Tier auswählen "/>
+                                    <Span Text="*" TextColor="Red"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Style="{StaticResource EntryBorder}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Picker ItemsSource="{Binding Animals}"
+                                    ItemDisplayBinding="{Binding PickerName}"
+                                    SelectedItem="{Binding SelectedAnimal}"
                                     FontSize="16"
                                     TextColor="{StaticResource TextPrimary}"
                                     BackgroundColor="Transparent"

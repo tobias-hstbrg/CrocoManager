@@ -133,7 +133,7 @@ public partial class FeedingViewModel : BaseViewModel
 
             await NotificationService.ShowSuccessAsync("Erfolgreich", "Fütterung gespeichert");
 
-            await LoadHistoryAsync();
+            await LoadHistoryInternalAsync();
             ClearSelection();
         }
         finally
@@ -146,7 +146,11 @@ public partial class FeedingViewModel : BaseViewModel
     public async Task LoadHistoryAsync()
     {
         if (IsBusy) return;
+        await LoadHistoryInternalAsync();
+    }
 
+    private async Task LoadHistoryInternalAsync()
+    {
         IsBusy = true;
         try
         {
