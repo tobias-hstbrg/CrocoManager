@@ -125,6 +125,11 @@ public partial class FeedingViewModel : BaseViewModel
         try
         {
             var userEmail = await AuthService.GetUserEmail();
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                await NotificationService.ShowErrorAsync("Fehler", "Benutzer-E-Mail konnte nicht ermittelt werden.");
+                return;
+            }
 
             foreach (var vm in Animals)
                 vm.ApplyToModel();

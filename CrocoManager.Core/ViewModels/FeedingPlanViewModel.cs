@@ -33,11 +33,11 @@ namespace CrocoManager.Core.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
-        private string name;
+        private string name = string.Empty;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
-        private string foodType;
+        private string foodType = string.Empty;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
@@ -49,7 +49,7 @@ namespace CrocoManager.Core.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
-        private string weekdays;
+        private string weekdays = string.Empty;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]

@@ -11,42 +11,47 @@ namespace CrocoManager.Core.Services
     {
         public async Task ShowSuccessAsync(string title, string message)
         {
-            if(Application.Current?.Windows?.FirstOrDefault()?.Page != null)
+            var page = Application.Current?.Windows?.FirstOrDefault()?.Page;
+            if (page != null)
             {
-                await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
+                await page.DisplayAlert(title, message, "OK");
             }
         }
 
         public async Task ShowErrorAsync(string title, string message)
         {
-            if (Application.Current?.Windows?.FirstOrDefault()?.Page != null)
+            var page = Application.Current?.Windows?.FirstOrDefault()?.Page;
+            if (page != null)
             {
-                await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
+                await page.DisplayAlert(title, message, "OK");
             }
         }
 
         public async Task ShowWarningAsync(string title, string message)
         {
-            if (Application.Current?.Windows?.FirstOrDefault()?.Page != null)
+            var page = Application.Current?.Windows?.FirstOrDefault()?.Page;
+            if (page != null)
             {
-                await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
+                await page.DisplayAlert(title, message, "OK");
             }
         }
 
         public async Task<bool> ShowConfirmationAsync(string title, string message, string accept = "Ja", string cancel = "Nein")
         {
-            if (Application.Current?.Windows?.FirstOrDefault()?.Page != null)
+            var page = Application.Current?.Windows?.FirstOrDefault()?.Page;
+            if (page != null)
             {
-                return await Application.Current.Windows[0].Page.DisplayAlert(title, message, accept, cancel);
+                return await page.DisplayAlert(title, message, accept, cancel);
             }
             return false;
         }
 
         public async Task ShowInfoAsync(string title, string message)
         {
-            if (Application.Current?.Windows?.FirstOrDefault()?.Page != null)
+            var page = Application.Current?.Windows?.FirstOrDefault()?.Page;
+            if (page != null)
             {
-                await Application.Current.Windows[0].Page.DisplayAlert(title, message, "OK");
+                await page.DisplayAlert(title, message, "OK");
             }
         }
     }

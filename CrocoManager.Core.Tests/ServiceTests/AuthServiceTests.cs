@@ -64,7 +64,7 @@ public class AuthServiceTests
         var session = (SupabaseSession)method!.Invoke(service, new object[] { fakeAuthResponse })!;
 
         // Assert
-        session.User.UserMetadata.Role.Should().Be(UserRole.Scientist);
+        session.User!.UserMetadata!.Role.Should().Be(UserRole.Scientist);
         session.AccessToken.Should().Be("abc-token");
         session.RefreshToken.Should().Be("def-refresh");
         session.User.Email.Should().Be("test@croco.com");

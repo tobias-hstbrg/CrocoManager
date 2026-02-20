@@ -4,7 +4,6 @@ namespace CrocoManager.Views;
 
 public partial class HomePage : ContentPage
 {
-    private readonly HomeViewModel _viewModel;
     public HomePage(HomeViewModel viewmodel)
 	{
 		InitializeComponent();

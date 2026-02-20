@@ -5,7 +5,6 @@
     xmlns:viewmodels="clr-namespace:CrocoManager.Core.ViewModels;assembly=CrocoManager.Core"
     xmlns:models="clr-namespace:CrocoManager.Core.Models;assembly=CrocoManager.Core"
     x:Class="CrocoManager.Views.ObservationPage"
-    x:DataType="viewmodels:ObservationViewModel"
     BackgroundColor="{StaticResource PageBackground}"
     Title="">
 

@@ -195,7 +195,7 @@ namespace CrocoManager.Core.Services
             try
             {
                 await _supabase.Client.Auth.SignOut();
-                _secureStorage.Remove("supabase_session");
+                await _secureStorage.Remove("supabase_session");
                 return true;
             }
             catch (Exception ex)
