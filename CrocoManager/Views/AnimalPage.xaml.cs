@@ -1,5 +1,5 @@
-﻿using CrocoManager.Core.Models;
-using CrocoManager.ViewModel;
+using CrocoManager.Core.Models;
+using CrocoManager.Core.ViewModels;
 using System.Threading.Tasks;
 
 namespace CrocoManager.Views;

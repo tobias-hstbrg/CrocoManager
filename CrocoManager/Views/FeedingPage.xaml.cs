@@ -1,4 +1,4 @@
-﻿using CrocoManager.ViewModel;
+using CrocoManager.Core.ViewModels;
 
 namespace CrocoManager.Views;
 

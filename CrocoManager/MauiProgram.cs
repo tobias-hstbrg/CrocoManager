@@ -1,13 +1,13 @@
 ﻿using CrocoManager.Core.Interfaces;
-
 using CrocoManager.Services;
-using CrocoManager.ViewModel;
+using CrocoManager.Core.ViewModels;
 using CrocoManager.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Platform.Compatibility;
 using CrocoManager.Core.Services;
+using Microsoft.Maui.Controls.Hosting;
 
 #if ANDROID
 using CrocoManager.Platforms.Android;
@@ -45,7 +45,7 @@ namespace CrocoManager
 #if ANDROID
     builder.ConfigureMauiHandlers(handlers =>
     {
-        handlers.AddHandler<Shell, CustomShellRenderer>();
+        handlers.AddHandler(typeof(Shell), typeof(CustomShellRenderer));
     });
 #endif
 
@@ -71,7 +71,7 @@ namespace CrocoManager
             builder.Services.AddTransient<ObservationPage>();
 
             // Shell
-            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddTransient<AppShell>();
 
             var assembly = typeof(MauiProgram).Assembly;
             var resourceName = "CrocoManager.appsettings.json";
@@ -95,6 +95,7 @@ namespace CrocoManager
                 client.Timeout = TimeSpan.FromSeconds(10);
             });
             builder.Services.AddSingleton<IFeedingService ,FeedingService>();
+            builder.Services.AddSingleton<INavigationService, MauiNavigationService>();
 
             var app = builder.Build();
             _serviceProvider = app.Services;
