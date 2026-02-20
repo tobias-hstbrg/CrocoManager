@@ -1,14 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
-using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class PasswordResetViewModel : BaseViewModel
     {
@@ -21,7 +20,11 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private string _passwordCheck = string.Empty;
 
-        public PasswordResetViewModel(IServiceProvider serviceProvider) : base(serviceProvider)
+        public PasswordResetViewModel(
+            INavigationService navigationService,
+            INotificationService notificationService,
+            IAuthService authService) 
+            : base(navigationService, notificationService, authService)
         {
         }
 
@@ -63,11 +66,7 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private void GoToLogin()
         {
-            var loginPage = ServiceProvider.GetRequiredService<LoginPage>();
-            if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-            {
-                window.Page = loginPage;
-            }
+            NavigationService.SetRoot("Login");
         }
     }
 }

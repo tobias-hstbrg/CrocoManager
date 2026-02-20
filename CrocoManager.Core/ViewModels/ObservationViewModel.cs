@@ -1,14 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.DTOs;
 using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Mappers;
 using CrocoManager.Core.Models;
-using CrocoManager.Services;
 using System.Collections.ObjectModel;
-using static Supabase.Postgrest.Constants;
+using Supabase.Postgrest;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class ObservationViewModel : BaseViewModel
     {
@@ -70,10 +69,10 @@ namespace CrocoManager.ViewModel
         private ObservableCollection<Observation> recentObservations;
 
         public bool HasFormChanges =>
-           !string.IsNullOrWhiteSpace(selectedAnimal?.DisplayName) ||
-           !string.IsNullOrWhiteSpace(selectedFeeding?.DisplayName) ||
-           !string.IsNullOrWhiteSpace(feedingBehavior) ||
-           !string.IsNullOrWhiteSpace(notes);
+           !string.IsNullOrWhiteSpace(SelectedAnimal?.DisplayName) ||
+           !string.IsNullOrWhiteSpace(SelectedFeeding?.DisplayName) ||
+           !string.IsNullOrWhiteSpace(FeedingBehavior) ||
+           !string.IsNullOrWhiteSpace(Notes);
 
         public bool CanSave =>
         SelectedAnimal != null &&
@@ -82,8 +81,16 @@ namespace CrocoManager.ViewModel
         AirTemperature.HasValue &&
         Humidity.HasValue;
 
-        public ObservationViewModel(IServiceProvider serviceProvider, ISupabaseClientService supabase, IObservationService observationService, IAnimalService animalService, IFeedingService feedingService, IFeedingPlanService feedingPlanService)
-            : base(serviceProvider)
+        public ObservationViewModel(
+            INavigationService navigationService, 
+            INotificationService notificationService,
+            IAuthService authService,
+            ISupabaseClientService supabase, 
+            IObservationService observationService, 
+            IAnimalService animalService, 
+            IFeedingService feedingService, 
+            IFeedingPlanService feedingPlanService)
+            : base(navigationService, notificationService, authService)
         {
             _observationService = observationService;
             _animalService = animalService;
@@ -110,13 +117,6 @@ namespace CrocoManager.ViewModel
         /// </summary>
         protected override void SetPermissions()
         {
-            // Ranger: Read
-            // Scientist: Create, Read, Update, Delete
-
-            // Not really necessary since these two groups should never be able to see this page by design
-            // NotAssigned: Readonly
-            // Admin: Create, Read, Update, Delete
-
             switch (CurrentUserRole)
             {
                 case UserRole.Scientist:
@@ -198,7 +198,7 @@ namespace CrocoManager.ViewModel
                 var planIds = feedingDtos.Select(f => f.FeedingPlanId).Distinct().ToList();
                 var planDtos = (await  _supabase.Client
                     .From<FeedingPlanDto>()
-                    .Filter("id", Operator.In, planIds)
+                    .Filter("id", Constants.Operator.In, planIds)
                     .Get()).Models;
 
                 var plans = planDtos.ToDictionary(p => p.Id, p => new FeedingPlan
@@ -215,7 +215,7 @@ namespace CrocoManager.ViewModel
                 var feedingIds = feedingDtos.Select(f => f.Id).ToList();
                 var feedingAnimalDtos = (await _supabase.Client
                     .From<FeedingAnimalDto>()
-                    .Filter("feeding_id", Operator.In, feedingIds)
+                    .Filter("feeding_id", Constants.Operator.In, feedingIds)
                     .Get()).Models;
 
                 var animalsDict = feedingAnimalDtos
@@ -273,7 +273,7 @@ namespace CrocoManager.ViewModel
                 {
                     var envResponse = await _supabase.Client
                         .From<EnvironmentalDataDto>()
-                        .Filter("id", Supabase.Postgrest.Constants.Operator.In, envIds)
+                        .Filter("id", Constants.Operator.In, envIds)
                         .Get();
 
                     environmentalLookup = envResponse.Models
@@ -375,6 +375,12 @@ namespace CrocoManager.ViewModel
             if (string.IsNullOrWhiteSpace(FeedingBehavior))
             {
                 await NotificationService.ShowErrorAsync("Fehler", "Bitte das Fütterungsverhalten auswählen.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(Notes))
+            {
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Notizen sind erforderlich.");
                 return;
             }
 

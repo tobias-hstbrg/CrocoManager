@@ -1,12 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CrocoManager.Core.DTOs;
 using CrocoManager.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class EmailWhitelistVM : ObservableObject
     {

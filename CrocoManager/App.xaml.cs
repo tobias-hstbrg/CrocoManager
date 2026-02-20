@@ -1,6 +1,6 @@
 ﻿using CrocoManager.Core.Interfaces;
 using CrocoManager.Services;
-using CrocoManager.ViewModel;
+using CrocoManager.Core.ViewModels;
 using CrocoManager.Views;
 
 namespace CrocoManager

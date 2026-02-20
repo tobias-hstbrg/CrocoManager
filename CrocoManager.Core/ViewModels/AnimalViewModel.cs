@@ -1,9 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Models;
 using CrocoManager.Core.Interfaces;
-using CrocoManager.Views;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,9 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CrocoManager.Core.Mappers;
-using CrocoManager.Services;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class AnimalViewModel : BaseViewModel
     {
@@ -68,7 +65,12 @@ namespace CrocoManager.ViewModel
         Age != 0 ||
         Gender != "Männlich";
 
-        public AnimalViewModel(IServiceProvider serviceProvider, IAnimalService animalService) : base(serviceProvider)
+        public AnimalViewModel(
+            INavigationService navigationService,
+            INotificationService notificationService,
+            IAuthService authService,
+            IAnimalService animalService) 
+            : base(navigationService, notificationService, authService)
         {
             _animalService = animalService;
 
@@ -96,13 +98,6 @@ namespace CrocoManager.ViewModel
         /// </summary>
         protected override void SetPermissions()
         {
-            // Ranger: Create, Read, Update, Delete
-            // Scientist: Read
-
-            // Not really necessary since these two groups should never be able to see this page by design
-            // NotAssigned: Readonly
-            // Admin: Create, Read, Update, Delete
-
             switch (CurrentUserRole)
             {
                 case UserRole.Scientist:
@@ -183,7 +178,6 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private void EditAnimal(Animal animal)
         {
-            // Prüfung direkt in der Methode
             if (!CanEdit || animal == null) return;
 
             IsEditing = true;
@@ -228,9 +222,6 @@ namespace CrocoManager.ViewModel
         private bool CanSaveAnimal()
         {
             if (IsBusy) return false;
-
-            // Beim Bearbeiten: CanEdit erforderlich
-            // Beim Erstellen: CanCreate erforderlich
             return IsEditing ? CanEdit : CanCreate;
         }
 

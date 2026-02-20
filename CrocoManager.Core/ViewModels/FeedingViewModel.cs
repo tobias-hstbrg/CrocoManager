@@ -1,20 +1,21 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
-using CrocoManager.Services;
 using System.Collections.ObjectModel;
 
-namespace CrocoManager.ViewModel;
+namespace CrocoManager.Core.ViewModels;
 
 public partial class FeedingViewModel : BaseViewModel
 {
     private readonly IFeedingService _feedingService;
 
     public FeedingViewModel(
-        IFeedingService feedingService,
-        IServiceProvider serviceProvider)
-        : base(serviceProvider)
+        INavigationService navigationService,
+        INotificationService notificationService,
+        IAuthService authService,
+        IFeedingService feedingService)
+        : base(navigationService, notificationService, authService)
     {
         _feedingService = feedingService;
     }
@@ -41,13 +42,6 @@ public partial class FeedingViewModel : BaseViewModel
     /// </summary>
     protected override void SetPermissions()
     {
-        // Ranger: Create, Read, Update, Delete
-        // Scientist: Read (only see todays feeding and history)
-
-        // Not really necessary since these two groups should never be able to see this page by design
-        // NotAssigned: Readonly
-        // Admin: Create, Read, Update, Delete
-
         switch(CurrentUserRole)
         {
             case UserRole.Scientist:
@@ -121,6 +115,12 @@ public partial class FeedingViewModel : BaseViewModel
     {
         if (CurrentFeeding == null) return;
 
+        if (!HasSelection)
+        {
+            await NotificationService.ShowErrorAsync("Fehler", "Bitte wählen Sie mindestens ein Tier aus.");
+            return;
+        }
+
         IsBusy = true;
         try
         {
@@ -183,3 +183,4 @@ public partial class FeedingViewModel : BaseViewModel
         OnPropertyChanged(nameof(HasSelection));
     }
 }
+

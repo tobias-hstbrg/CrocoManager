@@ -1,17 +1,15 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.DTOs;
 using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
-using CrocoManager.Views;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class AdminViewModel : BaseViewModel
     {
@@ -28,7 +26,12 @@ namespace CrocoManager.ViewModel
         public IAsyncRelayCommand LoadEmailsCommand { get; }
         public IAsyncRelayCommand AddEmailCommand { get; }
 
-        public AdminViewModel(IWhitelistService whitelistService, IServiceProvider serviceProvider) : base(serviceProvider)
+        public AdminViewModel(
+            INavigationService navigationService,
+            INotificationService notificationService,
+            IAuthService authService,
+            IWhitelistService whitelistService) 
+            : base(navigationService, notificationService, authService)
         {
             _whitelistService = whitelistService ?? throw new ArgumentNullException(nameof(whitelistService));
 

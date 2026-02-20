@@ -1,17 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
-using CrocoManager.Services;
 using CrocoManager.Core.Models;
-using CrocoManager.Views;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class LoginViewModel : BaseViewModel
     {
@@ -20,7 +17,11 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private string? password;
 
-        public LoginViewModel(IServiceProvider serviceProvider) : base(serviceProvider)
+        public LoginViewModel(
+            INavigationService navigationService,
+            INotificationService notificationService,
+            IAuthService authService) 
+            : base(navigationService, notificationService, authService)
         {
         }
 
@@ -57,19 +58,12 @@ namespace CrocoManager.ViewModel
 
             if (session.User.UserMetadata.Role == Core.Models.UserRole.Admin)
             {
-                var adminPage = ServiceProvider.GetRequiredService<AdminPage>();
-                if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-                {
-                    window.Page = adminPage;
-                }
+                NavigationService.SetRoot("Admin");
             }
             else
             {
-                var appShell = new AppShell(AuthService, startRoute: "//HomePage");
-                if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-                {
-                    window.Page = appShell;
-                }
+                NavigationService.SetRoot("AppShell");
+                await NavigationService.GoToAsync("//HomePage");
             }
 
         }
@@ -84,21 +78,13 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private void GoToRegister()
         {
-            var page = ServiceProvider.GetRequiredService<RegisterPage>();
-            if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-            {
-                window.Page = page;
-            }
+            NavigationService.SetRoot("Register");
         }
 
         [RelayCommand]
         private void GoToResetPassword()
         {
-            var page = ServiceProvider.GetRequiredService<ResetPasswordPage>();
-            if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-            {
-                window.Page = page;
-            }
+            NavigationService.SetRoot("ResetPassword");
         }
     }
 }
