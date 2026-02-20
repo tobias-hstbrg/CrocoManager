@@ -1,15 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
-using CrocoManager.Core.Services;
-using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class HomeViewModel : BaseViewModel
     {
@@ -36,7 +34,7 @@ namespace CrocoManager.ViewModel
         private string activePlanFrequency = "-";
 
         [ObservableProperty]
-        private string activePlanDescription;
+        private string? activePlanDescription;
 
         [ObservableProperty]
         private DateTime? lastFeedingDate;
@@ -86,14 +84,14 @@ namespace CrocoManager.ViewModel
                 var latest = (await _feedingService.GetHistoryAsync()).MaxBy(Entry => Entry.FeedingDate);
                 if (latest != null)
                 {
-                    LastFeedingDate = latest != null ? latest.FeedingDate : null;
-                    LastFeedingPlanName = latest != null ? latest.FeedingPlanName : "Bisher keine Fütterung";
-                    LastFeedingStatus = latest != null ? $"{latest.FedAnimals} von {latest.TotalAnimals} gefüttert" : "Bisher keine Fütterung";
+                    LastFeedingDate = latest.FeedingDate;
+                    LastFeedingPlanName = latest.FeedingPlanName;
+                    LastFeedingStatus = $"{latest.FedAnimals} von {latest.TotalAnimals} gefüttert";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
+                // Silently fail or log as needed
             }
             finally
             {

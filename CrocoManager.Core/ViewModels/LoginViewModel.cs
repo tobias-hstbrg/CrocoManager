@@ -1,17 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
-using CrocoManager.Services;
 using CrocoManager.Core.Models;
-using CrocoManager.Views;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class LoginViewModel : BaseViewModel
     {
@@ -61,13 +58,11 @@ namespace CrocoManager.ViewModel
 
             if (session.User.UserMetadata.Role == Core.Models.UserRole.Admin)
             {
-                NavigationService.SetRoot(typeof(AdminPage));
+                NavigationService.SetRoot("Admin");
             }
             else
             {
-                // Note: NavigationService implementation will handle AppShell creation or navigation
-                NavigationService.SetRoot(typeof(AppShell));
-                await NavigationService.GoToAsync("//HomePage");
+                NavigationService.SetRoot("AppShell");
             }
 
         }
@@ -82,13 +77,13 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private void GoToRegister()
         {
-            NavigationService.SetRoot(typeof(RegisterPage));
+            NavigationService.SetRoot("Register");
         }
 
         [RelayCommand]
         private void GoToResetPassword()
         {
-            NavigationService.SetRoot(typeof(ResetPasswordPage));
+            NavigationService.SetRoot("ResetPassword");
         }
     }
 }

@@ -1,23 +1,21 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
-using CrocoManager.Core.Services;
-using CrocoManager.Views;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class RegisterViewModel : BaseViewModel
     {
 
         [ObservableProperty] string? email;
         [ObservableProperty] string? password;
+
         public RegisterViewModel(
             INavigationService navigationService,
             INotificationService notificationService,
@@ -50,7 +48,7 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private void GoToLogin()
         {
-            NavigationService.SetRoot(typeof(LoginPage));
+            NavigationService.SetRoot("Login");
         }
     }
 }

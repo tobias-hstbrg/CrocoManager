@@ -1,4 +1,5 @@
 ﻿using CrocoManager.Core.Interfaces;
+using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,24 @@ namespace CrocoManager.Services
 
         public Task GoToAsync(string route) => Shell.Current.GoToAsync(route);
 
-        public void SetRoot(object pageOrShell)
+        public void SetRoot(string pageKey)
         {
-            // Switches between Login (Auth Page) and Pages of the main app
-            if(Application.Current?.Windows.FirstOrDefault() is Window window)
+            if (Application.Current?.Windows.FirstOrDefault() is Window window)
             {
-                window.Page = pageOrShell is Type t ? (Page)_services.GetRequiredService(t) : (Page)pageOrShell;
+                Type? pageType = pageKey switch
+                {
+                    "Login" => typeof(LoginPage),
+                    "Admin" => typeof(AdminPage),
+                    "AppShell" => typeof(AppShell),
+                    "Register" => typeof(RegisterPage),
+                    "ResetPassword" => typeof(ResetPasswordPage),
+                    _ => null
+                };
+
+                if (pageType != null)
+                {
+                    window.Page = (Page)_services.GetRequiredService(pageType);
+                }
             }
         }
     }

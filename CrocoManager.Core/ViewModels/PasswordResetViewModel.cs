@@ -1,14 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
-using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class PasswordResetViewModel : BaseViewModel
     {
@@ -67,7 +66,7 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private void GoToLogin()
         {
-            NavigationService.SetRoot(typeof(LoginPage));
+            NavigationService.SetRoot("Login");
         }
     }
 }

@@ -1,20 +1,16 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.DTOs;
 using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
-using CrocoManager.Core.Services;
-using CrocoManager.Views;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrocoManager.ViewModel
+namespace CrocoManager.Core.ViewModels
 {
     public partial class FeedingPlanViewModel : BaseViewModel
     {
@@ -89,13 +85,6 @@ namespace CrocoManager.ViewModel
         /// </summary>
         protected override void SetPermissions()
         {
-            // Ranger: Create, Read, Update, Delete
-            // Scientist: Read
-
-            // Not really necessary since these two groups should never be able to see this page by design
-            // NotAssigned: Readonly
-            // Admin: Create, Read, Update, Delete
-
             switch (CurrentUserRole)
             {
                 case UserRole.Scientist:

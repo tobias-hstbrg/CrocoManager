@@ -1,7 +1,6 @@
 ﻿using CrocoManager.Core.Interfaces;
-
 using CrocoManager.Services;
-using CrocoManager.ViewModel;
+using CrocoManager.Core.ViewModels;
 using CrocoManager.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

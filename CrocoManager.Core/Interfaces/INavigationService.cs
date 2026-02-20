@@ -14,7 +14,7 @@ namespace CrocoManager.Core.Interfaces
         /// <param name="route">e.g //HomePage</param>
         Task GoToAsync(string route);
 
-        // Switching between LoginPage and AppShell
-        void SetRoot(object pageOrShell);
+        // Switching between LoginPage and AppShell (using a string key like "Login", "Admin", etc.)
+        void SetRoot(string pageKey);
     }
 }
