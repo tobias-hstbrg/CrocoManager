@@ -378,6 +378,12 @@ namespace CrocoManager.Core.ViewModels
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(Notes))
+            {
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Notizen sind erforderlich.");
+                return;
+            }
+
             IsBusy = true;
 
             try
