@@ -20,7 +20,6 @@ namespace CrocoManager.Core.Services
         private readonly string _waterDataApiUrl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=251457080395802&parameterCd=00010,00480&period=PT2H";
         private readonly string _weatherDataApiUrl = "https://api.weather.gov/stations/KHST/observations/latest";
         private readonly ISupabaseClientService _supabase;
-        private static int _phCallCount = 0;
         public ObservationService(ISupabaseClientService supabaseClient, HttpClient httpClient)
            : base(supabaseClient)
         {
@@ -45,7 +44,7 @@ namespace CrocoManager.Core.Services
                 Console.WriteLine($"Error fetching weather data: {ex.Message}");
             }
 
-            decimal phValue = ((decimal)GeneratePhValues());
+            decimal phValue = GeneratePhValue();
 
             return new EnvironmentalData(
                 measurementDate: DateOnly.FromDateTime(DateTime.UtcNow),
@@ -138,32 +137,33 @@ namespace CrocoManager.Core.Services
         }
 
         /// <summary>
-        /// Generates a pseudo-random pH value that simulates natural fluctuations over time.
-        /// <remarks>
-        /// The value is influenced by the number of times this method has been called, creating a pattern of gradual increases and decreases to mimic real-world environmental changes.
-        /// The base pH value starts around 7.6 and can vary up to 0.6 in either direction, with additional micro-fluctuations that create a more dynamic and realistic output.
-        /// </remarks>
+        /// Generates a pseudo-random pH value based on the current time.
+        /// This simulates a natural diurnal cycle (pH fluctuates with photosynthesis/respiration)
+        /// and remains consistent even after app restarts.
         /// </summary>
-        /// <returns>Random pH value</returns>
-        private static double GeneratePhValues()
+        private static decimal GeneratePhValue()
         {
-            _phCallCount++;
+            var now = DateTime.UtcNow;
 
-            int bucket = _phCallCount / 10;
-            int hash = bucket.GetHashCode();
-            double baseVariation = (Math.Abs(hash) % 100) / 100.00;
-            double basePh = 7.6 + (baseVariation * 0.6);
+            // Diurnal cycle: pH is higher during the day (photosynthesis) and lower at night.
+            // We use a sine wave with a 24h period, peaking in the late afternoon (~16:00 UTC).
+            double hourFraction = now.Hour + (now.Minute / 60.0);
+            double diurnalCycle = Math.Sin((hourFraction - 10.0) * Math.PI / 12.0);
 
-            // Create pseudo-random but deterministic zigzag
-            int microStep = _phCallCount % 10;
-            int seed = bucket * 1000 + microStep;
-            Random stepRnd = new Random(seed);
+            decimal basePh = 7.8m;
+            decimal amplitude = 0.4m; // Fluctuation between 7.4 and 8.2
 
-            // Each step randomly goes -0.02, 0, or +0.02
-            double microChange = (stepRnd.Next(3) - 1) * 0.02;
+            decimal ph = basePh + (amplitude * (decimal)diurnalCycle);
 
-            double ph = basePh + microChange;
-            return Math.Round(Math.Max(7.0, Math.Min(8.4, ph)), 2);
+            // Add deterministic jitter based on 10-minute blocks to simulate local variations.
+            // Using a seed based on the date and the 10-minute block ensures consistency across restarts.
+            int timeBlock = (int)(now.TimeOfDay.TotalMinutes / 10);
+            int seed = now.Year + now.DayOfYear + timeBlock;
+            var rnd = new Random(seed);
+
+            decimal jitter = (decimal)(rnd.NextDouble() * 0.1 - 0.05); // ±0.05
+
+            return Math.Round(ph + jitter, 2);
         }
     }
 }

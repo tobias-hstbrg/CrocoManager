@@ -37,10 +37,19 @@ namespace CrocoManager.Core.ViewModels
         [ObservableProperty]
         private ObservableCollection<Animal> animals;
 
+        private List<Animal> _allAnimals = new();
+        private List<Feeding> _allFeedings = new();
+        private bool _isFiltering;
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private Animal? selectedAnimal;
+
+        partial void OnSelectedAnimalChanged(Animal? value)
+        {
+            if (!_isFiltering) FilterFeedings();
+        }
 
         [ObservableProperty]
         private ObservableCollection<Feeding> feedings;
@@ -52,6 +61,55 @@ namespace CrocoManager.Core.ViewModels
         [NotifyCanExecuteChangedFor(nameof(SaveObservationCommand))]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
         private Feeding? selectedFeeding;
+
+        partial void OnSelectedFeedingChanged(Feeding? value)
+        {
+            if (!_isFiltering) FilterAnimals();
+        }
+
+        private void FilterAnimals()
+        {
+            _isFiltering = true;
+            try
+            {
+                var currentSelection = SelectedAnimal;
+                Animals.Clear();
+
+                var filtered = SelectedFeeding == null
+                    ? _allAnimals
+                    : _allAnimals.Where(a => SelectedFeeding.Animals.Any(fa => fa.Animal.Id == a.Id && fa.WasFed)).ToList();
+
+                foreach (var a in filtered) Animals.Add(a);
+
+                SelectedAnimal = filtered.FirstOrDefault(a => a.Id == currentSelection?.Id);
+            }
+            finally
+            {
+                _isFiltering = false;
+            }
+        }
+
+        private void FilterFeedings()
+        {
+            _isFiltering = true;
+            try
+            {
+                var currentSelection = SelectedFeeding;
+                Feedings.Clear();
+
+                var filtered = SelectedAnimal == null
+                    ? _allFeedings
+                    : _allFeedings.Where(f => f.Animals.Any(fa => fa.Animal.Id == SelectedAnimal.Id && fa.WasFed)).ToList();
+
+                foreach (var f in filtered) Feedings.Add(f);
+
+                SelectedFeeding = filtered.FirstOrDefault(f => f.Id == currentSelection?.Id);
+            }
+            finally
+            {
+                _isFiltering = false;
+            }
+        }
 
         [ObservableProperty]
         private ObservableCollection<string> feedingBehaviors;
@@ -167,10 +225,11 @@ namespace CrocoManager.Core.ViewModels
                 Salinity = env.SalinityPpt;
 
                 var animalDtos = await _animalService.GetAllAsync();
+                _allAnimals = animalDtos.Select(dto => dto.ToModel()).ToList();
                 Animals.Clear();
-                foreach (var dto in animalDtos)
+                foreach (var a in _allAnimals)
                 {
-                    Animals.Add(dto.ToModel());
+                    Animals.Add(a);
                 }
 
                 await LoadFeedingsAsync();
@@ -232,12 +291,20 @@ namespace CrocoManager.Core.ViewModels
                         }).ToList()
                     );
 
+                var feedings = new List<Feeding>();
                 foreach (var dto in feedingDtos.OrderByDescending(f => f.FeedingDate))
                 {
                     plans.TryGetValue(dto.FeedingPlanId, out var plan);
-                    animalsDict.TryGetValue(dto.Id, out var animals);
+                    animalsDict.TryGetValue(dto.Id, out var animalsInFeeding);
 
-                    Feedings.Add(dto.ToModel(animals, plan));
+                    feedings.Add(dto.ToModel(animalsInFeeding, plan));
+                }
+
+                _allFeedings = feedings;
+                Feedings.Clear();
+                foreach (var f in _allFeedings)
+                {
+                    Feedings.Add(f);
                 }
             }
             catch (Exception ex)
