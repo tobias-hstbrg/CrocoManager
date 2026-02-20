@@ -18,7 +18,7 @@ namespace CrocoManager.Core.Mappers
                 FeedingDate = dto.FeedingDate,
                 PerformedByEmail = dto.PerformedByEmail,
                 Animals = animalFeedingStatus?.ToList() ?? new List<FeedingAnimalStatus>(),
-                FeedingPlan = plan
+                FeedingPlan = plan ?? new FeedingPlan()
             };
         }
 

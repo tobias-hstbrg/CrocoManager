@@ -27,11 +27,11 @@ namespace CrocoManager.Core.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
-        private string name;
+        private string name = string.Empty;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
-        private string gender;
+        private string gender = "Männlich";
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
@@ -39,15 +39,15 @@ namespace CrocoManager.Core.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
-        private string species;
+        private string species = string.Empty;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
-        private string enclosure;
+        private string enclosure = string.Empty;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFormChanges))]
-        private string description;
+        private string description = string.Empty;
 
         [ObservableProperty]
         private bool isBusy;

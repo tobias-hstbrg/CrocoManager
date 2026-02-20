@@ -159,6 +159,7 @@
 
             <!-- Animal Form Card -->
             <Border Grid.Row="2"
+                    x:DataType="{x:Null}"
                     Style="{StaticResource SecondaryCard}" 
                     Padding="20"
                     IsVisible="{Binding BindingContext.CanViewItem,

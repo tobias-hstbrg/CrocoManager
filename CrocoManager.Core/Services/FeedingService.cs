@@ -160,6 +160,6 @@ public class FeedingService : BaseService<FeedingDto>, IFeedingService
         Name = dto.Name,
         Species = dto.Species,
         Enclosure = dto.Enclosure,
-        AgeYears = dto.Age!.Value
+        AgeYears = dto.Age ?? 0
     };
 }

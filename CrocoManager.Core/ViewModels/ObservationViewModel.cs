@@ -481,8 +481,8 @@ namespace CrocoManager.Core.ViewModels
                 {
                     MeasurementDate = environmentalData.MeasurementDate,
                     MeasurementTime = environmentalData.MeasurementTime,
-                    AirTemperatureCelsius = environmentalData.AirTemperatureCelsius.Value,
-                    HumidityPercent = environmentalData.HumidityPercent.Value,
+                    AirTemperatureCelsius = AirTemperature.Value,
+                    HumidityPercent = Humidity.Value,
                     WaterTemperatureCelsius = environmentalData.WaterTemperatureCelsius,
                     PhValue = environmentalData.PhValue,
                     SalinityPpt = environmentalData.SalinityPpt
@@ -499,6 +499,13 @@ namespace CrocoManager.Core.ViewModels
                     return;
                 }
 
+                var researcherEmail = _supabase.Client.Auth.CurrentUser?.Email;
+                if (string.IsNullOrEmpty(researcherEmail))
+                {
+                    await NotificationService.ShowErrorAsync("Fehler", "Benutzerdaten konnten nicht ermittelt werden.");
+                    return;
+                }
+
                 var observation = new Observation
                 {
                     Animal = SelectedAnimal,
@@ -506,7 +513,7 @@ namespace CrocoManager.Core.ViewModels
                     EnvironmentalData = environmentalData,
                     FeedingBehavior = FeedingBehavior,
                     Notes = Notes ?? string.Empty,
-                    ResearcherEmail = _supabase.Client.Auth.CurrentUser.Email
+                    ResearcherEmail = researcherEmail
                 };
 
                 var observationDto = observation.ToDto();
