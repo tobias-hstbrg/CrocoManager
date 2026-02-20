@@ -161,7 +161,7 @@ namespace CrocoManager.Core.Services
             int seed = now.Year + now.DayOfYear + timeBlock;
             var rnd = new Random(seed);
 
-            decimal jitter = (decimal)(rnd.NextDouble() * 0.1 - 0.05); // ±0.05
+            decimal jitter = (decimal)(rnd.NextDouble() * 0.1 - 0.05); // +-0.05
 
             return Math.Round(ph + jitter, 2);
         }
