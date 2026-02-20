@@ -63,6 +63,7 @@ namespace CrocoManager.Core.ViewModels
             else
             {
                 NavigationService.SetRoot("AppShell");
+                await NavigationService.GoToAsync("//HomePage");
             }
 
         }

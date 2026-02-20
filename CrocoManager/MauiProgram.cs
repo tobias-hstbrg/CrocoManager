@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Platform.Compatibility;
 using CrocoManager.Core.Services;
+using Microsoft.Maui.Controls.Hosting;
 
 #if ANDROID
 using CrocoManager.Platforms.Android;
@@ -44,7 +45,7 @@ namespace CrocoManager
 #if ANDROID
     builder.ConfigureMauiHandlers(handlers =>
     {
-        handlers.AddHandler<Shell, CustomShellRenderer>();
+        handlers.AddHandler(typeof(Shell), typeof(CustomShellRenderer));
     });
 #endif
 

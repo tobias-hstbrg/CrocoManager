@@ -92,6 +92,7 @@ namespace CrocoManager.Core.Tests.ViewModelTests
 
             // Assert
             _mockNavigation.Verify(n => n.SetRoot("AppShell"), Times.Once);
+            _mockNavigation.Verify(n => n.GoToAsync("//HomePage"), Times.Once);
         }
 
         [Fact]
