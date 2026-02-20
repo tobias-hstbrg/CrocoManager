@@ -20,7 +20,11 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private string? password;
 
-        public LoginViewModel(IServiceProvider serviceProvider) : base(serviceProvider)
+        public LoginViewModel(
+            INavigationService navigationService,
+            INotificationService notificationService,
+            IAuthService authService) 
+            : base(navigationService, notificationService, authService)
         {
         }
 
@@ -57,19 +61,13 @@ namespace CrocoManager.ViewModel
 
             if (session.User.UserMetadata.Role == Core.Models.UserRole.Admin)
             {
-                var adminPage = ServiceProvider.GetRequiredService<AdminPage>();
-                if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-                {
-                    window.Page = adminPage;
-                }
+                NavigationService.SetRoot(typeof(AdminPage));
             }
             else
             {
-                var appShell = new AppShell(AuthService, startRoute: "//HomePage");
-                if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-                {
-                    window.Page = appShell;
-                }
+                // Note: NavigationService implementation will handle AppShell creation or navigation
+                NavigationService.SetRoot(typeof(AppShell));
+                await NavigationService.GoToAsync("//HomePage");
             }
 
         }
@@ -84,21 +82,13 @@ namespace CrocoManager.ViewModel
         [RelayCommand]
         private void GoToRegister()
         {
-            var page = ServiceProvider.GetRequiredService<RegisterPage>();
-            if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-            {
-                window.Page = page;
-            }
+            NavigationService.SetRoot(typeof(RegisterPage));
         }
 
         [RelayCommand]
         private void GoToResetPassword()
         {
-            var page = ServiceProvider.GetRequiredService<ResetPasswordPage>();
-            if (Application.Current?.Windows?.FirstOrDefault() is Window window)
-            {
-                window.Page = page;
-            }
+            NavigationService.SetRoot(typeof(ResetPasswordPage));
         }
     }
 }

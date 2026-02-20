@@ -12,9 +12,11 @@ public partial class FeedingViewModel : BaseViewModel
     private readonly IFeedingService _feedingService;
 
     public FeedingViewModel(
-        IFeedingService feedingService,
-        IServiceProvider serviceProvider)
-        : base(serviceProvider)
+        INavigationService navigationService,
+        INotificationService notificationService,
+        IAuthService authService,
+        IFeedingService feedingService)
+        : base(navigationService, notificationService, authService)
     {
         _feedingService = feedingService;
     }

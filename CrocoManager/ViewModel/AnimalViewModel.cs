@@ -68,7 +68,12 @@ namespace CrocoManager.ViewModel
         Age != 0 ||
         Gender != "Männlich";
 
-        public AnimalViewModel(IServiceProvider serviceProvider, IAnimalService animalService) : base(serviceProvider)
+        public AnimalViewModel(
+            INavigationService navigationService,
+            INotificationService notificationService,
+            IAuthService authService,
+            IAnimalService animalService) 
+            : base(navigationService, notificationService, authService)
         {
             _animalService = animalService;
 

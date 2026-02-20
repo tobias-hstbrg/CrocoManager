@@ -47,7 +47,14 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private string lastFeedingStatus = "-";
 
-        public HomeViewModel(IServiceProvider serviceProvider, IAnimalService animalService, IFeedingPlanService feedingPlanService, IFeedingService feedingService) : base(serviceProvider)
+        public HomeViewModel(
+            INavigationService navigationService,
+            INotificationService notificationService,
+            IAuthService authService,
+            IAnimalService animalService, 
+            IFeedingPlanService feedingPlanService, 
+            IFeedingService feedingService) 
+            : base(navigationService, notificationService, authService)
         {
             _animalService = animalService;
             _feedingService = feedingService;

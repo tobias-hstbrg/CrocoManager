@@ -70,10 +70,10 @@ namespace CrocoManager.ViewModel
         private ObservableCollection<Observation> recentObservations;
 
         public bool HasFormChanges =>
-           !string.IsNullOrWhiteSpace(selectedAnimal?.DisplayName) ||
-           !string.IsNullOrWhiteSpace(selectedFeeding?.DisplayName) ||
-           !string.IsNullOrWhiteSpace(feedingBehavior) ||
-           !string.IsNullOrWhiteSpace(notes);
+           !string.IsNullOrWhiteSpace(SelectedAnimal?.DisplayName) ||
+           !string.IsNullOrWhiteSpace(SelectedFeeding?.DisplayName) ||
+           !string.IsNullOrWhiteSpace(FeedingBehavior) ||
+           !string.IsNullOrWhiteSpace(Notes);
 
         public bool CanSave =>
         SelectedAnimal != null &&
@@ -82,8 +82,16 @@ namespace CrocoManager.ViewModel
         AirTemperature.HasValue &&
         Humidity.HasValue;
 
-        public ObservationViewModel(IServiceProvider serviceProvider, ISupabaseClientService supabase, IObservationService observationService, IAnimalService animalService, IFeedingService feedingService, IFeedingPlanService feedingPlanService)
-            : base(serviceProvider)
+        public ObservationViewModel(
+            INavigationService navigationService, 
+            INotificationService notificationService,
+            IAuthService authService,
+            ISupabaseClientService supabase, 
+            IObservationService observationService, 
+            IAnimalService animalService, 
+            IFeedingService feedingService, 
+            IFeedingPlanService feedingPlanService)
+            : base(navigationService, notificationService, authService)
         {
             _observationService = observationService;
             _animalService = animalService;

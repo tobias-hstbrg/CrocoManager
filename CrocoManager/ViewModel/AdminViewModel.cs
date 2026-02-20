@@ -28,7 +28,12 @@ namespace CrocoManager.ViewModel
         public IAsyncRelayCommand LoadEmailsCommand { get; }
         public IAsyncRelayCommand AddEmailCommand { get; }
 
-        public AdminViewModel(IWhitelistService whitelistService, IServiceProvider serviceProvider) : base(serviceProvider)
+        public AdminViewModel(
+            INavigationService navigationService,
+            INotificationService notificationService,
+            IAuthService authService,
+            IWhitelistService whitelistService) 
+            : base(navigationService, notificationService, authService)
         {
             _whitelistService = whitelistService ?? throw new ArgumentNullException(nameof(whitelistService));
 

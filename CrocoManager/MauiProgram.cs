@@ -71,7 +71,7 @@ namespace CrocoManager
             builder.Services.AddTransient<ObservationPage>();
 
             // Shell
-            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddTransient<AppShell>();
 
             var assembly = typeof(MauiProgram).Assembly;
             var resourceName = "CrocoManager.appsettings.json";
@@ -95,6 +95,7 @@ namespace CrocoManager
                 client.Timeout = TimeSpan.FromSeconds(10);
             });
             builder.Services.AddSingleton<IFeedingService ,FeedingService>();
+            builder.Services.AddSingleton<INavigationService, MauiNavigationService>();
 
             var app = builder.Build();
             _serviceProvider = app.Services;

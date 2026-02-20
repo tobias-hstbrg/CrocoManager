@@ -72,7 +72,12 @@ namespace CrocoManager.ViewModel
            AmountKg != 0 ||
            FrequencyPerWeek != 0;
 
-        public FeedingPlanViewModel(IFeedingPlanService feedingPlanService, IServiceProvider serviceProvider) : base(serviceProvider)
+        public FeedingPlanViewModel(
+            INavigationService navigationService,
+            INotificationService notificationService,
+            IAuthService authService,
+            IFeedingPlanService feedingPlanService) 
+            : base(navigationService, notificationService, authService)
         {
             _feedingPlanService = feedingPlanService;
             FeedingPlans = new ObservableCollection<FeedingPlanDto>();

@@ -15,7 +15,7 @@ namespace CrocoManager.ViewModel
     {
         protected INotificationService NotificationService { get; }
         protected IAuthService AuthService { get; }
-        protected IServiceProvider ServiceProvider { get; }
+        protected INavigationService NavigationService { get; }
 
         [ObservableProperty]
         private bool isBusy;
@@ -38,12 +38,11 @@ namespace CrocoManager.ViewModel
         [ObservableProperty]
         private bool canViewItem;
 
-        protected BaseViewModel(IServiceProvider serviceProvider)
+        protected BaseViewModel(INavigationService navigationService, INotificationService notificationService, IAuthService authService)
         {
-            ServiceProvider = serviceProvider;
-
-            NotificationService = serviceProvider.GetRequiredService<INotificationService>();
-            AuthService = serviceProvider.GetRequiredService<IAuthService>();
+            NavigationService = navigationService;
+            NotificationService = notificationService;
+            AuthService = authService;
         }
 
         /// <summary>
@@ -85,11 +84,7 @@ namespace CrocoManager.ViewModel
 
                 if(successful)
                 {
-                    var loginPage = ServiceProvider.GetRequiredService<LoginPage>();
-                    if(Application.Current?.Windows.FirstOrDefault() is Window window)
-                    {
-                        window.Page = loginPage;
-                    }
+                    NavigationService.SetRoot(typeof(LoginPage));
                 }
                 else
                 {
