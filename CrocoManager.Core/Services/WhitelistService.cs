@@ -28,6 +28,7 @@ namespace CrocoManager.Core.Services
 
         public async Task AddEmailToWhitelistAsync(string email, UserRole role)
         {
+            email = email.ToLowerInvariant();
             var newEntry = new EmailWhitelist
             {
                 Id = Guid.NewGuid(),
@@ -68,6 +69,7 @@ namespace CrocoManager.Core.Services
 
         public async Task<bool> DeleteEmailFromWhitelistAsync(Guid id, string email)
         {
+            email = email.ToLowerInvariant();
             var options = new InvokeFunctionOptions
             {
                 Body = new Dictionary<string, object>
