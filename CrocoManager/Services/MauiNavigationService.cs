@@ -1,4 +1,4 @@
-using CrocoManager.Core.Interfaces;
+﻿using CrocoManager.Core.Interfaces;
 using CrocoManager.Views;
 using System;
 using System.Collections.Generic;
