@@ -15,16 +15,24 @@ public class FeedingService : BaseService<FeedingDto>, IFeedingService
         _supabase = supabaseClient;
     }
 
-    public async Task<Feeding> GetTodayFeedingDraftAsync()
+    public async Task<Feeding?> GetTodayFeedingDraftAsync()
     {
-        var plan = (await _supabase.Client
+        var planResponse = await _supabase.Client
             .From<FeedingPlanDto>()
             .Filter("is_active", Operator.Equals, "true")
-            .Get()).Models.Single();
+            .Get();
 
-        var animals = (await _supabase.Client
+        var plan = planResponse.Models.SingleOrDefault();
+
+        if (plan == null) return null;
+
+        var animalsResponse = await _supabase.Client
             .From<AnimalDto>()
-            .Get()).Models;
+            .Get();
+
+        var animals = animalsResponse.Models;
+
+        if (animals == null || !animals.Any()) return null;
 
         return new Feeding
         {

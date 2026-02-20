@@ -33,6 +33,13 @@ namespace CrocoManager.Core.ViewModels
                 return;
             }
 
+            if (!IsValidPassword(Password))
+            {
+                await NotificationService.ShowWarningAsync("Passwort-Richtlinien",
+                    "Das Passwort muss mindestens 8 Zeichen lang sein und Großbuchstaben, Kleinbuchstaben sowie Sonderzeichen oder Zahlen enthalten.");
+                return;
+            }
+
             var session = await AuthService.RegisterAsync(Email, Password);
 
             if (session != null)
@@ -43,6 +50,17 @@ namespace CrocoManager.Core.ViewModels
             {
                 await NotificationService.ShowErrorAsync("Error", "Registration failed");
             }
+        }
+
+        private bool IsValidPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 8) return false;
+
+            bool hasUpper = password.Any(char.IsUpper);
+            bool hasLower = password.Any(char.IsLower);
+            bool hasDigitOrSpecial = password.Any(c => char.IsDigit(c) || char.IsPunctuation(c) || char.IsSymbol(c));
+
+            return hasUpper && hasLower && hasDigitOrSpecial;
         }
 
         [RelayCommand]

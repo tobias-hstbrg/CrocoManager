@@ -37,6 +37,7 @@ namespace CrocoManager.Core.Services
         {
             try
             {
+                email = email.ToLowerInvariant();
                 var whitelistResponse = await CheckEmailWhitelist(email);
                 if (whitelistResponse == null)
                     return null;
@@ -160,6 +161,7 @@ namespace CrocoManager.Core.Services
         {
             try
             {
+                email = email.ToLowerInvariant();
                 var authResponse = await _supabase.Client.Auth.SignInWithPassword(email, password);
 
                 if (authResponse?.User == null)
@@ -207,6 +209,7 @@ namespace CrocoManager.Core.Services
         {
             try
             {
+                email = email.ToLowerInvariant();
                 var parameters = new Dictionary<string, object>
                 {
                     { "user_email", email },

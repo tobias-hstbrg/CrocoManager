@@ -10,7 +10,7 @@ namespace CrocoManager.Core.Interfaces
 {
     public interface IFeedingService : IBaseService<FeedingDto>
     {
-        Task<Feeding> GetTodayFeedingDraftAsync();
+        Task<Feeding?> GetTodayFeedingDraftAsync();
         Task SaveFeedingAsync(Feeding feeding, string rangerEmail);
         Task<List<FeedingHistoryEntry>> GetHistoryAsync();
         Task<int> GetCurrentWeekCount();

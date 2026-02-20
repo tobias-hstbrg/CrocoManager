@@ -50,17 +50,35 @@ namespace CrocoManager.Core.ViewModels
                 return;
             }
 
+            if (!IsValidPassword(Password))
+            {
+                await NotificationService.ShowWarningAsync("Passwort-Richtlinien", 
+                    "Das Passwort muss mindestens 8 Zeichen lang sein und Großbuchstaben, Kleinbuchstaben sowie Sonderzeichen oder Zahlen enthalten.");
+                return;
+            }
+
             bool result =  await AuthService.ResetPasswordAsync(Email, Password);
 
             if(!result)
             {
-                await  NotificationService.ShowErrorAsync("Fehler", "Passwort konnte nicht zurückgesetzt werden. Bitte versuchen Sie es erneut.");
+                await NotificationService.ShowErrorAsync("Fehler", "Passwort konnte nicht zurückgesetzt werden. Bitte versuchen Sie es erneut.");
                 return;
             }
 
             await NotificationService.ShowWarningAsync("Erfolg", "Passwort erfolgreich geändert!");
 
             GoToLogin();
+        }
+
+        private bool IsValidPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 8) return false;
+            
+            bool hasUpper = password.Any(char.IsUpper);
+            bool hasLower = password.Any(char.IsLower);
+            bool hasDigitOrSpecial = password.Any(c => char.IsDigit(c) || char.IsPunctuation(c) || char.IsSymbol(c));
+
+            return hasUpper && hasLower && hasDigitOrSpecial;
         }
 
         [RelayCommand]
