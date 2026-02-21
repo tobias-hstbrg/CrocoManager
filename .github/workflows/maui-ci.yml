@@ -65,11 +65,22 @@ jobs:
           -p:AndroidKeyStore=false `
           -o ./artifacts/android
     
+    - name: Prepare Android Artifact
+      shell: pwsh
+      run: |
+        $apk = Get-ChildItem -Path ./artifacts/android -Filter "*-Signed.apk" -Recurse | Select-Object -First 1
+        if ($apk) {
+            Copy-Item $apk.FullName -Destination "./artifacts/android/CrocoManager.apk"
+        } else {
+            Write-Error "No Signed APK found!"
+            exit 1
+        }
+
     - name: Upload Android APK
       uses: actions/upload-artifact@v4
       with:
-        name: android-apk
-        path: ./artifacts/android/**/*-Signed.apk
+        name: CrocoManager-Android.zip
+        path: ./artifacts/android/CrocoManager.apk
         retention-days: 7
 
   build-windows:
@@ -101,7 +112,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore CrocoManager/CrocoManager.sln
     
-    - name: Build Windows MSIX
+    - name: Build Windows
       run: |
         dotnet publish CrocoManager/CrocoManager.csproj `
           -f net9.0-windows10.0.19041.0 `
@@ -112,11 +123,12 @@ jobs:
           -p:SelfContained=true `
           -p:PublishSingleFile=false `
           -p:PublishReadyToRun=false `
+          -p:DebugType=none `
           -o ./artifacts/windows
-    
+
     - name: Upload Windows Build
       uses: actions/upload-artifact@v4
       with:
-        name: windows-package
-        path: ./artifacts/windows/**
+        name: CrocoManager-Windows.zip
+        path: ./artifacts/windows/
         retention-days: 7
