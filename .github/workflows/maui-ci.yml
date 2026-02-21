@@ -121,9 +121,8 @@ jobs:
           -p:WindowsPackageType=None `
           -p:WindowsAppSDKSelfContained=true `
           -p:SelfContained=true `
-          -p:PublishSingleFile=true `
-          -p:PublishReadyToRun=true `
-          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -p:PublishSingleFile=false `
+          -p:PublishReadyToRun=false `
           -p:DebugType=none `
           -o ./artifacts/windows
 
