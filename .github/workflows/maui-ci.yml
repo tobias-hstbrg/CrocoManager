@@ -121,18 +121,15 @@ jobs:
           -p:WindowsPackageType=None `
           -p:WindowsAppSDKSelfContained=true `
           -p:SelfContained=true `
-          -p:PublishSingleFile=false `
-          -p:PublishReadyToRun=false `
-          -o ./artifacts/windows-temp
-    
-    - name: Zip Windows Build
-      shell: pwsh
-      run: |
-        Compress-Archive -Path "./artifacts/windows-temp/*" -DestinationPath "./artifacts/CrocoManager-Windows.zip"
+          -p:PublishSingleFile=true `
+          -p:PublishReadyToRun=true `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -p:DebugType=none `
+          -o ./artifacts/windows
 
     - name: Upload Windows Build
       uses: actions/upload-artifact@v4
       with:
         name: CrocoManager-Windows
-        path: ./artifacts/CrocoManager-Windows.zip
+        path: ./artifacts/windows/
         retention-days: 7
