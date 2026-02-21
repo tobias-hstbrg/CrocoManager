@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.DTOs;
 using CrocoManager.Core.Interfaces;
@@ -217,14 +217,22 @@ namespace CrocoManager.Core.ViewModels
         {
             try
             {
-                var env = await _observationService.FetchEnvironmentalDataAsync();
+                // load in parallel to speed up loading
+                var envTask = _observationService.FetchEnvironmentalDataAsync();
+                var animalTask = _animalService.GetAllAsync();
+                var feedingTask = LoadFeedingsAsync();
+                var historyTask = LoadObservationHistory();
+
+                await Task.WhenAll(envTask, animalTask, feedingTask, historyTask);
+
+                var env = envTask.Result;
                 AirTemperature = env.AirTemperatureCelsius;
                 Humidity = env.HumidityPercent;
                 WaterTemperature = env.WaterTemperatureCelsius;
                 PhValue = env.PhValue;
                 Salinity = env.SalinityPpt;
 
-                var animalDtos = await _animalService.GetAllAsync();
+                var animalDtos = animalTask.Result;
                 _allAnimals = animalDtos.Select(dto => dto.ToModel()).ToList();
                 Animals.Clear();
                 foreach (var a in _allAnimals)
@@ -232,8 +240,13 @@ namespace CrocoManager.Core.ViewModels
                     Animals.Add(a);
                 }
 
-                await LoadFeedingsAsync();
-                await LoadObservationHistory();
+                // Verify data presence after everything is assigned
+                if (!AirTemperature.HasValue || !Humidity.HasValue)
+                {
+                    await NotificationService.ShowErrorAsync(
+                        "Unvollständige Umweltdaten",
+                        "Nicht alle benötigten Umweltdaten konnten geladen werden. Eine Speicherung ist derzeit nicht möglich.");
+                }
             }
             catch (Exception ex)
             {
@@ -322,10 +335,17 @@ namespace CrocoManager.Core.ViewModels
             {
                 IsBusy = true;
 
-                var observationDtos = await _observationService.GetAllAsync();
-                var animalDtos = await _animalService.GetAllAsync();
-                var feedingDtos = await _feedingService.GetAllAsync();
-                var feedingPlanDtos = await _feedingPlanService.GetAllAsync();
+                var obsTask = _observationService.GetAllAsync();
+                var animalTask = _animalService.GetAllAsync();
+                var feedingTask = _feedingService.GetAllAsync();
+                var planTask = _feedingPlanService.GetAllAsync();
+
+                await Task.WhenAll(obsTask, animalTask, feedingTask, planTask);
+
+                var observationDtos = obsTask.Result;
+                var animalDtos = animalTask.Result;
+                var feedingDtos = feedingTask.Result;
+                var feedingPlanDtos = planTask.Result;
 
                 // 1️⃣ EnvironmentalData IDs sammeln
                 var envIds = observationDtos
@@ -392,7 +412,7 @@ namespace CrocoManager.Core.ViewModels
                 }
 
                 var recent = observations
-                    .OrderByDescending(o => o.UpdatedAt)
+                    .OrderByDescending(o => o.CreatedAt)
                     .Take(5)
                     .ToList();
 
@@ -401,14 +421,6 @@ namespace CrocoManager.Core.ViewModels
                 foreach (var obs in recent)
                 {
                     RecentObservations.Add(obs);
-                }
-
-                if (!AirTemperature.HasValue || !Humidity.HasValue)
-                {
-                    await NotificationService.ShowErrorAsync(
-                        "Unvollständige Umweltdaten",
-                        "Nicht alle benötigten Umweltdaten konnten geladen werden. Eine Speicherung ist derzeit nicht möglich."
-                    );
                 }
             }
             catch (Exception ex)
@@ -513,7 +525,8 @@ namespace CrocoManager.Core.ViewModels
                     EnvironmentalData = environmentalData,
                     FeedingBehavior = FeedingBehavior,
                     Notes = Notes ?? string.Empty,
-                    ResearcherEmail = researcherEmail
+                    ResearcherEmail = researcherEmail,
+                    CreatedAt = DateTime.Now
                 };
 
                 var observationDto = observation.ToDto();
@@ -526,21 +539,27 @@ namespace CrocoManager.Core.ViewModels
                 var createdObservationDto = obsResponse.Models?.FirstOrDefault();
                 if (createdObservationDto != null)
                 {
-                    RecentObservations.Add(createdObservationDto.ToEntity(
+                    // Map with the local timestamp we just generated to ensure it stays at the top
+                    var entity = createdObservationDto.ToEntity(
                         animal: SelectedAnimal,
                         feeding: SelectedFeeding,
                         environmentalData: environmentalData
-                    ));
+                    );
+                    
+                    // Ensure the UI sees the correct time immediately
+                    entity.CreatedAt = observation.CreatedAt;
+
+                    RecentObservations.Insert(0, entity);
 
                     await NotificationService.ShowSuccessAsync(
                         "Beobachtung gespeichert",
-                        "Die Observation wurde erfolgreich gespeichert.");
+                        "Die Beobachtung wurde erfolgreich gespeichert.");
                 }
                 else
                 {
                     await NotificationService.ShowErrorAsync(
                         "Fehler",
-                        "Die Observation konnte nicht gespeichert werden.");
+                        "Die Beobachtung konnte nicht gespeichert werden.");
                 }
 
                 Cancel();

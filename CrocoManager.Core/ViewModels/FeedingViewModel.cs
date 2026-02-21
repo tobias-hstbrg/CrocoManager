@@ -87,7 +87,12 @@ public partial class FeedingViewModel : BaseViewModel
         IsBusy = true;
         try
         {
-            CurrentFeeding = await _feedingService.GetTodayFeedingDraftAsync();
+            var draftTask = _feedingService.GetTodayFeedingDraftAsync();
+            var historyTask = LoadHistoryInternalAsync();
+
+            await Task.WhenAll(draftTask, historyTask);
+
+            CurrentFeeding = draftTask.Result;
             HasCurrentFeeding = CurrentFeeding != null;
 
             LoadAnimals();

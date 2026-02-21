@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
@@ -30,7 +30,7 @@ namespace CrocoManager.Core.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                await NotificationService.ShowErrorAsync("Error", "Please enter both email and password");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Bitte geben sie eine gültige E-Mail Adresse und ein Passwort an.");
                 return;
             }
 
@@ -45,7 +45,7 @@ namespace CrocoManager.Core.ViewModels
             // Session exists but user data is missing (shouldn't happen, but you never know)
             if (session.User?.UserMetadata == null)
             {
-                await NotificationService.ShowErrorAsync("Error", "Nutzerdaten konnten nicht abgerufen werden. Bitte versuchen sie es später erneut.");
+                await NotificationService.ShowErrorAsync("Fehler", "Nutzerdaten konnten nicht abgerufen werden. Bitte versuchen sie es später erneut.");
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace CrocoManager.Core.ViewModels
         async Task TestConnectionAsync()
         {
             var ok = await AuthService.TestConnectionAsync();
-            await NotificationService.ShowInfoAsync("Connection Test", ok ? "Connected" : "Failed");
+            await NotificationService.ShowInfoAsync("Verbindungstest", ok ? "Supabase Verbindung aktiv" : "Supabase Verbindung inaktiv");
         }
 
         [RelayCommand]

@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
 using System;
@@ -67,12 +67,20 @@ namespace CrocoManager.Core.ViewModels
             {
                 IsBusy = true;
 
-                TotalAnimals = await _animalService.GetTotalCount();
-                TotalFeedingPlans = await _feedingPlanService.GetTotalCount();
-                FeedingsThisWeek = await _feedingService.GetCurrentWeekCount();
+                // load data in parallel to fetch data faster
+                var totalAnimalsTask = _animalService.GetTotalCount();
+                var totalPlansTask = _feedingPlanService.GetTotalCount();
+                var currentWeekCountTask = _feedingService.GetCurrentWeekCount();
+                var activePlanTask = _feedingPlanService.GetActivePlanAsync();
+                var historyTask = _feedingService.GetHistoryAsync();
 
-                var activeFeedingPlan = await _feedingPlanService.GetActivePlanAsync();
+                await Task.WhenAll(totalAnimalsTask, totalPlansTask, currentWeekCountTask, activePlanTask, historyTask);
 
+                TotalAnimals = totalAnimalsTask.Result;
+                TotalFeedingPlans = totalPlansTask.Result;
+                FeedingsThisWeek = currentWeekCountTask.Result;
+
+                var activeFeedingPlan = activePlanTask.Result;
                 if (activeFeedingPlan != null)
                 {
                     ActivePlanName = activeFeedingPlan.Name;
@@ -81,7 +89,7 @@ namespace CrocoManager.Core.ViewModels
                     ActivePlanDescription = activeFeedingPlan.Description;
                 }
 
-                var latest = (await _feedingService.GetHistoryAsync()).MaxBy(Entry => Entry.FeedingDate);
+                var latest = historyTask.Result.MaxBy(Entry => Entry.FeedingDate);
                 if (latest != null)
                 {
                     LastFeedingDate = latest.FeedingDate;

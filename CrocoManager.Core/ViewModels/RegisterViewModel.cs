@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
@@ -29,7 +29,7 @@ namespace CrocoManager.Core.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                await NotificationService.ShowErrorAsync("Error", "Enter credentials");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Bitte geben Sie eine gültige E-Mail Adresse und ein Passwort an.");
                 return;
             }
 
@@ -48,7 +48,7 @@ namespace CrocoManager.Core.ViewModels
             }
             else
             {
-                await NotificationService.ShowErrorAsync("Error", "Registration failed");
+                await NotificationService.ShowErrorAsync("Fehler", "Registrierung fehlgeschlagen. Bitte versuche es erneut.");
             }
         }
 

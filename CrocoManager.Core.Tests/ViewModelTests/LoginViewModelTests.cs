@@ -1,4 +1,4 @@
-using CrocoManager.Core.Interfaces;
+﻿using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
 using CrocoManager.Core.ViewModels;
 using Moq;
@@ -38,7 +38,7 @@ namespace CrocoManager.Core.Tests.ViewModelTests
             await _viewModel.LoginUserCommand.ExecuteAsync(null);
 
             // Assert
-            _mockNotification.Verify(n => n.ShowErrorAsync("Error", It.IsAny<string>()), Times.Once);
+            _mockNotification.Verify(n => n.ShowErrorAsync("Validierungsfehler", It.IsAny<string>()), Times.Once);
             _mockAuth.Verify(a => a.LoginAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 

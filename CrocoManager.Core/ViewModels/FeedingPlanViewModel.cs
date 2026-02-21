@@ -240,19 +240,23 @@ namespace CrocoManager.Core.ViewModels
             {
                 IsBusy = true;
 
-                // deactivate all plans
+                var updateTasks = new List<Task>();
+
+                // deactivate all other plans in parallel
                 foreach (var p in FeedingPlans)
                 {
                     if (p.IsActive && p.Id != plan.Id)
                     {
                         p.IsActive = false;
-                        await _feedingPlanService.UpdateAsync(p);
+                        updateTasks.Add(_feedingPlanService.UpdateAsync(p));
                     }
                 }
 
                 // activate selected plan
                 plan.IsActive = true;
-                await _feedingPlanService.UpdateAsync(plan);
+                updateTasks.Add(_feedingPlanService.UpdateAsync(plan));
+
+                await Task.WhenAll(updateTasks);
 
                 // Update UI
                 ActivePlan = plan;
