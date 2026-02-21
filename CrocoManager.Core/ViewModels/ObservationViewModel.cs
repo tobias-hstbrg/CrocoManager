@@ -143,12 +143,13 @@ namespace CrocoManager.Core.ViewModels
             INavigationService navigationService, 
             INotificationService notificationService,
             IAuthService authService,
+            IConnectivityService connectivityService,
             ISupabaseClientService supabase, 
             IObservationService observationService, 
             IAnimalService animalService, 
             IFeedingService feedingService, 
             IFeedingPlanService feedingPlanService)
-            : base(navigationService, notificationService, authService)
+            : base(navigationService, notificationService, authService, connectivityService)
         {
             _observationService = observationService;
             _animalService = animalService;
@@ -215,6 +216,12 @@ namespace CrocoManager.Core.ViewModels
         [RelayCommand]
         private async Task LoadAsync()
         {
+            if (!ConnectivityService.IsConnected)
+            {
+                await DisplayError("Keine Verbindung", new Exception("Netzwerk nicht erreichbar."));
+                return;
+            }
+
             try
             {
                 // load in parallel to speed up loading
@@ -250,9 +257,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync(
-                    "Fehler beim Laden",
-                    ex.Message);
+                await DisplayError("Fehler beim Laden", ex);
             }
         }
 
@@ -322,9 +327,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync(
-                    "Fehler beim Laden der Fütterungen",
-                    ex.Message);
+                await DisplayError("Fehler beim Laden der Fütterungen", ex);
             }
         }
 
@@ -566,7 +569,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler beim Speichern", ex.Message);
+                await DisplayError("Fehler beim Speichern", ex);
             }
             finally
             {

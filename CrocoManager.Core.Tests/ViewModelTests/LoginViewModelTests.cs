@@ -1,4 +1,4 @@
-﻿using CrocoManager.Core.Interfaces;
+using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
 using CrocoManager.Core.ViewModels;
 using Moq;
@@ -13,6 +13,7 @@ namespace CrocoManager.Core.Tests.ViewModelTests
         private readonly Mock<INavigationService> _mockNavigation;
         private readonly Mock<INotificationService> _mockNotification;
         private readonly Mock<IAuthService> _mockAuth;
+        private readonly Mock<IConnectivityService> _mockConnectivity;
         private readonly LoginViewModel _viewModel;
 
         public LoginViewModelTests()
@@ -20,11 +21,15 @@ namespace CrocoManager.Core.Tests.ViewModelTests
             _mockNavigation = new Mock<INavigationService>();
             _mockNotification = new Mock<INotificationService>();
             _mockAuth = new Mock<IAuthService>();
+            _mockConnectivity = new Mock<IConnectivityService>();
+            
+            _mockConnectivity.Setup(c => c.IsConnected).Returns(true);
 
             _viewModel = new LoginViewModel(
                 _mockNavigation.Object,
                 _mockNotification.Object,
-                _mockAuth.Object);
+                _mockAuth.Object,
+                _mockConnectivity.Object);
         }
 
         [Fact]

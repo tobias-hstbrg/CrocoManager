@@ -49,10 +49,11 @@ namespace CrocoManager.Core.ViewModels
             INavigationService navigationService,
             INotificationService notificationService,
             IAuthService authService,
+            IConnectivityService connectivityService,
             IAnimalService animalService, 
             IFeedingPlanService feedingPlanService, 
             IFeedingService feedingService) 
-            : base(navigationService, notificationService, authService)
+            : base(navigationService, notificationService, authService, connectivityService)
         {
             _animalService = animalService;
             _feedingService = feedingService;
@@ -63,6 +64,12 @@ namespace CrocoManager.Core.ViewModels
         [RelayCommand]
         public async Task LoadAsync()
         {
+            if (!ConnectivityService.IsConnected)
+            {
+                await DisplayError("Keine Verbindung", new Exception("Netzwerk nicht erreichbar."));
+                return;
+            }
+
             try
             {
                 IsBusy = true;
@@ -97,9 +104,9 @@ namespace CrocoManager.Core.ViewModels
                     LastFeedingStatus = $"{latest.FedAnimals} von {latest.TotalAnimals} gefüttert";
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Silently fail or log as needed
+                await DisplayError("Fehler beim Laden des Dashboards", ex);
             }
             finally
             {

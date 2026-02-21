@@ -72,8 +72,9 @@ namespace CrocoManager.Core.ViewModels
             INavigationService navigationService,
             INotificationService notificationService,
             IAuthService authService,
+            IConnectivityService connectivityService,
             IFeedingPlanService feedingPlanService) 
-            : base(navigationService, notificationService, authService)
+            : base(navigationService, notificationService, authService, connectivityService)
         {
             _feedingPlanService = feedingPlanService;
             FeedingPlans = new ObservableCollection<FeedingPlanDto>();
@@ -148,7 +149,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler beim Laden", ex.Message);
+                await DisplayError("Fehler beim Laden", ex);
             }
             finally
             {
@@ -223,7 +224,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler beim Löschen", ex.Message);
+                await DisplayError("Fehler beim Löschen", ex);
             }
             finally
             {
@@ -274,7 +275,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler beim Aktivieren", ex.Message);
+                await DisplayError("Fehler beim Aktivieren", ex);
             }
             finally
             {
@@ -362,7 +363,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler beim Speichern", ex.Message);
+                await DisplayError("Fehler beim Speichern", ex);
             }
             finally
             {

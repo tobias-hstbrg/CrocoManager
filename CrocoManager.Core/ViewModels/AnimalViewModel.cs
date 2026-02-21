@@ -69,8 +69,9 @@ namespace CrocoManager.Core.ViewModels
             INavigationService navigationService,
             INotificationService notificationService,
             IAuthService authService,
+            IConnectivityService connectivityService,
             IAnimalService animalService) 
-            : base(navigationService, notificationService, authService)
+            : base(navigationService, notificationService, authService, connectivityService)
         {
             _animalService = animalService;
 
@@ -158,7 +159,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler beim Laden", ex.Message);
+                await DisplayError("Fehler beim Laden", ex);
             }
             finally
             {
@@ -211,7 +212,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler beim Speichern", ex.Message);
+                await DisplayError("Fehler beim Löschen", ex);
             }
             finally
             {
@@ -303,7 +304,7 @@ namespace CrocoManager.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler beim Speichern", ex.Message);
+                await DisplayError("Fehler beim Speichern", ex);
             }
             finally
             {

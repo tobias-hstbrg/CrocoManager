@@ -23,8 +23,9 @@ namespace CrocoManager.Core.ViewModels
         public PasswordResetViewModel(
             INavigationService navigationService,
             INotificationService notificationService,
-            IAuthService authService) 
-            : base(navigationService, notificationService, authService)
+            IAuthService authService,
+            IConnectivityService connectivityService) 
+            : base(navigationService, notificationService, authService, connectivityService)
         {
         }
 
@@ -57,17 +58,28 @@ namespace CrocoManager.Core.ViewModels
                 return;
             }
 
-            bool result =  await AuthService.ResetPasswordAsync(Email, Password);
-
-            if(!result)
+            try
             {
-                await NotificationService.ShowErrorAsync("Fehler", "Passwort konnte nicht zurückgesetzt werden. Bitte versuchen Sie es erneut.");
-                return;
+                IsBusy = true;
+                bool result = await AuthService.ResetPasswordAsync(Email, Password);
+
+                if (!result)
+                {
+                    await NotificationService.ShowErrorAsync("Fehler", "Passwort konnte nicht zurückgesetzt werden. Bitte versuchen Sie es erneut.");
+                    return;
+                }
+
+                await NotificationService.ShowWarningAsync("Erfolg", "Passwort erfolgreich geändert!");
+                GoToLogin();
             }
-
-            await NotificationService.ShowWarningAsync("Erfolg", "Passwort erfolgreich geändert!");
-
-            GoToLogin();
+            catch (Exception ex)
+            {
+                await DisplayError("Fehler beim Zurücksetzen", ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private bool IsValidPassword(string password)

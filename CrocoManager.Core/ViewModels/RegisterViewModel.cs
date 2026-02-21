@@ -19,8 +19,9 @@ namespace CrocoManager.Core.ViewModels
         public RegisterViewModel(
             INavigationService navigationService,
             INotificationService notificationService,
-            IAuthService authService) 
-            : base(navigationService, notificationService, authService)
+            IAuthService authService,
+            IConnectivityService connectivityService) 
+            : base(navigationService, notificationService, authService, connectivityService)
         {
         }
 
@@ -42,6 +43,7 @@ namespace CrocoManager.Core.ViewModels
 
             try
             {
+                IsBusy = true;
                 var session = await AuthService.RegisterAsync(Email, Password);
 
                 if (session != null)
@@ -57,9 +59,13 @@ namespace CrocoManager.Core.ViewModels
             {
                 await NotificationService.ShowErrorAsync("Whitelist Fehler", ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler", "Ein unerwarteter Fehler ist aufgetreten.");
+                await DisplayError("Registrierungsfehler", ex);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
