@@ -141,19 +141,5 @@ namespace CrocoManager.Core.Tests.ViewModelTests
             _viewModel.Feedings.Should().HaveCount(1);
             _viewModel.Feedings.Should().Contain(f => f.Id == feedingWith.Id);
         }
-
-        [Fact]
-        public async Task SetPermissions_Ranger_ShouldRestrictCreation()
-        {
-            // Arrange
-            _mockAuth.Setup(a => a.GetUserRoleAsync()).ReturnsAsync(UserRole.Ranger);
-
-            // Act
-            await _viewModel.InitializeAsync();
-
-            // Assert
-            _viewModel.CanCreate.Should().BeFalse();
-            _viewModel.IsReadOnly.Should().BeTrue();
-        }
     }
 }

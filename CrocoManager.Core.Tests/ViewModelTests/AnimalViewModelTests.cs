@@ -103,5 +103,29 @@ namespace CrocoManager.Core.Tests.ViewModelTests
             _mockNotification.Verify(n => n.ShowErrorAsync("Validierungsfehler", "Das Alter muss eine positive Zahl sein."), Times.Once);
             _mockAnimalService.Verify(a => a.AddAsync(It.IsAny<AnimalDto>()), Times.Never);
         }
+
+        [Fact]
+        public async Task SaveAnimal_ValidData_ShouldCallServiceAndClearForm()
+        {
+            // Arrange
+            _mockAuth.Setup(a => a.GetUserRoleAsync()).ReturnsAsync(UserRole.Ranger);
+            await _viewModel.InitializeAsync();
+            
+            _viewModel.Name = "New Croc";
+            _viewModel.Species = "Amerikanischer Alligator";
+            _viewModel.Gender = "Weiblich";
+            _viewModel.Age = 10;
+            _viewModel.Enclosure = "A1";
+
+            _mockAnimalService.Setup(s => s.AddAsync(It.IsAny<AnimalDto>()))
+                .ReturnsAsync(new AnimalDto { Name = "New Croc" });
+
+            // Act
+            await _viewModel.SaveAnimalCommand.ExecuteAsync(null);
+
+            // Assert
+            _mockAnimalService.Verify(s => s.AddAsync(It.Is<AnimalDto>(d => d.Name == "New Croc")), Times.Once);
+            _viewModel.Name.Should().BeEmpty(); // Form cleared
+        }
     }
 }

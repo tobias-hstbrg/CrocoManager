@@ -63,9 +63,10 @@ namespace CrocoManager.Core.Tests.ViewModelTests
         }
 
         [Fact]
-        public async Task SaveAsync_NoSelection_ShouldShowError()
+        public async Task SaveAsync_NoAnimalsSelected_ShouldShowError()
         {
             // Arrange
+            _viewModel.CurrentFeeding = new Feeding { Animals = new List<FeedingAnimalStatus>() };
             _viewModel.Animals.Clear(); // No animals selected
 
             // Act
@@ -74,6 +75,50 @@ namespace CrocoManager.Core.Tests.ViewModelTests
             // Assert
             _mockNotification.Verify(n => n.ShowErrorAsync("Fehler", "Bitte wählen Sie mindestens ein Tier aus."), Times.Once);
             _mockFeedingService.Verify(s => s.SaveFeedingAsync(It.IsAny<Feeding>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task SaveAsync_ValidSelection_ShouldCallServiceAndShowSuccess()
+        {
+            // Arrange
+            var animal = new Animal { Id = Guid.NewGuid(), Name = "Croc" };
+            var status = new FeedingAnimalStatus { Animal = animal, WasFed = true };
+            var feeding = new Feeding { Id = Guid.NewGuid(), Animals = new List<FeedingAnimalStatus> { status } };
+            
+            _viewModel.CurrentFeeding = feeding;
+            _viewModel.Animals.Add(new FeedingAnimalStatusViewModel(status, () => { }));
+            
+            _mockAuth.Setup(a => a.GetUserEmail()).ReturnsAsync("ranger@test.com");
+
+            // Act
+            await _viewModel.SaveCommand.ExecuteAsync(null);
+
+            // Assert
+            _mockFeedingService.Verify(s => s.SaveFeedingAsync(It.IsAny<Feeding>(), "ranger@test.com"), Times.Once);
+            _mockNotification.Verify(n => n.ShowSuccessAsync("Erfolgreich", It.IsAny<string>()), Times.Once);
+        }
+
+        [Fact]
+        public void HasSelection_ShouldUpdate_WhenAnimalStatusChanges()
+        {
+            // Arrange
+            bool propertyChangedCalled = false;
+            _viewModel.PropertyChanged += (s, e) => { if (e.PropertyName == nameof(_viewModel.HasSelection)) propertyChangedCalled = true; };
+            
+            var status = new FeedingAnimalStatus { WasFed = false };
+            var vm = new FeedingAnimalStatusViewModel(status, () => { 
+                // This simulates the toolkit behavior without calling protected methods
+                typeof(FeedingViewModel).GetMethod("OnPropertyChanged", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(string) }, null)
+                    ?.Invoke(_viewModel, new[] { nameof(_viewModel.HasSelection) });
+            });
+            _viewModel.Animals.Add(vm);
+
+            // Act
+            vm.WasFed = true;
+
+            // Assert
+            propertyChangedCalled.Should().BeTrue();
+            _viewModel.HasSelection.Should().BeTrue();
         }
     }
 }
