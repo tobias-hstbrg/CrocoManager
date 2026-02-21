@@ -40,15 +40,26 @@ namespace CrocoManager.Core.ViewModels
                 return;
             }
 
-            var session = await AuthService.RegisterAsync(Email, Password);
+            try
+            {
+                var session = await AuthService.RegisterAsync(Email, Password);
 
-            if (session != null)
-            {
-                await NotificationService.ShowSuccessAsync("Success", $"Registred {session.User.Email}");
+                if (session != null)
+                {
+                    await NotificationService.ShowSuccessAsync("Erfolg", $"Registrierung für {session.User.Email} erfolgreich.");
+                }
+                else
+                {
+                    await NotificationService.ShowErrorAsync("Fehler", "Registrierung fehlgeschlagen. Bitte versuche es erneut.");
+                }
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                await NotificationService.ShowErrorAsync("Fehler", "Registrierung fehlgeschlagen. Bitte versuche es erneut.");
+                await NotificationService.ShowErrorAsync("Whitelist Fehler", ex.Message);
+            }
+            catch (Exception)
+            {
+                await NotificationService.ShowErrorAsync("Fehler", "Ein unerwarteter Fehler ist aufgetreten.");
             }
         }
 

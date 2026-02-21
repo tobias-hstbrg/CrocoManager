@@ -40,7 +40,7 @@ namespace CrocoManager.Core.Services
                 email = email.ToLowerInvariant();
                 var whitelistResponse = await CheckEmailWhitelist(email);
                 if (whitelistResponse == null)
-                    return null;
+                    throw new InvalidOperationException($"Die E-Mail Adresse '{email}' ist nicht auf der Whitelist. Bitte kontaktieren Sie Ihren Administrator.");
 
                 // grab Userrole in usable format
                 var newUsersRole = ParseUserRole(whitelistResponse.Role);
@@ -71,6 +71,10 @@ namespace CrocoManager.Core.Services
             {
                 Console.WriteLine($"Supabase error: {ex.Message}");
                 return null;
+            }
+            catch (InvalidOperationException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
