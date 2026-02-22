@@ -68,8 +68,8 @@
 
                         <!-- Lufttemperatur -->
                         <Border x:Name="LuftTempBorder" BackgroundColor="White"
-                            Padding="15"
-                            HeightRequest="70">
+                            Padding="12"
+                            HeightRequest="80">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="PositionStates">
                                     <VisualState x:Name="WidePosition">
@@ -95,7 +95,7 @@
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5" VerticalOptions="Center">
                                 <Label Grid.Row="0"
                                    Text="Lufttemperatur"
                                    FontSize="10"
@@ -112,8 +112,8 @@
 
                         <!-- Luftfeuchtigkeit -->
                         <Border x:Name="LuftFeuchtigkeitBorder" BackgroundColor="White"
-                            Padding="15"
-                            HeightRequest="70">
+                            Padding="12"
+                            HeightRequest="80">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="PositionStates">
                                     <VisualState x:Name="WidePosition">
@@ -139,7 +139,7 @@
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5" VerticalOptions="Center">
                                 <Label Grid.Row="0"
                                    Text="Luftfeuchtigkeit"
                                    FontSize="10"
@@ -156,8 +156,8 @@
 
                         <!-- Wassertemperatur -->
                         <Border x:Name="WasserTempBorder" BackgroundColor="White"
-                            Padding="15"
-                            HeightRequest="70">
+                            Padding="12"
+                            HeightRequest="80">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="PositionStates">
                                     <VisualState x:Name="WidePosition">
@@ -183,7 +183,7 @@
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5" VerticalOptions="Center">
                                 <Label Grid.Row="0"
                                    Text="Wassertemperatur"
                                    FontSize="10"
@@ -200,8 +200,8 @@
 
                         <!-- pH-Wert -->
                         <Border x:Name="PhWertBorder" BackgroundColor="White"
-                            Padding="15"
-                            HeightRequest="70">
+                            Padding="12"
+                            HeightRequest="80">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="PositionStates">
                                     <VisualState x:Name="WidePosition">
@@ -227,7 +227,7 @@
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5" VerticalOptions="Center">
                                 <Label Grid.Row="0"
                                    Text="pH-Wert"
                                    FontSize="10"
@@ -244,8 +244,8 @@
 
                         <!-- Salzgehalt -->
                         <Border x:Name="SalzgehaltBorder" BackgroundColor="White"
-                            Padding="15"
-                            HeightRequest="70">
+                            Padding="12"
+                            HeightRequest="80">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="PositionStates">
                                     <VisualState x:Name="WidePosition">
@@ -271,7 +271,7 @@
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
-                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5" VerticalOptions="Center">
                                 <Label Grid.Row="0"
                                    Text="Salzgehalt"
                                    FontSize="10"
@@ -279,7 +279,7 @@
                                    HorizontalTextAlignment="Center"/>
                                 <Label Grid.Row="1"
                                    Text="{Binding Salinity, StringFormat='{0:F1} ppt'}"
-                                   FontSize="16"
+                                   FontSize="14"
                                    FontAttributes="Bold"
                                    TextColor="{StaticResource TextPrimary}"
                                    HorizontalTextAlignment="Center"/>
