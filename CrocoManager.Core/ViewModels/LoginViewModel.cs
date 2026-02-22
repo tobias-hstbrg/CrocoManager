@@ -83,7 +83,14 @@ namespace CrocoManager.Core.ViewModels
         [RelayCommand]
         async Task TestConnectionAsync()
         {
-            var ok = await AuthService.TestConnectionAsync();
+            bool ok = false;
+            
+            // Proactive check: If no internet, it's definitely inactive
+            if (ConnectivityService.IsConnected)
+            {
+                ok = await AuthService.TestConnectionAsync();
+            }
+
             await NotificationService.ShowInfoAsync("Verbindungstest", ok ? "Supabase Verbindung aktiv" : "Supabase Verbindung inaktiv");
         }
 
