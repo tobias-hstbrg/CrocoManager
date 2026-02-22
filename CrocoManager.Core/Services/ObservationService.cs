@@ -29,32 +29,43 @@ namespace CrocoManager.Core.Services
 
         public async Task<EnvironmentalData> FetchEnvironmentalDataAsync()
         {
-            var (waterTemp, salinity) = await FetchWaterData();
-
-            decimal? airTemp = null;
-            decimal? humidity = null;
-
             try
             {
-                (airTemp, humidity) = await FetchWeatherData();
+                var (waterTemp, salinity) = await FetchWaterData();
+
+                decimal? airTemp = null;
+                decimal? humidity = null;
+
+                try
+                {
+                    (airTemp, humidity) = await FetchWeatherData();
+                }
+                catch (Exception ex)
+                {
+                    // For weather data, we might want to continue even if it fails, 
+                    // but we should still check if it's a connection issue.
+                    // If we want to strictly enforce internet for everything:
+                    HandleException(ex);
+                    Console.WriteLine($"Error fetching weather data: {ex.Message}");
+                }
+
+                decimal phValue = GeneratePhValue();
+
+                return new EnvironmentalData(
+                    measurementDate: DateOnly.FromDateTime(DateTime.UtcNow),
+                    measurementTime: DateTime.UtcNow.TimeOfDay,
+                    airTemperatureCelsius: airTemp,
+                    humidityPercent: humidity,
+                    waterTemperatureCelsius: waterTemp,
+                    phValue: phValue,
+                    salinityPpt: salinity
+                );
             }
             catch (Exception ex)
             {
-                // Even if value cannot be fetched, log and proceed.
-                Console.WriteLine($"Error fetching weather data: {ex.Message}");
+                HandleException(ex);
+                throw; // HandleException already throws, but compiler might need this or just let it bubble
             }
-
-            decimal phValue = GeneratePhValue();
-
-            return new EnvironmentalData(
-                measurementDate: DateOnly.FromDateTime(DateTime.UtcNow),
-                measurementTime: DateTime.UtcNow.TimeOfDay,
-                airTemperatureCelsius: airTemp,
-                humidityPercent: humidity,
-                waterTemperatureCelsius: waterTemp,
-                phValue: phValue,
-                salinityPpt: salinity
-            );
         }
 
         private async Task<(decimal? airTemp, decimal? humidity)> FetchWeatherData()

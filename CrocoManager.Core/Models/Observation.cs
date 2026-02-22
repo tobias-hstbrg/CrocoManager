@@ -16,7 +16,7 @@ namespace CrocoManager.Core.Models
         public string? FeedingBehavior { get; init; }
         public string? Notes { get; init; }
         public string ResearcherEmail { get; init; } = string.Empty;
-        public DateTime UpdatedAt { get; init; }
+        public DateTime CreatedAt { get; set; }
         public bool HasNotes => !string.IsNullOrWhiteSpace(Notes);
 
         public bool HasEnvironmentalData => EnvironmentalData != null;

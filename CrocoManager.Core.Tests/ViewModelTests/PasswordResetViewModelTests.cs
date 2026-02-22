@@ -12,6 +12,7 @@ namespace CrocoManager.Core.Tests.ViewModelTests
         private readonly Mock<INavigationService> _mockNav;
         private readonly Mock<INotificationService> _mockNote;
         private readonly Mock<IAuthService> _mockAuth;
+        private readonly Mock<IConnectivityService> _mockConnectivity;
         private readonly PasswordResetViewModel _viewModel;
 
         public PasswordResetViewModelTests()
@@ -19,11 +20,15 @@ namespace CrocoManager.Core.Tests.ViewModelTests
             _mockNav = new Mock<INavigationService>();
             _mockNote = new Mock<INotificationService>();
             _mockAuth = new Mock<IAuthService>();
+            _mockConnectivity = new Mock<IConnectivityService>();
+
+            _mockConnectivity.Setup(c => c.IsConnected).Returns(true);
 
             _viewModel = new PasswordResetViewModel(
                 _mockNav.Object,
                 _mockNote.Object,
-                _mockAuth.Object);
+                _mockAuth.Object,
+                _mockConnectivity.Object);
         }
 
         [Fact]

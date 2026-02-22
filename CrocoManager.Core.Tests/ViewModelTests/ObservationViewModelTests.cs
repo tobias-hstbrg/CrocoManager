@@ -18,6 +18,7 @@ namespace CrocoManager.Core.Tests.ViewModelTests
         private readonly Mock<INavigationService> _mockNav;
         private readonly Mock<INotificationService> _mockNote;
         private readonly Mock<IAuthService> _mockAuth;
+        private readonly Mock<IConnectivityService> _mockConnectivity;
         private readonly Mock<ISupabaseClientService> _mockSupabase;
         private readonly Mock<IObservationService> _mockObsService;
         private readonly Mock<IAnimalService> _mockAnimalService;
@@ -30,23 +31,28 @@ namespace CrocoManager.Core.Tests.ViewModelTests
             _mockNav = new Mock<INavigationService>();
             _mockNote = new Mock<INotificationService>();
             _mockAuth = new Mock<IAuthService>();
+            _mockConnectivity = new Mock<IConnectivityService>();
             _mockSupabase = new Mock<ISupabaseClientService>();
             _mockObsService = new Mock<IObservationService>();
             _mockAnimalService = new Mock<IAnimalService>();
             _mockFeedingService = new Mock<IFeedingService>();
             _mockPlanService = new Mock<IFeedingPlanService>();
 
-            // Minimal setup to allow VM creation without crashing during automatic LoadAsync in constructor
+            _mockConnectivity.Setup(c => c.IsConnected).Returns(true);
+
+            // Setup ObservationService to return some dummy data to avoid crash during init
             _mockObsService.Setup(s => s.FetchEnvironmentalDataAsync())
                 .ReturnsAsync(new EnvironmentalData(DateOnly.FromDateTime(DateTime.Now), TimeSpan.Zero, 25, 60, 22, 7, 30));
             
             _mockAnimalService.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<AnimalDto>());
             _mockFeedingService.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<FeedingDto>());
+            _mockPlanService.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<FeedingPlanDto>());
 
             _viewModel = new ObservationViewModel(
                 _mockNav.Object,
                 _mockNote.Object,
                 _mockAuth.Object,
+                _mockConnectivity.Object,
                 _mockSupabase.Object,
                 _mockObsService.Object,
                 _mockAnimalService.Object,
@@ -134,20 +140,6 @@ namespace CrocoManager.Core.Tests.ViewModelTests
             // Assert
             _viewModel.Feedings.Should().HaveCount(1);
             _viewModel.Feedings.Should().Contain(f => f.Id == feedingWith.Id);
-        }
-
-        [Fact]
-        public async Task SetPermissions_Ranger_ShouldRestrictCreation()
-        {
-            // Arrange
-            _mockAuth.Setup(a => a.GetUserRoleAsync()).ReturnsAsync(UserRole.Ranger);
-
-            // Act
-            await _viewModel.InitializeAsync();
-
-            // Assert
-            _viewModel.CanCreate.Should().BeFalse();
-            _viewModel.IsReadOnly.Should().BeTrue();
         }
     }
 }

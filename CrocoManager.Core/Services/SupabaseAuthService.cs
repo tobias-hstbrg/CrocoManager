@@ -32,6 +32,36 @@ namespace CrocoManager.Core.Services
             await _supabase.InitializeAsync();
         }
 
+        private void HandleException(Exception ex)
+        {
+            if (IsNetworkError(ex))
+            {
+                throw new Exception("Keine Internetverbindung. Bitte prüfen Sie Ihre Netzwerkverbindung.", ex);
+            }
+            throw ex;
+        }
+
+        private bool IsNetworkError(Exception? ex)
+        {
+            if (ex == null) return false;
+
+            if (ex is HttpRequestException ||
+                ex is System.Net.Sockets.SocketException ||
+                ex.Message.Contains("Host is not reachable") ||
+                ex.Message.Contains("Der gegebene Host ist nicht erreichbar") ||
+                ex.Message.Contains("Failed to connect") ||
+                ex.Message.Contains("Name or service not known"))
+            {
+                return true;
+            }
+
+            if (ex is AggregateException agg)
+            {
+                return agg.InnerExceptions.Any(IsNetworkError);
+            }
+
+            return IsNetworkError(ex.InnerException);
+        }
 
         public async Task<SupabaseSession?> RegisterAsync(string email, string password)
         {
@@ -40,7 +70,7 @@ namespace CrocoManager.Core.Services
                 email = email.ToLowerInvariant();
                 var whitelistResponse = await CheckEmailWhitelist(email);
                 if (whitelistResponse == null)
-                    return null;
+                    throw new InvalidOperationException($"Die E-Mail Adresse '{email}' ist nicht auf der Whitelist. Bitte kontaktieren Sie Ihren Administrator.");
 
                 // grab Userrole in usable format
                 var newUsersRole = ParseUserRole(whitelistResponse.Role);
@@ -69,12 +99,15 @@ namespace CrocoManager.Core.Services
             }
             catch (PostgrestException ex)
             {
-                Console.WriteLine($"Supabase error: {ex.Message}");
-                return null;
+                HandleException(ex);
+            }
+            catch (InvalidOperationException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error {ex.Message}");
+                HandleException(ex);
             }
             return null;
         }
@@ -185,7 +218,7 @@ namespace CrocoManager.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Login failed: {ex.Message}");
+                HandleException(ex);
                 return null;
             }
         }
@@ -200,7 +233,7 @@ namespace CrocoManager.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Logout failed: {ex.Message}");
+                HandleException(ex);
                 return false;
             }
         }
@@ -231,7 +264,7 @@ namespace CrocoManager.Core.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Reset password error: {ex.Message}");
+                HandleException(ex);
                 return false;
             }
         }
@@ -280,7 +313,7 @@ namespace CrocoManager.Core.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error getting role: {ex.Message}");
+                HandleException(ex);
                 return UserRole.NotAssigned;
             }
         }

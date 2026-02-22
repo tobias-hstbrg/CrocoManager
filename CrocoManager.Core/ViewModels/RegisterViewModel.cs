@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
@@ -19,8 +19,9 @@ namespace CrocoManager.Core.ViewModels
         public RegisterViewModel(
             INavigationService navigationService,
             INotificationService notificationService,
-            IAuthService authService) 
-            : base(navigationService, notificationService, authService)
+            IAuthService authService,
+            IConnectivityService connectivityService) 
+            : base(navigationService, notificationService, authService, connectivityService)
         {
         }
 
@@ -29,7 +30,7 @@ namespace CrocoManager.Core.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                await NotificationService.ShowErrorAsync("Error", "Enter credentials");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Bitte geben Sie eine gültige E-Mail Adresse und ein Passwort an.");
                 return;
             }
 
@@ -40,15 +41,31 @@ namespace CrocoManager.Core.ViewModels
                 return;
             }
 
-            var session = await AuthService.RegisterAsync(Email, Password);
+            try
+            {
+                IsBusy = true;
+                var session = await AuthService.RegisterAsync(Email, Password);
 
-            if (session != null)
-            {
-                await NotificationService.ShowSuccessAsync("Success", $"Registred {session.User.Email}");
+                if (session != null)
+                {
+                    await NotificationService.ShowSuccessAsync("Erfolg", $"Registrierung für {session.User.Email} erfolgreich.");
+                }
+                else
+                {
+                    await NotificationService.ShowErrorAsync("Fehler", "Registrierung fehlgeschlagen. Bitte versuche es erneut.");
+                }
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                await NotificationService.ShowErrorAsync("Error", "Registration failed");
+                await NotificationService.ShowErrorAsync("Whitelist Fehler", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                await DisplayError("Registrierungsfehler", ex);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 

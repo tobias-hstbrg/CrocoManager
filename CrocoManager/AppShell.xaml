@@ -8,10 +8,11 @@
     x:Name="AppShellRoot"
     FlyoutBehavior="{OnIdiom Phone=Disabled, Default=Locked}"
     FlyoutBackgroundColor="White"
-    Shell.ForegroundColor="Black"
-    Shell.TitleColor="Black"
     FlyoutWidth="65"
-    Title="CrocoManager">
+    Title="CrocoManager"
+    Shell.TabBarBackgroundColor="{StaticResource CardBackground}"
+    Shell.TabBarForegroundColor="{StaticResource Primary}"
+    Shell.TabBarUnselectedColor="{StaticResource TextSecondary}">
 
     <Shell.Resources>
         <Style TargetType="Shell">

@@ -30,8 +30,9 @@ namespace CrocoManager.Core.ViewModels
             INavigationService navigationService,
             INotificationService notificationService,
             IAuthService authService,
+            IConnectivityService connectivityService,
             IWhitelistService whitelistService) 
-            : base(navigationService, notificationService, authService)
+            : base(navigationService, notificationService, authService, connectivityService)
         {
             _whitelistService = whitelistService ?? throw new ArgumentNullException(nameof(whitelistService));
 
@@ -45,11 +46,18 @@ namespace CrocoManager.Core.ViewModels
 
         private async Task LoadEmails()
         {
-            var emails = await _whitelistService.GetWhitelistedEmailsAsync();
-            WhitelistedEmails.Clear();
+            try
+            {
+                var emails = await _whitelistService.GetWhitelistedEmailsAsync();
+                WhitelistedEmails.Clear();
 
-            foreach (var e in emails)
-                WhitelistedEmails.Add(new EmailWhitelistVM(e));
+                foreach (var e in emails)
+                    WhitelistedEmails.Add(new EmailWhitelistVM(e));
+            }
+            catch (Exception ex)
+            {
+                await DisplayError("Fehler beim Laden", ex);
+            }
         }
 
         private async Task AddEmail()
@@ -64,11 +72,17 @@ namespace CrocoManager.Core.ViewModels
             if (!Enum.TryParse<UserRole>(targetRole, out var roleEnum))
                 return;
 
-            await _whitelistService.AddEmailToWhitelistAsync(Email, roleEnum);
-            Email = string.Empty;
-            SelectedRole = string.Empty;
-            await LoadEmails();
-
+            try
+            {
+                await _whitelistService.AddEmailToWhitelistAsync(Email, roleEnum);
+                Email = string.Empty;
+                SelectedRole = string.Empty;
+                await LoadEmails();
+            }
+            catch (Exception ex)
+            {
+                await DisplayError("Fehler beim Hinzufügen", ex);
+            }
         }
 
         [RelayCommand]

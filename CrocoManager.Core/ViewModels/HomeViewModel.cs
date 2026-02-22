@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
 using System;
@@ -49,10 +49,11 @@ namespace CrocoManager.Core.ViewModels
             INavigationService navigationService,
             INotificationService notificationService,
             IAuthService authService,
+            IConnectivityService connectivityService,
             IAnimalService animalService, 
             IFeedingPlanService feedingPlanService, 
             IFeedingService feedingService) 
-            : base(navigationService, notificationService, authService)
+            : base(navigationService, notificationService, authService, connectivityService)
         {
             _animalService = animalService;
             _feedingService = feedingService;
@@ -63,16 +64,30 @@ namespace CrocoManager.Core.ViewModels
         [RelayCommand]
         public async Task LoadAsync()
         {
+            if (!ConnectivityService.IsConnected)
+            {
+                await DisplayError("Keine Verbindung", new Exception("Netzwerk nicht erreichbar."));
+                return;
+            }
+
             try
             {
                 IsBusy = true;
 
-                TotalAnimals = await _animalService.GetTotalCount();
-                TotalFeedingPlans = await _feedingPlanService.GetTotalCount();
-                FeedingsThisWeek = await _feedingService.GetCurrentWeekCount();
+                // load data in parallel to fetch data faster
+                var totalAnimalsTask = _animalService.GetTotalCount();
+                var totalPlansTask = _feedingPlanService.GetTotalCount();
+                var currentWeekCountTask = _feedingService.GetCurrentWeekCount();
+                var activePlanTask = _feedingPlanService.GetActivePlanAsync();
+                var historyTask = _feedingService.GetHistoryAsync();
 
-                var activeFeedingPlan = await _feedingPlanService.GetActivePlanAsync();
+                await Task.WhenAll(totalAnimalsTask, totalPlansTask, currentWeekCountTask, activePlanTask, historyTask);
 
+                TotalAnimals = totalAnimalsTask.Result;
+                TotalFeedingPlans = totalPlansTask.Result;
+                FeedingsThisWeek = currentWeekCountTask.Result;
+
+                var activeFeedingPlan = activePlanTask.Result;
                 if (activeFeedingPlan != null)
                 {
                     ActivePlanName = activeFeedingPlan.Name;
@@ -81,7 +96,7 @@ namespace CrocoManager.Core.ViewModels
                     ActivePlanDescription = activeFeedingPlan.Description;
                 }
 
-                var latest = (await _feedingService.GetHistoryAsync()).MaxBy(Entry => Entry.FeedingDate);
+                var latest = historyTask.Result.MaxBy(Entry => Entry.FeedingDate);
                 if (latest != null)
                 {
                     LastFeedingDate = latest.FeedingDate;
@@ -89,9 +104,9 @@ namespace CrocoManager.Core.ViewModels
                     LastFeedingStatus = $"{latest.FedAnimals} von {latest.TotalAnimals} gefüttert";
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Silently fail or log as needed
+                await DisplayError("Fehler beim Laden des Dashboards", ex);
             }
             finally
             {

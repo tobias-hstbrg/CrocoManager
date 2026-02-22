@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrocoManager.Core.Interfaces;
 using CrocoManager.Core.Models;
@@ -20,8 +20,9 @@ namespace CrocoManager.Core.ViewModels
         public LoginViewModel(
             INavigationService navigationService,
             INotificationService notificationService,
-            IAuthService authService) 
-            : base(navigationService, notificationService, authService)
+            IAuthService authService,
+            IConnectivityService connectivityService) 
+            : base(navigationService, notificationService, authService, connectivityService)
         {
         }
 
@@ -30,49 +31,67 @@ namespace CrocoManager.Core.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                await NotificationService.ShowErrorAsync("Error", "Please enter both email and password");
+                await NotificationService.ShowErrorAsync("Validierungsfehler", "Bitte geben sie eine gültige E-Mail Adresse und ein Passwort an.");
                 return;
             }
 
-            var session = await AuthService.LoginAsync(Email, Password);
-
-            if (session == null)
+            try
             {
-                await NotificationService.ShowErrorAsync("Anmeldung fehlgeschlagen", "Email oder Passwort falsch. Bitte versuche es erneut.");
-                return;
-            }
+                IsBusy = true;
+                var session = await AuthService.LoginAsync(Email, Password);
 
-            // Session exists but user data is missing (shouldn't happen, but you never know)
-            if (session.User?.UserMetadata == null)
-            {
-                await NotificationService.ShowErrorAsync("Error", "Nutzerdaten konnten nicht abgerufen werden. Bitte versuchen sie es später erneut.");
-                return;
-            }
+                if (session == null)
+                {
+                    await NotificationService.ShowErrorAsync("Anmeldung fehlgeschlagen", "Email oder Passwort falsch. Bitte versuche es erneut.");
+                    return;
+                }
 
-            // User hasn't been assigned a role yet
-            if (session.User.UserMetadata.Role == Core.Models.UserRole.NotAssigned)
-            {
-                await NotificationService.ShowInfoAsync("Account in Bearbeitung", "Ihr Account ist noch keiner Rolle zugewiesen worden. Bitte kontaktieren Sie ihren Administrator.");
-                return;
-            }
+                // Session exists but user data is missing
+                if (session.User?.UserMetadata == null)
+                {
+                    await NotificationService.ShowErrorAsync("Fehler", "Nutzerdaten konnten nicht abgerufen werden. Bitte versuchen sie es später erneut.");
+                    return;
+                }
 
-            if (session.User.UserMetadata.Role == Core.Models.UserRole.Admin)
-            {
-                NavigationService.SetRoot("Admin");
-            }
-            else
-            {
-                NavigationService.SetRoot("AppShell");
-                await NavigationService.GoToAsync("//HomePage");
-            }
+                // User hasn't been assigned a role yet
+                if (session.User.UserMetadata.Role == Core.Models.UserRole.NotAssigned)
+                {
+                    await NotificationService.ShowInfoAsync("Account in Bearbeitung", "Ihr Account ist noch keiner Rolle zugewiesen worden. Bitte kontaktieren Sie ihren Administrator.");
+                    return;
+                }
 
+                if (session.User.UserMetadata.Role == Core.Models.UserRole.Admin)
+                {
+                    NavigationService.SetRoot("Admin");
+                }
+                else
+                {
+                    NavigationService.SetRoot("AppShell");
+                    await NavigationService.GoToAsync("//HomePage");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayError("Anmeldefehler", ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
         async Task TestConnectionAsync()
         {
-            var ok = await AuthService.TestConnectionAsync();
-            await NotificationService.ShowInfoAsync("Connection Test", ok ? "Connected" : "Failed");
+            bool ok = false;
+            
+            // Proactive check: If no internet, it's definitely inactive
+            if (ConnectivityService.IsConnected)
+            {
+                ok = await AuthService.TestConnectionAsync();
+            }
+
+            await NotificationService.ShowInfoAsync("Verbindungstest", ok ? "Supabase Verbindung aktiv" : "Supabase Verbindung inaktiv");
         }
 
         [RelayCommand]

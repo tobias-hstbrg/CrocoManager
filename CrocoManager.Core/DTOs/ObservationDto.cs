@@ -32,7 +32,7 @@ namespace CrocoManager.Core.DTOs
         [Column("researcher_email")]
         public string? ResearcherEmail { get; set; }
 
-        [Column("updated_at")]
-        public DateTime UpdatedAt { get; set; }
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
     }
 }

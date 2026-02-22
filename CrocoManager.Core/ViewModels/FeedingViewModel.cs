@@ -14,8 +14,9 @@ public partial class FeedingViewModel : BaseViewModel
         INavigationService navigationService,
         INotificationService notificationService,
         IAuthService authService,
+        IConnectivityService connectivityService,
         IFeedingService feedingService)
-        : base(navigationService, notificationService, authService)
+        : base(navigationService, notificationService, authService, connectivityService)
     {
         _feedingService = feedingService;
     }
@@ -82,15 +83,30 @@ public partial class FeedingViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadAsync()
     {
+        if (!ConnectivityService.IsConnected)
+        {
+            await DisplayError("Keine Verbindung", new Exception("Netzwerk nicht erreichbar."));
+            return;
+        }
+
         if (IsBusy) return;
 
         IsBusy = true;
         try
         {
-            CurrentFeeding = await _feedingService.GetTodayFeedingDraftAsync();
+            var draftTask = _feedingService.GetTodayFeedingDraftAsync();
+            var historyTask = LoadHistoryInternalAsync();
+
+            await Task.WhenAll(draftTask, historyTask);
+
+            CurrentFeeding = draftTask.Result;
             HasCurrentFeeding = CurrentFeeding != null;
 
             LoadAnimals();
+        }
+        catch (Exception ex)
+        {
+            await DisplayError("Fehler beim Laden", ex);
         }
         finally
         {
@@ -171,7 +187,7 @@ public partial class FeedingViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await NotificationService.ShowErrorAsync("Fehler beim Laden des Verlaufs", ex.Message);
+            await DisplayError("Fehler beim Laden des Verlaufs", ex);
         }
         finally
         {

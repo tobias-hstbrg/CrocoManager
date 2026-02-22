@@ -83,6 +83,7 @@ namespace CrocoManager
                 }
             }
 
+            builder.Services.AddSingleton<IConnectivityService, MauiConnectivityService>();
             builder.Services.AddSingleton<ISecureStorageService, MauiSecureStorageService>();
             builder.Services.AddSingleton<SupabaseAuthService>();
             builder.Services.AddSingleton<ISupabaseClientService, SupabaseClientService>();
