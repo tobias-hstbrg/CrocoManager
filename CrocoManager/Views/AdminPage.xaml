@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CrocoManager.Core.ViewModels;assembly=CrocoManager.Core"
+             x:Class="CrocoManager.Views.AdminPage"
+             Title="Admin Center"
+             BackgroundColor="{StaticResource PageBackground}">
+
+    <ScrollView>
+        <Grid Padding="20" RowSpacing="20" ColumnSpacing="0" MaximumWidthRequest="1000">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header Section -->
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0"
+                       Text="Admin Center"
+                       FontAttributes="Bold"
+                       FontSize="28"
+                       TextColor="{StaticResource TextPrimary}"/>
+
+                <!-- Logout Button -->
+                <ImageButton Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                        Source="sign_out.png"
+                        Style="{StaticResource PrimaryImageButton}"
+                        BorderColor="Transparent"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        CornerRadius="8"
+                        Padding="8"
+                        Command="{Binding SignOutCommand}"/>
+
+                <Label Grid.Row="1" Grid.Column="0"
+                       Text="Benutzer whitelisten, aktualisieren oder entfernen"
+                       FontSize="16"
+                       TextColor="{StaticResource TextSecondary}"/>
+            </Grid>
+
+            <!-- Add New User Card -->
+            <Border Grid.Row="1"
+                    Style="{StaticResource SecondaryCard}"
+                    Padding="24">
+                <Grid RowSpacing="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <!-- Title -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Email label + entry -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Role label + picker -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Add button -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Title -->
+                    <Label Grid.Row="0"
+                           Text="Neuen Benutzer hinzufügen"
+                           FontAttributes="Bold"
+                           FontSize="20"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <!-- Email -->
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <!-- Label -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Entry -->
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Text="E-Mail:" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                        <Border Grid.Row="1" Style="{StaticResource EntryBorder}" Padding="12,0" HeightRequest="50">
+                            <Entry Text="{Binding Email}"
+                                   Placeholder="z.B. max@beispiel.de"
+                                   Keyboard="Email"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   PlaceholderColor="{StaticResource PlaceholderText}"
+                                   BackgroundColor="Transparent"
+                                   FontSize="16"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- Role -->
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <!-- Label -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Picker -->
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Text="Rolle:" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                        <Border Grid.Row="1" Style="{StaticResource EntryBorder}" Padding="12,0" HeightRequest="50">
+                            <Picker ItemsSource="{Binding Roles}"
+                                    SelectedItem="{Binding SelectedRole}"
+                                    TextColor="{StaticResource TextPrimary}"
+                                    BackgroundColor="Transparent"
+                                    FontSize="16"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- Add Button -->
+                    <Button Grid.Row="3"
+                            Text="Hinzufügen"
+                            Command="{Binding AddEmailCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            HeightRequest="50"
+                            FontSize="16"/>
+                </Grid>
+            </Border>
+
+            <!-- Existing Users Label -->
+            <Label Grid.Row="2"
+                   Text="Vorhandene Benutzer"
+                   FontAttributes="Bold"
+                   FontSize="20"
+                   TextColor="{StaticResource TextPrimary}"/>
+
+            <!-- Existing Users List -->
+            <CollectionView Grid.Row="3" ItemsSource="{Binding WhitelistedEmails}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource SecondaryCard}" Padding="16" Margin="0,0,0,12">
+                            <Grid RowSpacing="12" ColumnSpacing="12">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Email -->
+                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                       Text="{Binding Email}" 
+                                       FontSize="16"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       LineBreakMode="WordWrap"/>
+
+                                <!-- Role Picker -->
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
+                                    <Label Text="Rolle:" FontSize="14" TextColor="{StaticResource TextSecondary}"/>
+                                    <Border Style="{StaticResource EntryBorder}" Padding="12,0" HeightRequest="50">
+                                        <Picker ItemsSource="{Binding Roles}"
+                                            SelectedItem="{Binding Role, Mode=TwoWay}"
+                                            TextColor="{StaticResource TextPrimary}"
+                                            BackgroundColor="Transparent"
+                                            FontSize="16"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <!-- Update Button -->
+                                <Button Grid.Row="2" Grid.Column="0"
+                                        Text="Aktualisieren"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.UpdateRoleCommand}"
+                                        CommandParameter="{Binding .}"
+                                        Style="{StaticResource PrimaryButton}"
+                                        HeightRequest="50"
+                                        FontSize="16"/>
+
+                                <!-- Delete Button -->
+                                <ImageButton Grid.Row="2" Grid.Column="1"
+                                             Source="trash_can.png"
+                                             Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteEmailCommand}"
+                                             CommandParameter="{Binding .}"
+                                             Style="{StaticResource SecondaryImageButton}"
+                                             CornerRadius="8"
+                                             HeightRequest="50"
+                                             WidthRequest="50"
+                                             Padding="10"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ScrollView>
+</ContentPage>

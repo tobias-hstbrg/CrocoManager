@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CrocoManager.Core.ViewModels;assembly=CrocoManager.Core"
+             x:Class="CrocoManager.Views.RegisterPage"
+             Title="RegisterPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource PageBackground}">
+
+    <Grid x:Name="MainGrid">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveStates">
+                <!-- Mobile Layout (width < 768) -->
+                <VisualState x:Name="Mobile">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter TargetName="ContentFlex" Property="FlexLayout.Padding" Value="20"/>
+                        <Setter TargetName="ContentFlex" Property="FlexLayout.MaximumWidthRequest" Value="380"/>
+                        <Setter TargetName="LogoSection" Property="VerticalStackLayout.Margin" Value="0,0,0,20"/>
+                        <Setter TargetName="LogoEmoji" Property="Label.FontSize" Value="56"/>
+                        <Setter TargetName="AppTitle" Property="Label.FontSize" Value="28"/>
+                        <Setter TargetName="WelcomeText" Property="Label.FontSize" Value="16"/>
+                        <Setter TargetName="RegisterCard" Property="Border.Padding" Value="24"/>
+                        <Setter TargetName="FormFlex" Property="FlexLayout.Margin" Value="0,0,0,0"/>
+                        <Setter TargetName="EmailEntry" Property="Entry.FontSize" Value="15"/>
+                        <Setter TargetName="PasswordEntry" Property="Entry.FontSize" Value="15"/>
+                        <Setter TargetName="EmailBorder" Property="Border.Padding" Value="14,0"/>
+                        <Setter TargetName="EmailBorder" Property="Border.HeightRequest" Value="48"/>
+                        <Setter TargetName="EmailBorder" Property="Border.Margin" Value="0,0,0,16"/>
+                        <Setter TargetName="PasswordBorder" Property="Border.Padding" Value="14,0"/>
+                        <Setter TargetName="PasswordBorder" Property="Border.HeightRequest" Value="48"/>
+                        <Setter TargetName="PasswordBorder" Property="Border.Margin" Value="0,0,0,16"/>
+                        <Setter TargetName="RegisterButton" Property="Button.HeightRequest" Value="48"/>
+                        <Setter TargetName="RegisterButton" Property="Button.FontSize" Value="16"/>
+                        <Setter TargetName="RegisterButton" Property="Button.Margin" Value="0,8,0,16"/>
+                        <!--<Setter TargetName="ForgotPasswordButton" Property="Button.FontSize" Value="13"/>
+                        <Setter TargetName="ForgotPasswordButton" Property="Button.Margin" Value="0,0,0,20"/>-->
+                        <Setter TargetName="LoginSection" Property="VerticalStackLayout.Margin" Value="0,0,0,0"/>
+                        <Setter TargetName="LoginLabel" Property="Label.FontSize" Value="14"/>
+                        <Setter TargetName="RegisterButton" Property="Button.HeightRequest" Value="48"/>
+                        <Setter TargetName="RegisterButton" Property="Button.FontSize" Value="16"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- Desktop Layout (width >= 768) -->
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="768" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter TargetName="ContentFlex" Property="FlexLayout.Padding" Value="40"/>
+                        <Setter TargetName="ContentFlex" Property="FlexLayout.MaximumWidthRequest" Value="520"/>
+                        <Setter TargetName="LogoSection" Property="VerticalStackLayout.Margin" Value="0,0,0,30"/>
+                        <Setter TargetName="LogoEmoji" Property="Label.FontSize" Value="72"/>
+                        <Setter TargetName="AppTitle" Property="Label.FontSize" Value="36"/>
+                        <Setter TargetName="WelcomeText" Property="Label.FontSize" Value="18"/>
+                        <Setter TargetName="RegisterCard" Property="Border.Padding" Value="40"/>
+                        <Setter TargetName="FormFlex" Property="FlexLayout.Margin" Value="0,0,0,0"/>
+                        <Setter TargetName="EmailEntry" Property="Entry.FontSize" Value="16"/>
+                        <Setter TargetName="PasswordEntry" Property="Entry.FontSize" Value="16"/>
+                        <Setter TargetName="EmailBorder" Property="Border.Padding" Value="16,0"/>
+                        <Setter TargetName="EmailBorder" Property="Border.HeightRequest" Value="56"/>
+                        <Setter TargetName="EmailBorder" Property="Border.Margin" Value="0,0,0,20"/>
+                        <Setter TargetName="PasswordBorder" Property="Border.Padding" Value="16,0"/>
+                        <Setter TargetName="PasswordBorder" Property="Border.HeightRequest" Value="56"/>
+                        <Setter TargetName="PasswordBorder" Property="Border.Margin" Value="0,0,0,20"/>
+                        <Setter TargetName="LoginButton" Property="Button.HeightRequest" Value="56"/>
+                        <Setter TargetName="LoginButton" Property="Button.FontSize" Value="17"/>
+                        <Setter TargetName="LoginButton" Property="Button.Margin" Value="0,8,0,20"/>
+                        <!--<Setter TargetName="ForgotPasswordButton" Property="Button.FontSize" Value="14"/>
+                        <Setter TargetName="ForgotPasswordButton" Property="Button.Margin" Value="0,0,0,30"/>-->
+                        <Setter TargetName="LoginSection" Property="VerticalStackLayout.Margin" Value="0,0,0,0"/>
+                        <Setter TargetName="LoginLabel" Property="Label.FontSize" Value="15"/>
+                        <Setter TargetName="RegisterButton" Property="Button.HeightRequest" Value="56"/>
+                        <Setter TargetName="RegisterButton" Property="Button.FontSize" Value="17"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <ScrollView>
+            <FlexLayout 
+                x:Name="ContentFlex"
+                Direction="Column"
+                JustifyContent="Center"
+                AlignItems="Center"
+                Padding="20"
+                MaximumWidthRequest="380"
+                MinimumHeightRequest="600">
+
+                <!-- Logo/Title Section -->
+                <VerticalStackLayout 
+                    x:Name="LogoSection"
+                    Spacing="8" 
+                    Margin="0,0,0,20"
+                    FlexLayout.AlignSelf="Stretch">
+                    <Label 
+                        x:Name="LogoEmoji"
+                        Text="🐊"
+                        FontSize="56"
+                        HorizontalOptions="Center"/>
+                    <Label 
+                        x:Name="AppTitle"
+                        Text="Croco Manager"
+                        FontAttributes="Bold"
+                        FontSize="28"
+                        TextColor="{StaticResource TextPrimary}"
+                        HorizontalOptions="Center"/>
+                    <Label 
+                        x:Name="WelcomeText"
+                        Text="Der Fütterungsmanager"
+                        FontSize="16"
+                        TextColor="{StaticResource TextSecondary}"
+                        HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Register Form Card -->
+                <Border 
+                    x:Name="RegisterCard"
+                    Style="{StaticResource SecondaryCard}"
+                    Padding="24"
+                    FlexLayout.AlignSelf="Stretch">
+
+                    <FlexLayout 
+                        x:Name="FormFlex"
+                        Direction="Column"
+                        Margin="0,0,0,0">
+
+                        <!-- Email Field -->
+                        <Border
+                            x:Name="EmailBorder"
+                            Style="{StaticResource EntryBorder}"
+                            Padding="14,0"
+                            HeightRequest="48"
+                            Margin="0,0,0,16"
+                            FlexLayout.AlignSelf="Stretch">
+                            <Entry 
+                                x:Name="EmailEntry"
+                                Placeholder="E-Mail" 
+                                Text="{Binding Email}"
+                                Keyboard="Email"
+                                TextColor="{StaticResource TextPrimary}"
+                                PlaceholderColor="{StaticResource PlaceholderText}"
+                                BackgroundColor="Transparent"
+                                FontSize="15"
+                                VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Password Field -->
+                        <Border
+                            x:Name="PasswordBorder"
+                            Style="{StaticResource EntryBorder}"
+                            Padding="14,0"
+                            HeightRequest="48"
+                            Margin="0,0,0,16"
+                            FlexLayout.AlignSelf="Stretch">
+                            <Entry 
+                                x:Name="PasswordEntry"
+                                Placeholder="Passwort" 
+                                IsPassword="True" 
+                                Text="{Binding Password}"
+                                TextColor="{StaticResource TextPrimary}"
+                                PlaceholderColor="{StaticResource PlaceholderText}"
+                                BackgroundColor="Transparent"
+                                FontSize="15"
+                                VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Register Button -->
+                        <Button 
+                            x:Name="RegisterButton"
+                            Text="Registrieren" 
+                            Command="{Binding RegisterUserCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            Margin="0,8,0,16"
+                            HeightRequest="48"
+                            FontSize="16"
+                            FlexLayout.AlignSelf="Stretch"/>
+
+                        <!-- Login Section -->
+                        <VerticalStackLayout 
+                            x:Name="LoginSection"
+                            Spacing="12"
+                            Margin="0,0,0,0"
+                            FlexLayout.AlignSelf="Stretch">
+                            <Label 
+                                x:Name="LoginLabel"
+                                Text="Du schon einen Account?"
+                                FontSize="14"
+                                TextColor="{StaticResource TextSecondary}"
+                                HorizontalOptions="Center"/>
+                            <Button 
+                                x:Name="LoginButton"
+                                Text="Anmelden" 
+                                Command="{Binding GoToLoginCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                HeightRequest="48"
+                                FontSize="16"/>
+                        </VerticalStackLayout>
+
+                    </FlexLayout>
+                </Border>
+
+            </FlexLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
