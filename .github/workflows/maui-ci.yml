@@ -77,10 +77,11 @@ jobs:
         }
 
     - name: Upload Android APK
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: CrocoManager-Android
         path: ./artifacts/android/CrocoManager.apk
+        archive: false
         retention-days: 7
 
   build-windows:
@@ -127,7 +128,7 @@ jobs:
           -o ./artifacts/windows
 
     - name: Upload Windows Build
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: CrocoManager-Windows
         path: ./artifacts/windows/
