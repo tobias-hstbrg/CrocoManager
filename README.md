@@ -28,6 +28,37 @@ Mit dem **CrocoFeeding Manager** soll die Fütterungsplanung digitalisiert und d
 - Unterstützung mehrerer Plattformen
 
 ---
+## Screenshots
+
+### Dashboard
+| Desktop | Mobile |
+|--------|--------|
+| ![](./images/dashboard_desktop.png) | ![](./images/dashboard_mobile.png) |
+
+---
+
+### Admin Center (Mobile)
+<p>
+  <img src="./images/admin_center_mobile.png" width="280">
+</p>
+
+---
+
+### Futterpläne (Meal Plans)
+<p>
+  <img src="./images/futterplaene_desktop.png" width="70%">
+</p>
+
+<p>
+  <img src="./images/futterplan_erstellen.png" width="70%">
+</p>
+
+---
+
+### Research (Mobile)
+<p>
+  <img src="./images/research_mobile.png" width="280">
+</p>
 
 ### 🧰 Technologien  
 - **Programmiersprache:** C#
